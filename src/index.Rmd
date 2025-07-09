@@ -1,0 +1,61 @@
+--- 
+title: "DoD cloud2trees Demonstration: Forest Fuel Quantification for Wildfire Modeling using QUIC-Fire"
+author: "George Woolsey"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+site: bookdown::bookdown_site
+output: 
+  bookdown::gitbook:
+    includes:
+      in_header: header.html
+documentclass: book
+book_filename: "dod_cloud2trees_demo"
+output_dir: "../docs"
+language:
+  ui:
+    chapter_name: "Section "
+delete_merged_file: true
+bibliography: [packages.bib]
+biblio-style: apalike
+csl: https://raw.githubusercontent.com/citation-style-language/styles/master/research-institute-for-nature-and-forest.csl
+suppress-bibliography: true
+lang: en-US
+zotero: true
+link-citations: true
+description: "Using the bookdown package to write a book of data exploration. The output format for this example is bookdown::gitbook."
+---
+
+# Introduction
+
+Demonstration of [`cloud2trees`](https://github.com/georgewoolsey/cloud2trees) for processing aerial point cloud data to generate inputs for [QUIC-Fire](https://scholar.google.com/scholar?cluster=5135309566348498660&oi=gsb&hl=en&as_sdt=0,6)
+
+## Objective
+
+The objective of this study is to demonstrate the use of [`cloud2trees`](https://github.com/georgewoolsey/cloud2trees) for processing aerial point cloud data to generate inputs for [QUIC-Fire](https://scholar.google.com/scholar?cluster=5135309566348498660&oi=gsb&hl=en&as_sdt=0,6). We will use the framework to process ALS and UAS-SfM datasets across geographically variable demonstration sites. The `cloud2trees` framework generates a tree list containing individual tree-level attributes such as geographic coordinates (X, Y), height, DBH, crown dimensions, forest type, and wildfire-relevant fuel loading metrics like crown bulk density and crown base height. The outputs from `cloud2trees` will be prepared for ingestion into the QUIC-Fire model (perhaps this is built into the package by now???) to showcase the framework's processing efficiency and reliability for timely wildfire behavior modeling.
+
+## Data{#data_desc}
+
+ALS data was mostly obtained at the [USGS LidarExplorer](https://www.usgs.gov/tools/lidarexplorer) and UAS-SfM data was.....
+
+```{r, include=FALSE, echo=FALSE}
+knitr::write_bib(c(
+  .packages(),
+  "bookdown"
+  , "knitr"
+  , "rmarkdown"
+  , "tidyverse"
+  , "viridis"
+  , "RColorBrewer"
+  , "scales"
+  , "latex2exp"
+  , "mapview"
+  , "kableExtra"
+  , "patchwork"
+  , "ggnewscale"
+  , "terra"
+  , "stars"
+  , "sf"
+  , "brms"
+  , "tidybayes"
+  , "parallel"
+), 'packages.bib')
+```

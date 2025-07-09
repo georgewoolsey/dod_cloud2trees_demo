@@ -1,0 +1,252 @@
+# Data Processing
+
+Load the standard libraries we use to do work
+
+```{r, warning=FALSE, message=FALSE}
+# bread-and-butter
+library(tidyverse) # the tidyverse
+library(viridis) # viridis colors
+library(harrypotter) # hp colors
+library(RColorBrewer) # brewer colors
+library(scales) # work with number and plot scales
+library(latex2exp)
+
+# visualization
+library(mapview) # interactive html maps
+library(kableExtra) # tables
+library(patchwork) # combine plots
+library(corrplot) # correlation plots
+
+# spatial analysis
+library(terra) # raster
+library(sf) # simple features
+library(lidR) # lidar data
+library(rgl) # 3d plots
+library(cloud2trees) # the cloud2trees
+```
+
+```{r pkg-ld, include=F, warning=F, message=F}
+# knit options
+knitr::opts_chunk$set(
+  echo = TRUE
+  , warning = FALSE
+  , message = FALSE
+  # , results = 'hide'
+  , fig.width = 10.5
+  , fig.height = 7
+)
+# option to put satellite imagery as base layer of mapview maps
+  mapview::mapviewOptions(
+    homebutton = FALSE
+    # , basemaps = c("Esri.WorldImagery","OpenStreetMap")
+    , basemaps = c("OpenStreetMap", "Esri.WorldImagery")
+  )
+# clean session
+remove(list = ls())
+gc()
+```
+
+## Study Sites
+
+let's check out the vector data of the study sites
+
+```{r}
+dir_temp <- "../data"
+# what vector data?
+df_temp <-
+  list.files(dir_temp, pattern = ".*\\.(shp|gpkg)$", recursive = T) %>% 
+  dplyr::tibble() %>% 
+  setNames("fpath") %>% 
+  dplyr::mutate(
+    study_site = dirname(fpath)
+    , fpath = file.path(dir_temp, fpath)
+    , fdir = dirname(fpath)
+  ) %>% 
+  dplyr::group_by(study_site) %>% 
+  dplyr::filter(dplyr::row_number()==1) %>% 
+  dplyr::ungroup()
+if(nrow(df_temp)==0){stop("no vector data found")}
+# load in the vector data
+study_sites_sf <- 1:nrow(df_temp) %>% 
+  purrr::map(\(x)
+    sf::st_read(
+      dsn = df_temp$fpath[x]
+    ) %>%
+    # put all in the same projection
+    sf::st_transform(crs=5070) %>% 
+    dplyr::mutate(study_site = df_temp$study_site[x]) %>% 
+    dplyr::select(study_site)
+  ) %>% 
+  dplyr::bind_rows() %>% 
+  dplyr::inner_join(df_temp, by = "study_site")
+# what?
+study_sites_sf %>% 
+  dplyr::glimpse()
+```
+
+where are these places?
+
+```{r}
+# mapview::mapview(slash_piles_points, zcol = "comment", layer.name = "slash piles")
+mapview::mapview(
+  sf::st_centroid(study_sites_sf)
+  , zcol = "study_site"
+  , cex = 5
+  , label = T
+  , legend = T
+  , popup = T
+  , layer.name = "study areas"
+) + 
+mapview::mapview(
+  study_sites_sf
+  , color = "black"
+  , lwd = 2
+  , alpha.regions = 0
+  , label = F
+  , legend = F
+  , popup = F
+)
+```
+
+## Point Cloud Data
+
+Let's check out the point cloud data we got
+
+```{r}
+# directory with the downloaded .las|.laz files
+study_sites_las_ctg <- 1:nrow(study_sites_sf) %>% 
+  purrr::map(function(x){
+    t <- study_sites_sf$fdir[x] %>% 
+      list.files(pattern = ".*\\.(laz|las)$", recursive = T, full.names = T)
+    if(length(t)>0){return(lidR::readLAScatalog(t))}else(return(NULL))
+  })
+names(study_sites_las_ctg) <- study_sites_sf$study_site
+# what are these ctgs?
+study_sites_las_ctg
+```
+
+plot one point cloud catalog with the vector data
+
+```{r}
+ggplot2::ggplot() + 
+  ggplot2::geom_sf(
+    data = study_sites_sf %>% dplyr::slice(1)
+    , color = "navy", fill = NA
+  ) + 
+  ggplot2::geom_sf(
+    data = study_sites_las_ctg[[1]]$geometry %>% sf::st_transform(sf::st_crs(study_sites_sf))
+    , color = "gray33", fill = NA
+  ) + 
+  ggplot2::theme_light()
+# lidR::st_crs(ctg_temp[[3]])
+```
+
+
+
+what information does `lidR` read from the catalog?
+
+```{r}
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+las_ctg <- lidR::readLAScatalog(f_temp)
+# set the processing options
+lidR::opt_progress(las_ctg) <- F
+lidR::opt_filter(las_ctg) <- "-drop_duplicates"
+lidR::opt_select(las_ctg) <- "xyziRGB"
+# huh?
+las_ctg
+
+```
+
+that's a lot of points...can an ordinary laptop handle it? we'll find out.
+
+We'll plot our point cloud data tiles real quick to orient ourselves
+
+```{r}
+las_ctg %>% 
+  purrr::pluck("data") %>% 
+  mapview::mapview(popup = F, layer.name = "point cloud tile")
+```
+
+## Check out one pile
+
+```{r}
+las_temp <- lidR::clip_roi(
+  las_ctg
+  # biggest mechanical
+  , slash_piles_points %>%
+    dplyr::filter(tolower(comment)=="mechanical pile") %>% 
+    dplyr::arrange(desc(diameter)) %>% 
+    dplyr::slice(1) %>% 
+    sf::st_zm() %>% 
+    sf::st_buffer(10, endCapStyle = "SQUARE") %>% 
+    sf::st_transform(lidR::st_crs(las_ctg))
+)
+```
+
+what did we get?
+
+```{r}
+las_temp@data %>% dplyr::glimpse()
+```
+
+plot a sample
+
+```{r,echo=FALSE,message=FALSE,warning=FALSE}
+## if want to get current rgl parameters
+# rgl::par3d()$zoom
+# rgl::par3d()$FOV
+# rgl::par3d()$userMatrix %>% c()
+# rgl::par3d()$windowRect
+## set up for printing rgl graphics
+r3dDefaults <- rgl::r3dDefaults
+m  <- structure(c(
+  -0.39951634,0.09665099, -0.91161686,0.00000000, -0.90745372,0.09938181,0.40822852,0.00000000,0.13005376,0.99034417,0.04800174,0.00000000,0.00000000,0.00000000
+,0.00000000,1.00000000
+), .Dim = c(4L, 4L))
+r3dDefaults$FOV <- 30
+r3dDefaults$userMatrix <- m
+r3dDefaults$zoom <- 0.78
+r3dDefaults$windowRect <- c(0,23,1536,864)
+rgl::setupKnitr(autoprint = TRUE)
+```
+
+```{r, rgl = TRUE}
+las_temp %>% 
+  lidR::plot(
+    color = "Z", bg = "white", legend = F
+   , pal = harrypotter::hp(n=50, house = "gryffindor")
+  )
+```
+
+make a gif
+
+```{r}
+library(magick)
+if(!file.exists(file.path("../data/", "pile_z.gif"))){
+  rgl::close3d()
+  lidR::plot(
+    las_temp, color = "Z", bg = "white", legend = F
+   , pal = harrypotter::hp(n=50, house = "gryffindor")
+  )
+  rgl::movie3d( rgl::spin3d(), duration = 10, fps = 10 , movie = "pile_z", dir = "../data/")
+  rgl::close3d()
+}
+```
+
+```{r}
+library(magick)
+if(!file.exists(file.path("../data/", "pile_rgb.gif"))){
+  rgl::close3d()
+  lidR::plot(
+    las_temp, color = "RGB", bg = "white", legend = F
+  )
+  rgl::movie3d( rgl::spin3d(), duration = 10, fps = 10 , movie = "pile_rgb", dir = "../data/")
+  rgl::close3d()
+}
+```
+
+```{r, warning=FALSE, message=FALSE, echo=FALSE, include=FALSE}
+remove(list = ls()[grep("_temp",ls())])
+remove(f, r3dDefaults, m)
+gc()
+```
