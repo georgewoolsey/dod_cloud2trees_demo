@@ -1,4 +1,6 @@
-# Data Processing
+# Data Preparation
+
+Let's check out the data we need to process and create: 1) a processing data frame; 2) a LAS catalog (`lidR` package) with information on the point cloud data
 
 The priority list for processing this data is: 
 
@@ -389,7 +391,7 @@ plts_temp <-
     )
   )
 # patchwork it
-patchwork::wrap_plots(plts_temp)
+patchwork::wrap_plots(plts_temp, ncol = 2)
 # 
 ```
 
@@ -397,7 +399,7 @@ patchwork::wrap_plots(plts_temp)
 ggplot2::ggsave(
   "../data/ptcld_aoi_extents.jpg"
   , dpi = "print"
-  , height = 8, width = 8
+  , height = 10, width = 8
 )
 ```
 
@@ -405,7 +407,6 @@ ggplot2::ggsave(
 remove(list = ls()[grep("_temp",ls())])
 gc()
 ```
-
 
 ```{r, include = F, eval = F}
 # can we add an inset map?
@@ -575,4 +576,93 @@ plot_sentinel2_aoi <- function(aoi,
 
   return(ggplot_obj)
 }
+```
+
+## ITD window functions
+
+```{r}
+# set up initial list with default functions
+my_ws_functions <- cloud2trees::itd_ws_functions()
+# add to list
+my_ws_functions$log_les_ccv_fn <- function (x) {
+    y <- dplyr::case_when(
+      is.na(x) ~ 0.001
+      , x < 0 ~ 0.001
+      , x > exp(5)-1 ~ 5
+      , TRUE ~ log(x+1)
+    )
+    return(y)
+}
+# add to list
+my_ws_functions$log_mor_ccv_fn <- function (x) {
+    y <- dplyr::case_when(
+      is.na(x) ~ 0.001
+      , x < 0 ~ 0.001
+      , x > exp(7/1.5)-1 ~ 7
+      , TRUE ~ 1.5*log(x+1)
+    )
+    return(y)
+}
+# add to list
+my_ws_functions$lin_lo_slp_fn <- function (x) {
+    y <- dplyr::case_when(
+      is.na(x) ~ 0.001
+      , x < 0 ~ 0.001
+      , x > (4-0.75)/0.04 ~ 4
+      , TRUE ~ 0.75 + (x * 0.04)
+    )
+    return(y)
+}
+```
+
+run each function over a range of heights to see what they return on a plot
+
+```{r}
+# get ws by ht for each fn
+ws_fn_df <- 1:length(my_ws_functions) %>%
+  purrr::map(function(x){
+    nm <- my_ws_functions[x] %>% names() %>% as.character()
+    fn <- my_ws_functions[[x]]
+    # est
+    height <- seq(from=0,to=60,by=0.5)
+    ws <- fn(height) %>% unlist()
+    df <- dplyr::tibble(
+        height = height
+        , ws = ws
+      ) %>% 
+      dplyr::mutate(ws_fn_nm = nm) %>% 
+      dplyr::relocate(ws_fn_nm)
+    return(df)
+  }) %>% 
+  dplyr::bind_rows()
+# huh?
+ws_fn_df %>% dplyr::glimpse()
+```
+
+plot of all ITD variable window functions for testing
+
+```{r}
+ws_fn_df %>% 
+  ggplot2::ggplot(mapping = ggplot2::aes(x = height, y = ws, color = ws_fn_nm)) +
+  ggplot2::geom_line(lwd=1) +
+  # ggplot2::scale_color_manual(values = pal_ws) +
+  # ggplot2::scale_color_viridis_d(option = "turbo") +
+  ggplot2::scale_color_brewer(palette = "Dark2") +
+  ggplot2::xlim(-3,NA) +
+  ggplot2::ylim(-0.1,NA) +
+  ggplot2::labs(
+    x = "heights", y = "ws"
+    , color = "variable\nwindow\nfunction"
+    , subtitle = "ITD variable window functions for testing"
+  ) +
+  ggplot2::theme_light() +
+  ggplot2::guides(
+    color = ggplot2::guide_legend(override.aes = list(lwd = 6))
+  )
+```
+
+```{r, warning=FALSE, message=FALSE, echo=FALSE, include=FALSE}
+remove(list = ls()[grep("_temp",ls())])
+remove(ws_fn_df)
+gc()
 ```
