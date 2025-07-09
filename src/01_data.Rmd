@@ -1,5 +1,17 @@
 # Data Processing
 
+The priority list for processing this data is: 
+
+* Sycan ALS
+* Fort Stewart ALS
+* New Jersey ALS
+* Salt Cabin SfM
+* Fort Stewart UAS Lidar
+* Sycan UAS Lidar
+* Salt Cabin ALS
+
+I debated creating an automated pipeline to process all of the data but instead will create individual sections for each of the study sites and process them manually. This will overcome the challenge of defining unique variable window functions for use in ITD which we'll tune using `cloud2trees::itd_tuning()`
+
 Load the standard libraries we use to do work
 
 ```{r, warning=FALSE, message=FALSE}
@@ -15,7 +27,7 @@ library(latex2exp)
 library(mapview) # interactive html maps
 library(kableExtra) # tables
 library(patchwork) # combine plots
-library(corrplot) # correlation plots
+library(ggmap) # correlation plots
 
 # spatial analysis
 library(terra) # raster
@@ -57,6 +69,9 @@ df_temp <-
   list.files(dir_temp, pattern = ".*\\.(shp|gpkg)$", recursive = T) %>% 
   dplyr::tibble() %>% 
   setNames("fpath") %>% 
+  dplyr::filter(
+    !str_detect(fpath, "point_cloud_processing")
+  ) %>% 
   dplyr::mutate(
     study_site = dirname(fpath)
     , fpath = file.path(dir_temp, fpath)
@@ -79,6 +94,38 @@ study_sites_sf <- 1:nrow(df_temp) %>%
   ) %>% 
   dplyr::bind_rows() %>% 
   dplyr::inner_join(df_temp, by = "study_site")
+# figure out where the point cloud data is
+ptcld_df_temp <- 
+  1:nrow(study_sites_sf) %>% 
+  purrr::map(function(x){
+    # look for dirs with las/laz
+      dirs <-
+        study_sites_sf$fdir[x] %>% 
+        list.files(pattern = ".*\\.(laz|las)$", recursive = T, full.names = T) %>% 
+        dirname() %>%
+        tolower() %>% 
+        unique() %>% 
+        purrr::keep(
+          ~ !str_detect(.x, "point_cloud_processing")
+        )
+    # gen df
+    df <- dplyr::tibble(
+        als_dir = character(1)
+        , uas_lidar_dir = character(1)
+        , uas_sfm_dir = character(1)
+      ) %>% 
+      dplyr::mutate(
+       als_dir = purrr::keep(dirs, ~ str_detect(.x, "als"))[1] %>% dplyr::coalesce(as.character(NA))
+        , uas_lidar_dir = purrr::keep(dirs, ~ str_detect(.x, "uas") & str_detect(.x, "lidar"))[1] %>% dplyr::coalesce(as.character(NA))
+        , uas_sfm_dir = purrr::keep(dirs, ~ str_detect(.x, "uas") & str_detect(.x, "sfm"))[1] %>% dplyr::coalesce(as.character(NA))
+        , fdir = study_sites_sf$fdir[x]
+      )
+    return(df)
+  }) %>% 
+  dplyr::bind_rows()
+# add ptcld dirs to data
+study_sites_sf <- study_sites_sf %>% 
+  dplyr::left_join(ptcld_df_temp, by = "fdir")
 # what?
 study_sites_sf %>% 
   dplyr::glimpse()
@@ -87,7 +134,7 @@ study_sites_sf %>%
 where are these places?
 
 ```{r}
-# mapview::mapview(slash_piles_points, zcol = "comment", layer.name = "slash piles")
+# first plot a point so we can see it on the map
 mapview::mapview(
   sf::st_centroid(study_sites_sf)
   , zcol = "study_site"
@@ -97,6 +144,7 @@ mapview::mapview(
   , popup = T
   , layer.name = "study areas"
 ) + 
+# add the study bounds
 mapview::mapview(
   study_sites_sf
   , color = "black"
@@ -108,24 +156,54 @@ mapview::mapview(
 )
 ```
 
+let's create a pretty name for each site
+
+```{r}
+study_sites_sf <- study_sites_sf %>% 
+  dplyr::mutate(
+    study_site_lab = dplyr::case_match(
+      tolower(study_site)
+      , "fortstewart" ~ "Fort Stewart (GA)"
+      , "newjersey" ~ "Cedar Bridge (NJ)"
+      , "saltcabin" ~ "Salt Cabin (CO)"
+      , "sycanmarsh" ~ "Sycan Marsh (OR)"
+    ) %>% 
+    dplyr::coalesce(study_site)
+  )
+```
+
+```{r, warning=FALSE, message=FALSE, echo=FALSE, include=FALSE}
+remove(list = ls()[grep("_temp",ls())])
+gc()
+```
+
 ## Point Cloud Data
 
 Let's check out the point cloud data we got
 
 ```{r}
+las_df_temp <- study_sites_sf %>% 
+  sf::st_drop_geometry() %>% 
+  dplyr::select(study_site, tidyselect::ends_with("_dir")) %>% 
+  tidyr::pivot_longer(
+    cols = -c(study_site)
+    , values_drop_na = T
+  ) %>% 
+  dplyr::mutate(
+    name = stringr::str_remove_all(name, "_dir")
+    , nm = stringr::str_c(study_site, name, sep = "_")
+  )
 # directory with the downloaded .las|.laz files
-study_sites_las_ctg <- 1:nrow(study_sites_sf) %>% 
-  purrr::map(function(x){
-    t <- study_sites_sf$fdir[x] %>% 
-      list.files(pattern = ".*\\.(laz|las)$", recursive = T, full.names = T)
-    if(length(t)>0){return(lidR::readLAScatalog(t))}else(return(NULL))
-  })
-names(study_sites_las_ctg) <- study_sites_sf$study_site
+study_sites_las_ctg <- 1:nrow(las_df_temp) %>% 
+  purrr::map(\(x)
+    lidR::readLAScatalog(las_df_temp$value[x])
+  )
+names(study_sites_las_ctg) <- las_df_temp$nm
 # what are these ctgs?
 study_sites_las_ctg
 ```
 
-plot one point cloud catalog with the vector data
+plot the point cloud catalog with the stand boundary
 
 ```{r}
 ggplot2::ggplot() + 
@@ -139,114 +217,362 @@ ggplot2::ggplot() +
   ) + 
   ggplot2::theme_light()
 # lidR::st_crs(ctg_temp[[3]])
-```
-
-
-
-what information does `lidR` read from the catalog?
-
-```{r}
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-las_ctg <- lidR::readLAScatalog(f_temp)
-# set the processing options
-lidR::opt_progress(las_ctg) <- F
-lidR::opt_filter(las_ctg) <- "-drop_duplicates"
-lidR::opt_select(las_ctg) <- "xyziRGB"
-# huh?
-las_ctg
 
 ```
 
-that's a lot of points...can an ordinary laptop handle it? we'll find out.
+let's make a quick function to grab a background map (e.g. like a Google Map) for an AOI using the `ggmap` package
 
-We'll plot our point cloud data tiles real quick to orient ourselves
+```{r, warning=F, message=FALSE, results=F}
+library(ggmap)
+library(ggspatial)
+#########################################################################
+#########################################################################
+# Make each plot individually by landscape as solution to small multiples
+# this block defines function
+#########################################################################
+##################hack to align plots for ggmap
+ggmap_bbox_fn <- function(map, my_crs=3857) {
+    if (!inherits(map, "ggmap")) stop("map must be a ggmap object")
+    # Extract the bounding box (in lat/lon) from the ggmap to a numeric vector, 
+    # and set the names to what sf::st_bbox expects:
+    map_bbox <- setNames(unlist(attr(map, "bb")), c("ymin", "xmin", "ymax", "xmax"))
+    # Convert the bbox to an sf polygon, transform it to 3857, 
+    # and convert back to a bbox (convoluted, but it works)
+    bbox_3857 <- st_bbox(st_transform(st_as_sfc(st_bbox(map_bbox, crs = 4326)), my_crs))
+    # Overwrite the bbox of the ggmap object with the transformed coordinates 
+    attr(map, "bb")$ll.lat <- bbox_3857["ymin"]
+    attr(map, "bb")$ll.lon <- bbox_3857["xmin"]
+    attr(map, "bb")$ur.lat <- bbox_3857["ymax"]
+    attr(map, "bb")$ur.lon <- bbox_3857["xmax"]
+    map
+}
+plt_crs <- 3857
+#########################################################################
+#########################################################################
+#########################################################################
+my_ggmap_basemap <- function(sf_data, zoom_level = 14, buffer_box = 2600, my_crs = plt_crs, scale_location = "bl", my_maptype = "stamen_terrain") {
+  
+  # # should zoom in?
+  # zoom_level <- 14 # 11
+  # # should buffer extend?
+  # buffer_box <- 2600 # 20000
+  # bounding box
+  bb_temp <-
+    sf_data %>% 
+    sf::st_bbox() %>% 
+    sf::st_as_sfc() %>% 
+    sf::st_transform(crs=5070) %>% 
+    sf::st_buffer(as.numeric(buffer_box)) %>% 
+    sf::st_transform(crs=4326) %>% # same as get_map return
+    sf::st_bbox()
+  # set bbox for get call
+  bbox_temp <- c(
+    bottom = bb_temp[[2]]
+    , top = bb_temp[[4]]
+    , right = bb_temp[[3]]
+    , left = bb_temp[[1]]
+  )
+  hey_ggmap <- ggmap::get_stadiamap(
+    bbox = bbox_temp
+    , zoom = zoom_level
+    , maptype = my_maptype #"stamen_terrain" #"stamen_toner_lite"
+    , crop = T
+  )
 
-```{r}
-las_ctg %>% 
-  purrr::pluck("data") %>% 
-  mapview::mapview(popup = F, layer.name = "point cloud tile")
+  # ggmap::ggmap(hey_ggmap)
+  # apply align function
+  hey_ggmap_aligned <- ggmap_bbox_fn(hey_ggmap, my_crs) # Use the function
+  # plot
+  plt_basemap <-
+    ggmap::ggmap(hey_ggmap_aligned) + 
+    ggplot2::coord_sf(
+      expand = FALSE
+    ) +
+    ggplot2::theme_light() +
+    ggplot2::theme(
+      legend.position = "none"
+      , plot.title = ggplot2::element_blank()
+      , strip.text = ggplot2::element_blank()
+      , axis.title = ggplot2::element_blank()
+      , axis.text = ggplot2::element_blank()
+      , axis.ticks = ggplot2::element_blank()
+      , panel.grid = ggplot2::element_blank()
+      , plot.margin = ggplot2::margin(0, 0, 0, 0, "cm")
+    )
+  if(scale_location %in% c("bl", "br", "tr", "tl")){
+    plt_basemap <- plt_basemap + 
+      ggspatial::annotation_scale(
+        location = scale_location
+        , style = "ticks"
+        , pad_x = unit(0.1, "cm")
+        , pad_y = unit(0.1, "cm")
+      )
+  }
+  return(plt_basemap)
+}
+
 ```
 
-## Check out one pile
+make a function specific to this data and task to grab the basemap with `my_ggmap_basemap()` and overlay the point cloud data and the study area bounds
 
 ```{r}
-las_temp <- lidR::clip_roi(
-  las_ctg
-  # biggest mechanical
-  , slash_piles_points %>%
-    dplyr::filter(tolower(comment)=="mechanical pile") %>% 
-    dplyr::arrange(desc(diameter)) %>% 
-    dplyr::slice(1) %>% 
-    sf::st_zm() %>% 
-    sf::st_buffer(10, endCapStyle = "SQUARE") %>% 
-    sf::st_transform(lidR::st_crs(las_ctg))
+plt_fn_temp <- function(
+  record_study_sites_las_ctg
+  , my_study_sites_las_ctg = study_sites_las_ctg
+  , my_study_sites_sf = study_sites_sf
+  # , zoom_level = 14, buffer_box = 2600, my_crs = plt_crs, scale_location = "bl", my_maptype = "stamen_terrain"
+) {
+  
+  
+  # make a function to grab the basemap with my_ggmap_basemap, and overlay the point cloud data and the study area bounds
+  plt_basemap_temp <- my_ggmap_basemap(
+    sf_data = my_study_sites_las_ctg[[record_study_sites_las_ctg]]$geometry
+    , zoom_level = 14
+    , buffer_box = 3333
+    , my_crs = plt_crs
+    , scale_location = "bl"
+    , my_maptype = "stamen_terrain"
+  )
+  
+  # plot
+  plt2_temp <-
+    plt_basemap_temp + 
+      ggplot2::geom_sf(
+        data = 
+          my_study_sites_las_ctg[[record_study_sites_las_ctg]]$geometry %>%
+          sf::st_transform(crs=plt_crs)
+        , fill = NA, lwd = 0.7, color = "gray8"
+        , inherit.aes = F
+      ) +
+      ggplot2::geom_sf(
+        data = my_study_sites_sf %>% 
+          dplyr::filter(
+            study_site %in% (my_study_sites_las_ctg[record_study_sites_las_ctg] %>% 
+              names() %>% 
+              stringr::word(sep = "_"))
+          ) %>% 
+          sf::st_transform(crs=plt_crs)
+        , fill = NA, color = "navy", lwd = 1.4
+        , inherit.aes = F
+      ) +
+      ggplot2::labs(
+        subtitle = paste0(
+          my_study_sites_sf %>% 
+          dplyr::filter(
+            study_site %in% (my_study_sites_las_ctg[record_study_sites_las_ctg] %>% 
+              names() %>% 
+              stringr::word(sep = "_"))
+          ) %>% 
+          dplyr::pull(study_site_lab)
+          , " - "
+          , (my_study_sites_las_ctg[record_study_sites_las_ctg] %>% 
+              names() %>% 
+              stringr::str_replace_all("_"," ") %>% 
+              stringr::str_replace("^\\S+\\s*", "") %>% 
+              toupper()
+            )
+          , " data"
+        )
+      )
+    
+  return( plt2_temp )
+}
+# for each las ctg with crs
+plts_temp <- 
+  1:length(study_sites_las_ctg %>% purrr::discard(names(.) %in% c("FortStewart_uas_lidar","NewJersey_als"))) %>% 
+  purrr::map(
+    \(x)
+    plt_fn_temp(
+      record_study_sites_las_ctg = x
+      , my_study_sites_las_ctg = study_sites_las_ctg %>% purrr::discard(names(.) %in% c("FortStewart_uas_lidar","NewJersey_als"))
+      , 
+    )
+  )
+# patchwork it
+patchwork::wrap_plots(plts_temp)
+# 
+```
+
+```{r, include=FALSE, eval=TRUE}
+ggplot2::ggsave(
+  "../data/ptcld_aoi_extents.jpg"
+  , dpi = "print"
+  , height = 8, width = 8
 )
-```
-
-what did we get?
-
-```{r}
-las_temp@data %>% dplyr::glimpse()
-```
-
-plot a sample
-
-```{r,echo=FALSE,message=FALSE,warning=FALSE}
-## if want to get current rgl parameters
-# rgl::par3d()$zoom
-# rgl::par3d()$FOV
-# rgl::par3d()$userMatrix %>% c()
-# rgl::par3d()$windowRect
-## set up for printing rgl graphics
-r3dDefaults <- rgl::r3dDefaults
-m  <- structure(c(
-  -0.39951634,0.09665099, -0.91161686,0.00000000, -0.90745372,0.09938181,0.40822852,0.00000000,0.13005376,0.99034417,0.04800174,0.00000000,0.00000000,0.00000000
-,0.00000000,1.00000000
-), .Dim = c(4L, 4L))
-r3dDefaults$FOV <- 30
-r3dDefaults$userMatrix <- m
-r3dDefaults$zoom <- 0.78
-r3dDefaults$windowRect <- c(0,23,1536,864)
-rgl::setupKnitr(autoprint = TRUE)
-```
-
-```{r, rgl = TRUE}
-las_temp %>% 
-  lidR::plot(
-    color = "Z", bg = "white", legend = F
-   , pal = harrypotter::hp(n=50, house = "gryffindor")
-  )
-```
-
-make a gif
-
-```{r}
-library(magick)
-if(!file.exists(file.path("../data/", "pile_z.gif"))){
-  rgl::close3d()
-  lidR::plot(
-    las_temp, color = "Z", bg = "white", legend = F
-   , pal = harrypotter::hp(n=50, house = "gryffindor")
-  )
-  rgl::movie3d( rgl::spin3d(), duration = 10, fps = 10 , movie = "pile_z", dir = "../data/")
-  rgl::close3d()
-}
-```
-
-```{r}
-library(magick)
-if(!file.exists(file.path("../data/", "pile_rgb.gif"))){
-  rgl::close3d()
-  lidR::plot(
-    las_temp, color = "RGB", bg = "white", legend = F
-  )
-  rgl::movie3d( rgl::spin3d(), duration = 10, fps = 10 , movie = "pile_rgb", dir = "../data/")
-  rgl::close3d()
-}
 ```
 
 ```{r, warning=FALSE, message=FALSE, echo=FALSE, include=FALSE}
 remove(list = ls()[grep("_temp",ls())])
-remove(f, r3dDefaults, m)
 gc()
+```
+
+
+```{r, include = F, eval = F}
+# can we add an inset map?
+# get big map
+plt_basemap_inset <-
+  my_ggmap_basemap(
+    sf_data = las_ctg_sf$geom %>%
+      dplyr::as_tibble() %>% 
+      dplyr::mutate(rn = dplyr::row_number()) %>% 
+      sf::st_as_sf(sf_column_name = "geometry") %>% 
+      dplyr::filter(rn==max(rn))
+    , zoom_level = 6
+    , buffer_box = 565000
+    , my_maptype = "stamen_toner_lite"
+    , scale_location = NA
+  ) 
+# plt_basemap_inset
+# add point
+plt_inset <- plt_basemap_inset + 
+  ggplot2::geom_sf(
+        data = stand_sf %>% 
+          dplyr::filter(unit_id==2) %>% 
+          sf::st_geometry() %>%
+          sf::st_centroid() %>% 
+          `+`(c(0,12000)) %>% # moves the point up so not blocking text label
+          sf::st_set_crs(sf::st_crs(stand_sf)) %>% 
+          sf::st_transform(crs=plt_crs)
+        , fill = NA, color = my_pal[2]
+        , size = 1.8, shape = 18
+        , inherit.aes = F
+      )
+# combine
+plt2_temp + 
+  patchwork::inset_element(
+    plt_inset
+    , left = 0.733, bottom = 0.753
+    , right = 1, top = 1
+    , align_to = "full"
+  )
+```
+
+```{r, include = F, eval=FALSE}
+# get sentinel2 basemap
+# Load necessary libraries (ensure they are installed)
+# These are loaded here for clarity, but in a package, they would be listed in DESCRIPTION Imports.
+# In a regular script, 'library()' calls are sufficient.
+library(sf)
+library(rsi) #get sentinel-2 imagery
+library(ggplot2)
+library(terra)
+library(dplyr)
+
+#' Plot Sentinel-2 Imagery as a background with AOI overlay
+#'
+#' This function downloads Sentinel-2 imagery for a specified area of interest,
+#' plots it as a background using ggplot2, and overlays the AOI polygon.
+#'
+#' @param aoi An `sf` polygon object defining the area of interest.
+#'            Must have a valid CRS.
+#' @param start_date A character string in "YYYY-MM-DD" format specifying the
+#'                   start date for imagery search.
+#' @param end_date A character string in "YYYY-MM-DD" format specifying the
+#'                 end date for imagery search.
+#' @param output_filename A character string specifying the path and filename
+#'                        (including .tif extension) to save the downloaded
+#'                        composite image. Defaults to a temporary file.
+#' @param bands A character vector specifying the Sentinel-2 bands to download
+#'              for the true-color composite (default: c("B04", "B03", "B02") for RGB).
+#' @param composite_function A character string specifying the function to use
+#'                           for creating the composite image from multiple
+#'                           scenes (e.g., "median", "mean", "max", "min").
+#'                           Defaults to "median".
+#' @param aoi_border_color A character string specifying the color of the AOI
+#'                         polygon border (default: "red").
+#' @param aoi_border_linewidth A numeric value specifying the width of the AOI
+#'                             polygon border (default: 1).
+#' @param plot_title A character string for the ggplot title (default: "Sentinel-2 Imagery with AOI").
+#'
+#' @return A `ggplot` object containing the Sentinel-2 imagery and AOI overlay.
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' # Example: Creating a simple rectangular AOI in WGS84
+#' aoi_example <- sf::st_bbox(c(xmin = -105.15, ymin = 40.55, xmax = -105.05, ymax = 40.65), 
+#'                        crs = 4326) %>% sf::st_as_sfc()
+#' 
+#' # Plot the imagery
+#' my_plot <- plot_sentinel2_aoi(aoi = aoi_example,
+#'                              start_date = "2024-06-01",
+#'                              end_date = "2024-06-30",
+#'                              aoi_border_color = "blue",
+#'                              plot_title = "My Custom Sentinel-2 Plot")
+#' print(my_plot)
+#' }
+plot_sentinel2_aoi <- function(aoi, 
+                               start_date, 
+                               end_date,
+                               output_filename = tempfile(fileext = ".tif"),
+                               bands = c("B04", "B03", "B02"), # Red, Green, Blue bands
+                               composite_function = "median",
+                               aoi_border_color = "red",
+                               aoi_border_linewidth = 1,
+                               plot_title = "Sentinel-2 Imagery with AOI") {
+
+  # Ensure AOI is a valid sf object
+  if (!inherits(aoi, "sf")) {
+    stop("Input aoi must be an sf polygon object.")
+  }
+
+  # --- 1. Search and Download Sentinel-2 Imagery ---
+  message("Searching for Sentinel-2 imagery...")
+  s2_items <- rsi::get_stac_items(
+    aoi = aoi,
+    collection = "sentinel-s2-l2a-cogs", # Sentinel-2 Level 2A, Cloud Optimized GeoTiffs
+    datetime = paste0(start_date, "/", end_date)
+  )
+
+  if (length(s2_items$features) == 0) {
+    stop("No Sentinel-2 imagery found for the specified AOI and date range.")
+  }
+
+  message(paste0("Downloading Sentinel-2 imagery composite (", composite_function, ")..."))
+  s2_images_path <- rsi::get_stac_data(
+    items = s2_items, 
+    aoi = aoi,
+    assets = bands,
+    composite_function = composite_function,
+    output_filename = output_filename
+  )
+
+  # Load the downloaded image as a terra SpatRaster object
+  s2_raster <- terra::rast(s2_images_path)
+
+  # --- 2. Prepare Imagery for Plotting with ggplot2 ---
+  message("Preparing imagery for plotting...")
+  s2_df <- as.data.frame(s2_raster, xy = TRUE)
+
+  # Rename the band columns for easier use
+  # Assuming bands are B04, B03, B02 for RGB
+  names(s2_df) <- c("x", "y", "red", "green", "blue")
+
+  # Normalize and convert to RGB for plotting true color
+  # Handle potential NA values in imagery data gracefully
+  max_red <- max(s2_df$red, na.rm = TRUE)
+  max_green <- max(s2_df$green, na.rm = TRUE)
+  max_blue <- max(s2_df$blue, na.rm = TRUE)
+
+  s2_df$rgb <- with(s2_df, rgb(red / max_red, green / max_green, blue / max_blue))
+
+  # --- 3. Plot the Imagery and Overlay the AOI Polygon ---
+  message("Generating plot...")
+  ggplot_obj <- ggplot2::ggplot() +
+    # Plot the Sentinel-2 imagery as a background
+    ggplot2::geom_raster(data = s2_df, ggplot2::aes(x = x, y = y, fill = rgb)) +
+    ggplot2::scale_fill_identity() + # Use the pre-calculated RGB colors
+    
+    # Overlay the Area of Interest polygon
+    ggplot2::geom_sf(data = aoi, fill = NA, color = aoi_border_color, linewidth = aoi_border_linewidth) + 
+    
+    # Add titles and labels
+    ggplot2::labs(title = plot_title,
+         x = "",
+         y = "") +
+    ggplot2::theme_minimal() + # Use a clean theme
+    ggplot2::coord_sf() # Ensures correct spatial projection
+
+  return(ggplot_obj)
+}
 ```
