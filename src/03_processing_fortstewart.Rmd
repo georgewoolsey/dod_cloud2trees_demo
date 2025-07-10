@@ -1,12 +1,12 @@
-# Sycan Marsh (OR)
+# Fort Stewart (GA)
 
-process the point cloud data for the Sycan Marsh (OR) study site
+process the point cloud data for the Fort Stewart (GA) study site
 
 let's check out the data we have and the area
 
 ```{r}
 # just get the data we care about
-aoi_study_site <- "SycanMarsh"
+aoi_study_site <- "FortStewart"
 aoi_sf <- study_sites_sf %>% dplyr::filter(study_site == aoi_study_site)
 aoi_las_ctg <- study_sites_las_ctg %>% 
   purrr::keep_at(
@@ -27,15 +27,6 @@ mapview::mapview(
   , lwd = 2
   , alpha.regions = 0
   , layer.name = names(aoi_las_ctg[1])
-  , legend = F
-  , popup = F
-) +
-mapview::mapview(
-  aoi_las_ctg[[2]]$geometry
-  , color = "gray"
-  , lwd = 2
-  , alpha.regions = 0
-  , layer.name = names(aoi_las_ctg[2])
   , legend = F
   , popup = F
 ) +
@@ -63,7 +54,7 @@ aoi_las_ctg
 put las files in a list
 ```{r}
 # list of all las files
-las_flist_temp <- aoi_las_ctg[["SycanMarsh_als"]] %>% 
+las_flist_temp <- aoi_las_ctg[["FortStewart_als"]] %>% 
   purrr::pluck("data") %>% 
   dplyr::pull(filename)
 ```
@@ -75,25 +66,25 @@ run tuning
     # Caused by error in `dplyr::group_by()`:
     # ! Must group by variables found in `.data`.
     # Column `ws_fn` is not found.
-if(!file.exists("../data/itd_tuning_SycanMarsh_als.jpg")){
+if(!file.exists("../data/itd_tuning_FortStewart_als.jpg")){
   # tuning
   itd_tuning_ans <- cloud2trees::itd_tuning(
       input_las_dir = las_flist_temp
-      , n_samples = 2
+      , n_samples = 3
       , ws_fn_list = my_ws_functions
     )
   ggplot2::ggsave(
-    "../data/itd_tuning_SycanMarsh_als.jpg"
+    "../data/itd_tuning_FortStewart_als.jpg"
     , plot = itd_tuning_ans$plot_samples
     , dpi = "print"
-    , height = 6, width = 10
+    , height = 7, width = 10
   )
 }
 ```
 
 ```{r, echo=FALSE, out.width="100%", out.height="100%", fig.align='center', fig.show='hold', results='asis'}
 # this is so we get the actual result that we used for tuning
-# knitr::include_graphics("../data/itd_tuning_SycanMarsh_als.jpg")
+# knitr::include_graphics("../data/itd_tuning_FortStewart_als.jpg")
 knitr::include_graphics("https://i.ibb.co/VpqjxXSf/itd-tuning-Sycan-Marsh-als.jpg")
 ```
 
@@ -157,103 +148,3 @@ remove(itd_tuning_ans)
 gc()
 ```
 
-## UAS lidar Processing
-
-### ITD tuning
-
-put las files in a list
-```{r}
-# list of all las files
-las_flist_temp <- aoi_las_ctg[["SycanMarsh_uas_lidar"]] %>% 
-  purrr::pluck("data") %>% 
-  dplyr::pull(filename)
-```
-
-run tuning
-
-```{r}
-# if there is an error with tuning...is it because there are no trees for a given ws_fn?
-    # Caused by error in `dplyr::group_by()`:
-    # ! Must group by variables found in `.data`.
-    # Column `ws_fn` is not found.
-if(!file.exists("../data/itd_tuning_SycanMarsh_uas_lidar.jpg")){
-  # tuning
-  itd_tuning_ans <- cloud2trees::itd_tuning(
-      input_las_dir = las_flist_temp
-      , n_samples = 2
-      , ws_fn_list = my_ws_functions
-    )
-  ggplot2::ggsave(
-    "../data/itd_tuning_SycanMarsh_uas_lidar.jpg"
-    , plot = itd_tuning_ans$plot_samples
-    , dpi = "print"
-    , height = 6, width = 10
-  )
-}
-```
-
-```{r, echo=FALSE, out.width="100%", out.height="100%", fig.align='center', fig.show='hold', results='asis'}
-# this is so we get the actual result that we used for tuning
-# knitr::include_graphics("../data/itd_tuning_SycanMarsh_uas_lidar.jpg")
-knitr::include_graphics("https://i.ibb.co/mdBgNsv/itd-tuning-Sycan-Marsh-uas-lidar.jpg")
-```
-
-pick the best function for use in ITD
-
-```{r}
-# pick the best function for use in ITD
-best_ws_fn_temp <- my_ws_functions$lin_fn
-```
-
-### `cloud2trees` point cloud processing
-
-```{r}
-dir_temp <- file.path(aoi_sf$fdir, "uas_lidar_processing")
-if(!dir.exists(dir_temp)){
-  dir.create(dir_temp)
-# c2t
-  cloud2trees_ans <- cloud2trees::cloud2trees(
-    input_las_dir = las_flist_temp
-    , output_dir = dir_temp
-    , ws = best_ws_fn_temp
-    , dtm_res_m = 1
-    , chm_res_m = 0.25
-    , estimate_tree_dbh = T
-    , estimate_tree_type = T
-    # hmd
-    , estimate_tree_hmd = T
-    , hmd_tree_sample_prop = 0.5
-    , hmd_estimate_missing_hmd = T
-    # biomass
-    , estimate_biomass_method = c("landfire","cruz")
-    # cbh
-    , estimate_tree_cbh = T
-    , cbh_tree_sample_prop = 0.5
-    , cbh_estimate_missing_cbh = T
-  )
-}else{
-  cloud2raster_ans <- list(
-    "dtm_rast" = terra::rast( file.path(dir_temp, "point_cloud_processing_delivery", "dtm_1m.tif") )
-    , "chm_rast" = terra::rast( file.path(dir_temp, "point_cloud_processing_delivery", "chm_0.25m.tif") )
-    , "crowns_sf" = list.files(
-        file.path(dir_temp, "point_cloud_processing_delivery")
-        , pattern = "final_detected_crowns.*\\.gpkg$"
-        , full.names = T
-      ) %>% 
-      normalizePath() %>% 
-      purrr::map(\(x)
-        sf::st_read(
-          dsn = x
-          , quiet = T
-        )
-      ) %>% 
-      dplyr::bind_rows()
-  )
-}
-```
-
-```{r, warning=FALSE, message=FALSE, echo=FALSE, include=FALSE}
-remove(list = ls()[grep("_temp",ls())])
-remove(itd_tuning_ans)
-gc()
-```
