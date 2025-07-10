@@ -162,88 +162,18 @@ gc()
 #### DTM
 
 ```{r}
-plt_rast_poly_fn <- function(
-  rast
-  , poly
+plt_rast_poly_fn(
+  rast = cloud2trees_ans$dtm_rast
+  , poly = aoi_sf
+  , title = "DTM (m)"
   , crop = T
-  , mask = F
   , buff = 22
-  , col = "red"
-  , lwd = 1
-  , title = ""
-  , leg_pos = "top"
-) {
-  if(crop){
-    rast <- rast %>% 
-      terra::crop(
-        poly %>% 
-          sf::st_buffer(buff) %>% 
-          sf::st_transform(terra::crs(rast)) %>% 
-          terra::vect()
-      )
-  }
-  if(mask){
-    rast <- rast %>% 
-      terra::mask(
-        poly %>% 
-          sf::st_buffer(buff) %>% 
-          sf::st_transform(terra::crs(rast)) %>% 
-          terra::vect()
-      )
-  }
-  
-  # Convert SpatRaster to a data frame for ggplot
-  rast_df <- terra::as.data.frame(rast, xy=TRUE) %>% rename(f=3)
-
-  # Create the base raster plot
-  p <- ggplot2::ggplot() +
-    ggplot2::geom_raster(
-      data = rast_df, aes(x = x, y = y, fill = f)
-    ) +
-    ggplot2::scale_fill_viridis_c() + # Use a colorblind-friendly palette
-    # ggplot2::coord_sf(crs = terra::crs(rast)) +  # Match the CRS
-    ggplot2::labs(fill = "") +
-    ggplot2::theme_void() +
-    ggplot2::theme(
-      legend.position = leg_pos
-      , legend.text = ggplot2::element_text(angle = 90, vjust = 0.5, size = 7)
-      , plot.subtitle = ggplot2::element_text(hjust = 0.5)
-    )
-
-  # Add the polygon overlay
-  p <- p +
-    ggplot2::geom_sf(
-      data = poly %>% sf::st_transform(terra::crs(rast))
-      , fill = NA, color = col, lwd = lwd
-    ) +
-    ggplot2::labs(subtitle = title)
-
-  return(p)
-}
-
-plt_rast_poly_fn(rast = cloud2trees_ans$dtm_rast, poly = aoi_sf, title = "DTM (m)") +
+  , col = "navy"
+) +
   harrypotter::scale_fill_hp(
     option = "mischief", alpha = 0.9, labels = scales::comma_format(accuracy=1), breaks = scales::breaks_extended(n=6)
-  )
-
-cloud2trees_ans$dtm_rast %>% 
-  terra::crop(
-    aoi_sf %>% 
-      sf::st_buffer(22) %>% 
-      sf::st_transform(terra::crs(cloud2trees_ans$dtm_rast)) %>% 
-      terra::vect()
-  ) %>% 
-  terra::plot(
-    col = harrypotter::hp(n=100, option = "mischief", alpha = 0.9)
-    , axes=F
-    , main = "DTM (m)"
-  )
-terra::plot(
-  aoi_sf %>% 
-      sf::st_transform(terra::crs(cloud2trees_ans$dtm_rast)) %>% 
-      terra::vect()
-  , add = T, border = "navy", col = NA, lwd = 1.5
-)
+  ) +
+  ggplot2::labs(title = paste0(aoi_sf$study_site_lab, " - ALS"))
 ```
 
 #### CHM
@@ -251,43 +181,83 @@ terra::plot(
 plot the CHM and we'll also add the extracted trees in gray
 
 ```{r}
-cloud2trees_ans$chm_rast %>% 
-  terra::crop(
-    aoi_sf %>% 
-      sf::st_buffer(22) %>% 
-      sf::st_transform(terra::crs(cloud2trees_ans$chm_rast)) %>% 
-      terra::vect()
-  ) %>% 
-  terra::plot(
-    col = viridis::plasma(n=100, alpha = 0.9)
-    , axes=F
-    , main = "CHM (m)"
-  )
-terra::plot(
-  aoi_sf %>% 
-      sf::st_transform(terra::crs(cloud2trees_ans$chm_rast)) %>% 
-      terra::vect()
-  , add = T, border = "navy", col = NA, lwd = 1.5
-)
-terra::plot(
-  cloud2trees_ans$crowns_sf %>% 
-    sf::st_intersection(
-      aoi_sf %>% 
-        sf::st_transform(sf::st_crs(cloud2trees_ans$crowns_sf))
-    ) %>% 
-    sf::st_transform(terra::crs(cloud2trees_ans$chm_rast)) %>% 
-    terra::vect()
-  # cloud2trees_ans$crowns_sf %>% 
-  #   sf::st_transform(sf::st_crs(aoi_sf)) %>% 
-  #   sf::st_intersection(aoi_sf) %>% 
-  #   sf::st_transform(terra::crs(cloud2trees_ans$chm_rast)) %>% 
-  #   terra::vect()
-  , add = T, border = "black", col = NA, lwd = 0.9
-)
+plt_rast_poly_fn(
+  rast = cloud2trees_ans$chm_rast
+  , poly = aoi_sf
+  , title = "CHM (m)"
+  , crop = T
+  , buff = 22
+  , col = "navy"
+) +
+  ggplot2::scale_fill_viridis_c(
+    option = "plasma", alpha = 0.9, labels = scales::comma_format(accuracy=1), breaks = scales::breaks_extended(n=6)
+  ) +
+  ggplot2::geom_sf(
+    data = cloud2trees_ans$crowns_sf %>% 
+      # dplyr::slice_sample(prop = 0.1) %>% 
+      sf::st_intersection(
+        aoi_sf %>% sf::st_transform(sf::st_crs(cloud2trees_ans$crowns_sf))
+      )
+    , fill = NA, color = "gray33", lwd = 0.5
+  ) +
+  ggplot2::labs(title = paste0(aoi_sf$study_site_lab, " - ALS"))
 ```
 
+#### Imagery
 
-let's check the tree extraction results on satellite imagery with a collection date that may not coincide with the point cloud collection date
+let's check the tree extraction results (gray) on satellite imagery with a collection date that may not coincide with the point cloud collection date
+
+```{r}
+plt_aoi_basemap <- my_ggmap_basemap(
+  sf_data = aoi_sf
+  , zoom_level = 16
+  , buffer_box = 22
+  , my_maptype = "satellite"
+  , add_sf_data = T
+  , outline_sf_data_col = "navy"
+  , outline_lwd = 1
+)
+# add crowns
+plt_aoi_basemap +
+  ggplot2::geom_sf(
+    data = cloud2trees_ans$crowns_sf %>% 
+      sf::st_intersection(
+        aoi_sf %>% sf::st_transform(sf::st_crs(cloud2trees_ans$crowns_sf))
+      ) %>% 
+      sf::st_transform(4326)
+    , fill = NA, color = "gray77", lwd = 0.1
+    , inherit.aes = F
+  ) +
+  ggplot2::labs(title = paste0(aoi_sf$study_site_lab, " - ALS")) +
+  ggplot2::theme(
+    plot.title = ggplot2::element_text(size = 12, hjust = 0, margin = ggplot2::margin(0,3,3,0))
+  )
+```
+
+#### Tree Attributes
+
+```{r}
+plt_df_temp <- dplyr::tibble(
+  fill_var = c("tree_height_m", "dbh_cm", "tree_cbh_m", "max_crown_diam_height_m", "landfire_crown_biomass_kg")
+  , palette = c("Blues", "Oranges", "Greens", "Purples", "Reds")
+  , title = c("Height (m)", "DBH (cm)", "CBH (m)", "HMD (m)", "Crown\nbiomass (kg)")
+)
+
+plts_temp <- 1:nrow(plt_df_temp) %>% 
+  purrr::map(
+    \(x)
+    plt_crown_attr_fn(
+      crowns = cloud2trees_ans$crowns_sf
+      , aoi = aoi_sf
+      , lwd = 0.6
+      , fill_var = plt_df_temp$fill_var[x]
+      , palette = plt_df_temp$palette[x]
+      , title = plt_df_temp$title[x]
+    )  
+  )
+# combine with patchwork
+patchwork::wrap_plots(plts_temp, ncol = 2)
+```
 
 ## UAS lidar Processing
 

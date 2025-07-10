@@ -810,6 +810,106 @@ ws_fn_df %>%
   )
 ```
 
+## Other plotting functions
+
+function to plot raster with vector data overlaid
+
+```{r}
+plt_rast_poly_fn <- function(
+  rast
+  , poly
+  , crop = T
+  , mask = F
+  , buff = 22
+  , col = "red"
+  , lwd = 1
+  , title = ""
+  , leg_pos = "top"
+) {
+  if(crop){
+    rast <- rast %>% 
+      terra::crop(
+        poly %>% 
+          sf::st_buffer(buff) %>% 
+          sf::st_transform(terra::crs(rast)) %>% 
+          terra::vect()
+      )
+  }
+  if(mask){
+    rast <- rast %>% 
+      terra::mask(
+        poly %>% 
+          sf::st_buffer(buff) %>% 
+          sf::st_transform(terra::crs(rast)) %>% 
+          terra::vect()
+      )
+  }
+  
+  # Convert SpatRaster to a data frame for ggplot
+  rast_df <- terra::as.data.frame(rast, xy=TRUE) %>% rename(f=3)
+
+  # Create the base raster plot
+  p <- ggplot2::ggplot() +
+    ggplot2::geom_raster(
+      data = rast_df, aes(x = x, y = y, fill = f)
+    ) +
+    # ggplot2::scale_fill_viridis_c() + # Use a colorblind-friendly palette
+    # ggplot2::coord_sf(crs = terra::crs(rast)) +  # Match the CRS
+    ggplot2::labs(fill = "") +
+    ggplot2::theme_void() +
+    ggplot2::theme(
+      legend.position = leg_pos
+      , legend.text = ggplot2::element_text(angle = 90, vjust = 0.5, size = 7)
+      , plot.subtitle = ggplot2::element_text(hjust = 0.5)
+      # , plot.title = ggplot2::element_text(hjust = 0.5)
+    )
+
+  # Add the polygon overlay
+  p <- p +
+    ggplot2::geom_sf(
+      data = poly %>% sf::st_transform(terra::crs(rast))
+      , fill = NA, color = col, lwd = lwd
+    ) +
+    ggplot2::labs(subtitle = title)
+
+  return(p)
+}
+#####
+plt_crown_attr_fn <- function(
+  crowns
+  , aoi
+  , col = "navy"
+  , lwd = 1
+  , title = ""
+  , leg_pos = "top"
+  # polygon attrs
+  , fill_var
+  , palette = "Blues" # see ggplot2::scale_fill_distiller
+) {
+ggplot2::ggplot(
+    data = aoi %>% sf::st_transform(sf::st_crs(crowns))
+  ) + 
+  ggplot2::geom_sf(fill = NA, color = col, lwd = lwd) +
+  ggplot2::geom_sf(
+    data = crowns %>% 
+      sf::st_intersection(
+        aoi %>% sf::st_transform(sf::st_crs(crowns))
+      )
+    , mapping = ggplot2::aes(fill = .data[[fill_var]])
+    , color = NA
+  ) + 
+  ggplot2::scale_fill_distiller(palette = palette, name = title, direction = 1, labels = scales::comma_format(accuracy = 1)) +
+  ggplot2::theme_void() +
+  ggplot2::theme(
+    legend.position = leg_pos
+    , legend.direction = "horizontal"
+    , legend.title = ggplot2::element_text(size = 7)
+    , legend.text = ggplot2::element_text(size = 6)
+  )
+}
+```
+
+
 ```{r, warning=FALSE, message=FALSE, echo=FALSE, include=FALSE}
 remove(list = ls()[grep("_temp",ls())])
 remove(ws_fn_df)
