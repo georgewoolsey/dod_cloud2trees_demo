@@ -131,7 +131,7 @@ if(!dir.exists(dir_temp)){
     , cbh_estimate_missing_cbh = T
   )
 }else{
-  cloud2raster_ans <- list(
+  cloud2trees_ans <- list(
     "dtm_rast" = terra::rast( file.path(dir_temp, "point_cloud_processing_delivery", "dtm_1m.tif") )
     , "chm_rast" = terra::rast( file.path(dir_temp, "point_cloud_processing_delivery", "chm_0.25m.tif") )
     , "crowns_sf" = list.files(
@@ -156,6 +156,138 @@ remove(list = ls()[grep("_temp",ls())])
 remove(itd_tuning_ans)
 gc()
 ```
+
+### `cloud2trees` Results
+
+#### DTM
+
+```{r}
+plt_rast_poly_fn <- function(
+  rast
+  , poly
+  , crop = T
+  , mask = F
+  , buff = 22
+  , col = "red"
+  , lwd = 1
+  , title = ""
+  , leg_pos = "top"
+) {
+  if(crop){
+    rast <- rast %>% 
+      terra::crop(
+        poly %>% 
+          sf::st_buffer(buff) %>% 
+          sf::st_transform(terra::crs(rast)) %>% 
+          terra::vect()
+      )
+  }
+  if(mask){
+    rast <- rast %>% 
+      terra::mask(
+        poly %>% 
+          sf::st_buffer(buff) %>% 
+          sf::st_transform(terra::crs(rast)) %>% 
+          terra::vect()
+      )
+  }
+  
+  # Convert SpatRaster to a data frame for ggplot
+  rast_df <- terra::as.data.frame(rast, xy=TRUE) %>% rename(f=3)
+
+  # Create the base raster plot
+  p <- ggplot2::ggplot() +
+    ggplot2::geom_raster(
+      data = rast_df, aes(x = x, y = y, fill = f)
+    ) +
+    ggplot2::scale_fill_viridis_c() + # Use a colorblind-friendly palette
+    # ggplot2::coord_sf(crs = terra::crs(rast)) +  # Match the CRS
+    ggplot2::labs(fill = "") +
+    ggplot2::theme_void() +
+    ggplot2::theme(
+      legend.position = leg_pos
+      , legend.text = ggplot2::element_text(angle = 90, vjust = 0.5, size = 7)
+      , plot.subtitle = ggplot2::element_text(hjust = 0.5)
+    )
+
+  # Add the polygon overlay
+  p <- p +
+    ggplot2::geom_sf(
+      data = poly %>% sf::st_transform(terra::crs(rast))
+      , fill = NA, color = col, lwd = lwd
+    ) +
+    ggplot2::labs(subtitle = title)
+
+  return(p)
+}
+
+plt_rast_poly_fn(rast = cloud2trees_ans$dtm_rast, poly = aoi_sf, title = "DTM (m)") +
+  harrypotter::scale_fill_hp(
+    option = "mischief", alpha = 0.9, labels = scales::comma_format(accuracy=1), breaks = scales::breaks_extended(n=6)
+  )
+
+cloud2trees_ans$dtm_rast %>% 
+  terra::crop(
+    aoi_sf %>% 
+      sf::st_buffer(22) %>% 
+      sf::st_transform(terra::crs(cloud2trees_ans$dtm_rast)) %>% 
+      terra::vect()
+  ) %>% 
+  terra::plot(
+    col = harrypotter::hp(n=100, option = "mischief", alpha = 0.9)
+    , axes=F
+    , main = "DTM (m)"
+  )
+terra::plot(
+  aoi_sf %>% 
+      sf::st_transform(terra::crs(cloud2trees_ans$dtm_rast)) %>% 
+      terra::vect()
+  , add = T, border = "navy", col = NA, lwd = 1.5
+)
+```
+
+#### CHM
+
+plot the CHM and we'll also add the extracted trees in gray
+
+```{r}
+cloud2trees_ans$chm_rast %>% 
+  terra::crop(
+    aoi_sf %>% 
+      sf::st_buffer(22) %>% 
+      sf::st_transform(terra::crs(cloud2trees_ans$chm_rast)) %>% 
+      terra::vect()
+  ) %>% 
+  terra::plot(
+    col = viridis::plasma(n=100, alpha = 0.9)
+    , axes=F
+    , main = "CHM (m)"
+  )
+terra::plot(
+  aoi_sf %>% 
+      sf::st_transform(terra::crs(cloud2trees_ans$chm_rast)) %>% 
+      terra::vect()
+  , add = T, border = "navy", col = NA, lwd = 1.5
+)
+terra::plot(
+  cloud2trees_ans$crowns_sf %>% 
+    sf::st_intersection(
+      aoi_sf %>% 
+        sf::st_transform(sf::st_crs(cloud2trees_ans$crowns_sf))
+    ) %>% 
+    sf::st_transform(terra::crs(cloud2trees_ans$chm_rast)) %>% 
+    terra::vect()
+  # cloud2trees_ans$crowns_sf %>% 
+  #   sf::st_transform(sf::st_crs(aoi_sf)) %>% 
+  #   sf::st_intersection(aoi_sf) %>% 
+  #   sf::st_transform(terra::crs(cloud2trees_ans$chm_rast)) %>% 
+  #   terra::vect()
+  , add = T, border = "black", col = NA, lwd = 0.9
+)
+```
+
+
+let's check the tree extraction results on satellite imagery with a collection date that may not coincide with the point cloud collection date
 
 ## UAS lidar Processing
 

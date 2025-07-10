@@ -251,8 +251,27 @@ ggmap_bbox_fn <- function(map, my_crs=3857) {
 plt_crs <- 3857
 #########################################################################
 #########################################################################
+# for google maps... have to:
+# 1) get api key at https://console.cloud.google.com/apis/dashboard
+# 2) run ggmap::register_google(key = "mykey_xxxxxxxxx", write = T)
 #########################################################################
-my_ggmap_basemap <- function(sf_data, zoom_level = 14, buffer_box = 2600, my_crs = plt_crs, scale_location = "bl", my_maptype = "stamen_terrain") {
+my_ggmap_basemap <- function(
+  sf_data
+  , zoom_level = 14 # from 3 (continent) to 21 (building), default value 10 (city)
+  , buffer_box = 2600
+  , my_crs = plt_crs
+  , scale_location = "bl"
+  , my_maptype = "stamen_terrain"
+  ## stamen
+  # stamen_terrain, stamen_toner, stamen_toner_lite, stamen_watercolor, stamen_terrain_background
+  # , stamen_toner_background, stamen_terrain_lines, stamen_terrain_labels
+  # , stamen_toner_lines, stamen_toner_labels
+  ## googlmap
+  # "terrain", "satellite", "roadmap", and "hybrid"
+  , add_sf_data = F
+  , outline_sf_data_col = "white"
+  , outline_lwd = 0.7
+) {
   
   # # should zoom in?
   # zoom_level <- 14 # 11
@@ -265,28 +284,47 @@ my_ggmap_basemap <- function(sf_data, zoom_level = 14, buffer_box = 2600, my_crs
     sf::st_as_sfc() %>% 
     sf::st_transform(crs=5070) %>% 
     sf::st_buffer(as.numeric(buffer_box)) %>% 
-    sf::st_transform(crs=4326) %>% # same as get_map return
-    sf::st_bbox()
+    sf::st_transform(crs=4326)
+  
+  center_temp <- sf::st_centroid(bb_temp) %>% sf::st_coordinates() %>% .[1,]
   # set bbox for get call
+  bb_temp <- sf::st_bbox(bb_temp)
   bbox_temp <- c(
     bottom = bb_temp[[2]]
     , top = bb_temp[[4]]
     , right = bb_temp[[3]]
     , left = bb_temp[[1]]
   )
-  hey_ggmap <- ggmap::get_stadiamap(
-    bbox = bbox_temp
-    , zoom = zoom_level
-    , maptype = my_maptype #"stamen_terrain" #"stamen_toner_lite"
-    , crop = T
-  )
-
-  # ggmap::ggmap(hey_ggmap)
-  # apply align function
-  hey_ggmap_aligned <- ggmap_bbox_fn(hey_ggmap, my_crs) # Use the function
+  
+  # ggmap::get_stadiamap vs ggmap::get_googlemap
+  if(
+    tolower(my_maptype) %in% c("terrain", "satellite", "roadmap", "hybrid")
+  ){
+    is_google <- T
+    
+    hey_ggmap <- ggmap::get_googlemap(
+      center = center_temp
+      , zoom = zoom_level
+      , maptype = tolower(my_maptype)
+      , crop = T
+    )
+  }else{
+    is_google <- F
+    
+    hey_ggmap <- ggmap::get_stadiamap(
+      bbox = bbox_temp
+      , zoom = zoom_level
+      , maptype = tolower(my_maptype) #"stamen_terrain" #"stamen_toner_lite"
+      , crop = T
+    )
+  
+    # ggmap::ggmap(hey_ggmap)
+    # apply align function
+    hey_ggmap <- ggmap_bbox_fn(hey_ggmap, my_crs) # Use the function
+  }
   # plot
   plt_basemap <-
-    ggmap::ggmap(hey_ggmap_aligned) + 
+    ggmap::ggmap(hey_ggmap) + 
     ggplot2::coord_sf(
       expand = FALSE
     ) +
@@ -301,6 +339,8 @@ my_ggmap_basemap <- function(sf_data, zoom_level = 14, buffer_box = 2600, my_crs
       , panel.grid = ggplot2::element_blank()
       , plot.margin = ggplot2::margin(0, 0, 0, 0, "cm")
     )
+  
+  ### add data?
   if(scale_location %in% c("bl", "br", "tr", "tl")){
     plt_basemap <- plt_basemap + 
       ggspatial::annotation_scale(
@@ -310,21 +350,65 @@ my_ggmap_basemap <- function(sf_data, zoom_level = 14, buffer_box = 2600, my_crs
         , pad_y = unit(0.1, "cm")
       )
   }
+  
+  if(add_sf_data){
+    if(is_google){
+      plt_basemap <- 
+        plt_basemap +
+        ggplot2::geom_sf(
+          data = sf_data %>% 
+            sf::st_transform(4326)
+          , fill = NA, color = outline_sf_data_col, lwd = outline_lwd
+          , inherit.aes = F
+        )
+        # ggplot2::geom_path(
+        #   data = sf_data %>% 
+        #     sf::st_transform(4326) %>% 
+        #     st_coordinates() %>% 
+        #     as.data.frame() %>% 
+        #     dplyr::mutate(lon = X, lat = Y) %>% 
+        #     sf::st_as_sf(coords = c("X","Y"), crs = 4326)
+        #   , fill = NA, color = outline_sf_data_col
+        #   , inherit.aes = F
+        # )
+    }else{
+      plt_basemap <- 
+        plt_basemap +
+        ggplot2::geom_sf(
+          data = sf_data %>%
+            sf::st_transform(crs=plt_crs)
+          , fill = NA, color = outline_sf_data_col, lwd = outline_lwd
+          , inherit.aes = F
+        )
+    }
+  }
+  
   return(plt_basemap)
 }
 
 ```
 
+```{r, include=FALSE, eval=FALSE}
+my_ggmap_basemap(
+  sf_data = study_sites_sf %>% dplyr::filter(study_site == "SaltCabin")
+  , zoom_level = 16
+  , buffer_box = 100
+  , my_maptype = "satellite"
+  , add_sf_data = T
+  , outline_sf_data_col = "salmon"
+  , outline_lwd = 2
+)
+```
+
 make a function specific to this data and task to grab the basemap with `my_ggmap_basemap()` and overlay the point cloud data and the study area bounds
 
-```{r}
+```{r, eval = F}
 plt_fn_temp <- function(
   record_study_sites_las_ctg
   , my_study_sites_las_ctg = study_sites_las_ctg
   , my_study_sites_sf = study_sites_sf
   # , zoom_level = 14, buffer_box = 2600, my_crs = plt_crs, scale_location = "bl", my_maptype = "stamen_terrain"
 ) {
-  
   
   # make a function to grab the basemap with my_ggmap_basemap, and overlay the point cloud data and the study area bounds
   plt_basemap_temp <- my_ggmap_basemap(
@@ -395,7 +479,7 @@ patchwork::wrap_plots(plts_temp, ncol = 2)
 # 
 ```
 
-```{r, include=FALSE, eval=TRUE}
+```{r, include=FALSE, eval=F}
 ggplot2::ggsave(
   "../data/ptcld_aoi_extents.jpg"
   , dpi = "print"
@@ -502,41 +586,58 @@ library(dplyr)
 #'                              plot_title = "My Custom Sentinel-2 Plot")
 #' print(my_plot)
 #' }
-plot_sentinel2_aoi <- function(aoi, 
-                               start_date, 
-                               end_date,
-                               output_filename = tempfile(fileext = ".tif"),
-                               bands = c("B04", "B03", "B02"), # Red, Green, Blue bands
-                               composite_function = "median",
-                               aoi_border_color = "red",
-                               aoi_border_linewidth = 1,
-                               plot_title = "Sentinel-2 Imagery with AOI") {
+plot_sentinel2_aoi <- function(
+  sf_data
+  , buffer_box = 20
+  # revisit frequency of ~5 days
+  , start_date # "2024-06-01"
+  , end_date # "2024-06-30"
+  , output_filename = tempfile(fileext = ".tif")
+  , bands = c("red", "blue", "green")
+    # c("B04", "B03", "B02") # Red, Green, Blue bands
+  , composite_function = "median"
+  , aoi_border_color = "red"
+  , aoi_border_linewidth = 1
+  , plot_title = "Sentinel-2 Imagery with AOI"
+  , stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1/"
+){
 
   # Ensure AOI is a valid sf object
-  if (!inherits(aoi, "sf")) {
-    stop("Input aoi must be an sf polygon object.")
+  if (!inherits(sf_data, "sf")) {
+    stop("Input sf_data must be an sf polygon object.")
   }
+  # # should zoom in?
+  # zoom_level <- 14 # 11
+  # # should buffer extend?
+  # buffer_box <- 2600 # 20000
+  # bounding box
+  aoi <-
+    sf_data %>% 
+    sf::st_bbox() %>% 
+    sf::st_as_sfc() %>% 
+    sf::st_transform(crs=5070) %>% 
+    sf::st_buffer(as.numeric(buffer_box)) %>% 
+    sf::st_transform(crs=4326) %>% # same as get_map return
+    sf::st_as_sf()
 
-  # --- 1. Search and Download Sentinel-2 Imagery ---
-  message("Searching for Sentinel-2 imagery...")
-  s2_items <- rsi::get_stac_items(
-    aoi = aoi,
-    collection = "sentinel-s2-l2a-cogs", # Sentinel-2 Level 2A, Cloud Optimized GeoTiffs
-    datetime = paste0(start_date, "/", end_date)
-  )
-
-  if (length(s2_items$features) == 0) {
-    stop("No Sentinel-2 imagery found for the specified AOI and date range.")
-  }
-
-  message(paste0("Downloading Sentinel-2 imagery composite (", composite_function, ")..."))
+  # --- 1. Download Sentinel-2 Imagery using rsi::get_stac_data ---
+  message(paste0("Downloading Sentinel-2 imagery composite (", composite_function, ") for ", start_date, " to ", end_date, "..."))
+  
   s2_images_path <- rsi::get_stac_data(
-    items = s2_items, 
     aoi = aoi,
-    assets = bands,
+    start_date = start_date,
+    end_date = end_date,
+    asset_names = bands, # Use asset_names for the bands
+    stac_source = stac_source,
+    collection = "sentinel-s2-l2a-cogs", # Sentinel-2 Level 2A, Cloud Optimized GeoTiffs
     composite_function = composite_function,
     output_filename = output_filename
+    # Add other parameters like mask_band, mask_function, etc. if needed for advanced use
   )
+
+  if (is.null(s2_images_path) || !file.exists(s2_images_path)) {
+    stop("Failed to download Sentinel-2 imagery. Check AOI, date range, and STAC source.")
+  }
 
   # Load the downloaded image as a terra SpatRaster object
   s2_raster <- terra::rast(s2_images_path)
@@ -545,9 +646,22 @@ plot_sentinel2_aoi <- function(aoi,
   message("Preparing imagery for plotting...")
   s2_df <- as.data.frame(s2_raster, xy = TRUE)
 
-  # Rename the band columns for easier use
-  # Assuming bands are B04, B03, B02 for RGB
-  names(s2_df) <- c("x", "y", "red", "green", "blue")
+  # Rename the band columns for easier use (assuming RGB order)
+  # Adjust if a different band order is used in the 'bands' argument
+  if (length(bands) == 3) {
+      names(s2_df) <- c("x", "y", "red", "green", "blue")
+  } else {
+      # Handle cases with different number of bands or non-RGB plots
+      # For now, just use generic names if not 3 bands for true color
+      names(s2_df)[3:(2 + length(bands))] <- bands
+      # If not RGB, direct 'rgb()' might not be appropriate.
+      # This part might need further customization based on the bands.
+      warning("Plotting only the first three bands as RGB. Adjust 'bands' for different visualization or 's2_df$rgb' calculation.")
+      s2_df$rgb <- with(s2_df, rgb(s2_df[,3] / max(s2_df[,3], na.rm = TRUE),
+                                              s2_df[,4] / max(s2_df[,4], na.rm = TRUE),
+                                              s2_df[,5] / max(s2_df[,5], na.rm = TRUE)))
+  }
+
 
   # Normalize and convert to RGB for plotting true color
   # Handle potential NA values in imagery data gracefully
@@ -569,13 +683,48 @@ plot_sentinel2_aoi <- function(aoi,
     
     # Add titles and labels
     ggplot2::labs(title = plot_title,
-         x = "",
-         y = "") +
+         x = "Longitude",
+         y = "Latitude") +
     ggplot2::theme_minimal() + # Use a clean theme
     ggplot2::coord_sf() # Ensures correct spatial projection
 
   return(ggplot_obj)
+
 }
+
+
+xxx <- plot_sentinel2_aoi(
+  sf_data = study_sites_sf %>% dplyr::filter(study_site == "SaltCabin")
+  , buffer_box = 50
+  , start_date = "2025-06-01"
+  , end_date = "2025-06-30"
+  , output_filename = "../data/sentineltesttest.tif"
+)
+
+# Generate the plot
+aoi_temp <- sf::st_bbox(c(xmin = -105.15, ymin = 40.55, xmax = -105.05, ymax = 40.65), crs = 4326) %>% 
+  sf::st_as_sfc()
+f_temp <- tempfile(fileext = ".tif")
+
+aoi_temp <- sf::st_point(c(-74.912131, 44.080410))
+aoi_temp <- sf::st_set_crs(sf::st_sfc(aoi_temp), 4326)
+aoi_temp <- sf::st_buffer(sf::st_transform(aoi_temp, 5070), 100)
+
+
+s2_images_path <- rsi::get_stac_data(
+    aoi = aoi_temp,
+    start_date = "2022-06-01",
+    end_date = "2022-06-30",
+    asset_names = c(
+    "red", "blue", "green"
+  ), # Use asset_names for the bands
+    stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1/",
+    collection = "sentinel-s2-l2a-cogs", # Sentinel-2 Level 2A, Cloud Optimized GeoTiffs
+    composite_function = "median",
+    output_filename = f_temp
+    # Add other parameters like mask_band, mask_function, etc. if needed for advanced use
+  )
+# !!!! there is no data for anywhere...looks like microsoft planetarycomputer is discontinued???
 ```
 
 ## ITD window functions
