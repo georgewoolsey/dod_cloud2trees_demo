@@ -72,6 +72,7 @@ if(!file.exists("../data/itd_tuning_FortStewart_als.jpg")){
       input_las_dir = las_flist_temp
       , n_samples = 3
       , ws_fn_list = my_ws_functions
+      , chm_res_m = 0.3
     )
   ggplot2::ggsave(
     "../data/itd_tuning_FortStewart_als.jpg"
@@ -85,7 +86,7 @@ if(!file.exists("../data/itd_tuning_FortStewart_als.jpg")){
 ```{r, echo=FALSE, out.width="100%", out.height="100%", fig.align='center', fig.show='hold', results='asis'}
 # this is so we get the actual result that we used for tuning
 # knitr::include_graphics("../data/itd_tuning_FortStewart_als.jpg")
-knitr::include_graphics("https://i.ibb.co/VpqjxXSf/itd-tuning-Sycan-Marsh-als.jpg")
+knitr::include_graphics("https://i.ibb.co/RG1LdCq9/itd-tuning-Fort-Stewart-als.jpg")
 ```
 
 pick the best function for use in ITD
@@ -97,7 +98,7 @@ best_ws_fn_temp <- my_ws_functions$exp_fn
 
 ### `cloud2trees` point cloud processing
 
-```{r}
+```{r fortstewart-als}
 dir_temp <- file.path(aoi_sf$fdir, "als_processing")
 if(!dir.exists(dir_temp)){
   dir.create(dir_temp)
@@ -107,7 +108,7 @@ if(!dir.exists(dir_temp)){
     , output_dir = dir_temp
     , ws = best_ws_fn_temp
     , dtm_res_m = 1
-    , chm_res_m = 0.25
+    , chm_res_m = 0.3
     , estimate_tree_dbh = T
     , estimate_tree_type = T
     # hmd
@@ -124,7 +125,7 @@ if(!dir.exists(dir_temp)){
 }else{
   cloud2raster_ans <- list(
     "dtm_rast" = terra::rast( file.path(dir_temp, "point_cloud_processing_delivery", "dtm_1m.tif") )
-    , "chm_rast" = terra::rast( file.path(dir_temp, "point_cloud_processing_delivery", "chm_0.25m.tif") )
+    , "chm_rast" = terra::rast( file.path(dir_temp, "point_cloud_processing_delivery", "chm_0.3m.tif") )
     , "crowns_sf" = list.files(
         file.path(dir_temp, "point_cloud_processing_delivery")
         , pattern = "final_detected_crowns.*\\.gpkg$"
