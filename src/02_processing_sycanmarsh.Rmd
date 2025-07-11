@@ -106,7 +106,7 @@ best_ws_fn_temp <- my_ws_functions$exp_fn
 
 ### `cloud2trees` point cloud processing
 
-```{r sycanmarsh-als}
+```{r sycanmarsh-als, results=F}
 dir_temp <- file.path(aoi_sf$fdir, "als_processing")
 if(!dir.exists(dir_temp)){
   dir.create(dir_temp)
@@ -174,9 +174,8 @@ plt_rast_poly_fn(
   , buff = 22
   , col = "navy"
 ) +
-  harrypotter::scale_fill_hp_d(
-    option = "lunalovegood", alpha = 0.8
-  ) +
+  ggplot2::scale_fill_viridis_d(option = "turbo", alpha = 0.8) +
+  # harrypotter::scale_fill_hp_d(option = "lunalovegood", alpha = 0.8) +
   ggplot2::labs(title = paste0(aoi_sf$study_site_lab, " - ALS")) +
   ggplot2::theme(
     legend.text = ggplot2::element_text(size = 7, angle = 0)
@@ -237,6 +236,8 @@ plt_rast_poly_fn(
 
 let's check the tree extraction results (gray) on satellite imagery with a collection date that may not coincide with the point cloud collection date
 
+*we'll sample the trees here so the output can be seen more clearly*
+
 ```{r}
 plt_aoi_basemap <- my_ggmap_basemap(
   sf_data = aoi_sf
@@ -251,6 +252,7 @@ plt_aoi_basemap <- my_ggmap_basemap(
 plt_aoi_basemap +
   ggplot2::geom_sf(
     data = cloud2trees_ans$crowns_sf %>% 
+      dplyr::slice_sample(prop = 0.6) %>% 
       sf::st_intersection(
         aoi_sf %>% sf::st_transform(sf::st_crs(cloud2trees_ans$crowns_sf))
       ) %>% 
@@ -360,7 +362,7 @@ best_ws_fn_temp <- my_ws_functions$lin_fn
 
 ### `cloud2trees` point cloud processing
 
-```{r sycanmarsh-uas}
+```{r sycanmarsh-uas, results=F}
 dir_temp <- file.path(aoi_sf$fdir, "uas_lidar_processing")
 if(!dir.exists(dir_temp)){
   dir.create(dir_temp)
@@ -427,9 +429,8 @@ plt_rast_poly_fn(
   , buff = 22
   , col = "navy"
 ) +
-  harrypotter::scale_fill_hp_d(
-    option = "lunalovegood", alpha = 0.8
-  ) +
+  ggplot2::scale_fill_viridis_d(option = "turbo", alpha = 0.8) +
+  # harrypotter::scale_fill_hp_d(option = "lunalovegood", alpha = 0.8) +
   ggplot2::labs(title = paste0(aoi_sf$study_site_lab, " - UAS Lidar")) +
   ggplot2::theme(
     legend.text = ggplot2::element_text(size = 7, angle = 0)
@@ -490,11 +491,14 @@ plt_rast_poly_fn(
 
 let's check the tree extraction results (gray) on satellite imagery with a collection date that may not coincide with the point cloud collection date
 
+*we'll sample the trees here so the output can be seen more clearly*
+
 ```{r}
 # add crowns
 plt_aoi_basemap +
   ggplot2::geom_sf(
     data = cloud2trees_ans$crowns_sf %>% 
+      dplyr::slice_sample(prop = 0.6) %>% 
       sf::st_intersection(
         aoi_sf %>% sf::st_transform(sf::st_crs(cloud2trees_ans$crowns_sf))
       ) %>% 

@@ -219,11 +219,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="5.1.1" data-path="salt-cabin-co.html"><a href="salt-cabin-co.html#itd-tuning-3"><i class="fa fa-check"></i><b>5.1.1</b> ITD tuning</a></li>
 <li class="chapter" data-level="5.1.2" data-path="salt-cabin-co.html"><a href="salt-cabin-co.html#cloud2trees-point-cloud-processing-3"><i class="fa fa-check"></i><b>5.1.2</b> <code>cloud2trees</code> point cloud processing</a></li>
+<li class="chapter" data-level="5.1.3" data-path="salt-cabin-co.html"><a href="salt-cabin-co.html#cloud2trees-results-3"><i class="fa fa-check"></i><b>5.1.3</b> <code>cloud2trees</code> Results</a></li>
 </ul></li>
 <li class="chapter" data-level="5.2" data-path="salt-cabin-co.html"><a href="salt-cabin-co.html#uas-sfm-processing"><i class="fa fa-check"></i><b>5.2</b> UAS sfm Processing</a>
 <ul>
 <li class="chapter" data-level="5.2.1" data-path="salt-cabin-co.html"><a href="salt-cabin-co.html#itd-tuning-4"><i class="fa fa-check"></i><b>5.2.1</b> ITD tuning</a></li>
 <li class="chapter" data-level="5.2.2" data-path="salt-cabin-co.html"><a href="salt-cabin-co.html#cloud2trees-point-cloud-processing-4"><i class="fa fa-check"></i><b>5.2.2</b> <code>cloud2trees</code> point cloud processing</a></li>
+<li class="chapter" data-level="5.2.3" data-path="salt-cabin-co.html"><a href="salt-cabin-co.html#cloud2trees-results-4"><i class="fa fa-check"></i><b>5.2.3</b> <code>cloud2trees</code> Results</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -247,53 +249,53 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1><span class="header-section-number">Section 3</span> Sycan Marsh (OR)<a href="sycan-marsh-or.html#sycan-marsh-or" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>process the point cloud data for the Sycan Marsh (OR) study site</p>
 <p>let’s check out the data we have and the area</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="sycan-marsh-or.html#cb20-1" tabindex="-1"></a><span class="co"># just get the data we care about</span></span>
-<span id="cb20-2"><a href="sycan-marsh-or.html#cb20-2" tabindex="-1"></a>aoi_study_site <span class="ot">&lt;-</span> <span class="st">&quot;SycanMarsh&quot;</span></span>
-<span id="cb20-3"><a href="sycan-marsh-or.html#cb20-3" tabindex="-1"></a>aoi_sf <span class="ot">&lt;-</span> study_sites_sf <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(study_site <span class="sc">==</span> aoi_study_site)</span>
-<span id="cb20-4"><a href="sycan-marsh-or.html#cb20-4" tabindex="-1"></a>aoi_las_ctg <span class="ot">&lt;-</span> study_sites_las_ctg <span class="sc">%&gt;%</span> </span>
-<span id="cb20-5"><a href="sycan-marsh-or.html#cb20-5" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">keep_at</span>(</span>
-<span id="cb20-6"><a href="sycan-marsh-or.html#cb20-6" tabindex="-1"></a>    <span class="fu">names</span>(study_sites_las_ctg)[</span>
-<span id="cb20-7"><a href="sycan-marsh-or.html#cb20-7" tabindex="-1"></a>      stringr<span class="sc">::</span><span class="fu">str_detect</span>(<span class="fu">names</span>(study_sites_las_ctg), aoi_study_site)</span>
-<span id="cb20-8"><a href="sycan-marsh-or.html#cb20-8" tabindex="-1"></a>    ]</span>
-<span id="cb20-9"><a href="sycan-marsh-or.html#cb20-9" tabindex="-1"></a>  )</span>
-<span id="cb20-10"><a href="sycan-marsh-or.html#cb20-10" tabindex="-1"></a><span class="co"># option to put satellite imagery as base layer of mapview maps</span></span>
-<span id="cb20-11"><a href="sycan-marsh-or.html#cb20-11" tabindex="-1"></a>mapview<span class="sc">::</span><span class="fu">mapviewOptions</span>(</span>
-<span id="cb20-12"><a href="sycan-marsh-or.html#cb20-12" tabindex="-1"></a>  <span class="at">homebutton =</span> <span class="cn">FALSE</span></span>
-<span id="cb20-13"><a href="sycan-marsh-or.html#cb20-13" tabindex="-1"></a>  , <span class="at">basemaps =</span> <span class="fu">c</span>(<span class="st">&quot;Esri.WorldImagery&quot;</span>,<span class="st">&quot;OpenStreetMap&quot;</span>)</span>
-<span id="cb20-14"><a href="sycan-marsh-or.html#cb20-14" tabindex="-1"></a>)</span>
-<span id="cb20-15"><a href="sycan-marsh-or.html#cb20-15" tabindex="-1"></a><span class="co"># map it</span></span>
-<span id="cb20-16"><a href="sycan-marsh-or.html#cb20-16" tabindex="-1"></a><span class="co"># add the study bounds</span></span>
-<span id="cb20-17"><a href="sycan-marsh-or.html#cb20-17" tabindex="-1"></a>mapview<span class="sc">::</span><span class="fu">mapview</span>(</span>
-<span id="cb20-18"><a href="sycan-marsh-or.html#cb20-18" tabindex="-1"></a>  aoi_las_ctg[[<span class="dv">1</span>]]<span class="sc">$</span>geometry</span>
-<span id="cb20-19"><a href="sycan-marsh-or.html#cb20-19" tabindex="-1"></a>  , <span class="at">color =</span> <span class="st">&quot;black&quot;</span></span>
-<span id="cb20-20"><a href="sycan-marsh-or.html#cb20-20" tabindex="-1"></a>  , <span class="at">lwd =</span> <span class="dv">2</span></span>
-<span id="cb20-21"><a href="sycan-marsh-or.html#cb20-21" tabindex="-1"></a>  , <span class="at">alpha.regions =</span> <span class="dv">0</span></span>
-<span id="cb20-22"><a href="sycan-marsh-or.html#cb20-22" tabindex="-1"></a>  , <span class="at">layer.name =</span> <span class="fu">names</span>(aoi_las_ctg[<span class="dv">1</span>])</span>
-<span id="cb20-23"><a href="sycan-marsh-or.html#cb20-23" tabindex="-1"></a>  , <span class="at">legend =</span> F</span>
-<span id="cb20-24"><a href="sycan-marsh-or.html#cb20-24" tabindex="-1"></a>  , <span class="at">popup =</span> F</span>
-<span id="cb20-25"><a href="sycan-marsh-or.html#cb20-25" tabindex="-1"></a>) <span class="sc">+</span></span>
-<span id="cb20-26"><a href="sycan-marsh-or.html#cb20-26" tabindex="-1"></a>mapview<span class="sc">::</span><span class="fu">mapview</span>(</span>
-<span id="cb20-27"><a href="sycan-marsh-or.html#cb20-27" tabindex="-1"></a>  aoi_las_ctg[[<span class="dv">2</span>]]<span class="sc">$</span>geometry</span>
-<span id="cb20-28"><a href="sycan-marsh-or.html#cb20-28" tabindex="-1"></a>  , <span class="at">color =</span> <span class="st">&quot;gray&quot;</span></span>
-<span id="cb20-29"><a href="sycan-marsh-or.html#cb20-29" tabindex="-1"></a>  , <span class="at">lwd =</span> <span class="dv">2</span></span>
-<span id="cb20-30"><a href="sycan-marsh-or.html#cb20-30" tabindex="-1"></a>  , <span class="at">alpha.regions =</span> <span class="dv">0</span></span>
-<span id="cb20-31"><a href="sycan-marsh-or.html#cb20-31" tabindex="-1"></a>  , <span class="at">layer.name =</span> <span class="fu">names</span>(aoi_las_ctg[<span class="dv">2</span>])</span>
-<span id="cb20-32"><a href="sycan-marsh-or.html#cb20-32" tabindex="-1"></a>  , <span class="at">legend =</span> F</span>
-<span id="cb20-33"><a href="sycan-marsh-or.html#cb20-33" tabindex="-1"></a>  , <span class="at">popup =</span> F</span>
-<span id="cb20-34"><a href="sycan-marsh-or.html#cb20-34" tabindex="-1"></a>) <span class="sc">+</span></span>
-<span id="cb20-35"><a href="sycan-marsh-or.html#cb20-35" tabindex="-1"></a>mapview<span class="sc">::</span><span class="fu">mapview</span>(</span>
-<span id="cb20-36"><a href="sycan-marsh-or.html#cb20-36" tabindex="-1"></a>  aoi_sf</span>
-<span id="cb20-37"><a href="sycan-marsh-or.html#cb20-37" tabindex="-1"></a>  , <span class="at">zcol =</span> <span class="st">&quot;study_site_lab&quot;</span></span>
-<span id="cb20-38"><a href="sycan-marsh-or.html#cb20-38" tabindex="-1"></a>  , <span class="at">color =</span> <span class="st">&quot;navy&quot;</span></span>
-<span id="cb20-39"><a href="sycan-marsh-or.html#cb20-39" tabindex="-1"></a>  , <span class="at">lwd =</span> <span class="dv">2</span></span>
-<span id="cb20-40"><a href="sycan-marsh-or.html#cb20-40" tabindex="-1"></a>  , <span class="at">alpha.regions =</span> <span class="dv">0</span></span>
-<span id="cb20-41"><a href="sycan-marsh-or.html#cb20-41" tabindex="-1"></a>  , <span class="at">legend =</span> T</span>
-<span id="cb20-42"><a href="sycan-marsh-or.html#cb20-42" tabindex="-1"></a>  , <span class="at">popup =</span> F</span>
-<span id="cb20-43"><a href="sycan-marsh-or.html#cb20-43" tabindex="-1"></a>)</span></code></pre></div>
-<div class="leaflet html-widget html-fill-item" id="htmlwidget-6342a89dbcaa1a3d8490" style="width:1008px;height:672px;"></div>
-<script type="application/json" data-for="htmlwidget-6342a89dbcaa1a3d8490">{"x":{"options":{"minZoom":1,"maxZoom":52,"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}},"preferCanvas":false,"bounceAtZoomLimits":false,"maxBounds":[[[-90,-370]],[[90,370]]]},"calls":[{"method":"addProviderTiles","args":["Esri.WorldImagery","Esri.WorldImagery","Esri.WorldImagery",{"errorTileUrl":"","noWrap":false,"detectRetina":false,"pane":"tilePane"}]},{"method":"addProviderTiles","args":["OpenStreetMap","OpenStreetMap","OpenStreetMap",{"errorTileUrl":"","noWrap":false,"detectRetina":false,"pane":"tilePane"}]},{"method":"createMapPane","args":["polygon",420]},{"method":"addPolygons","args":[[[[{"lng":[-121.1516243760736,-121.1513557455988,-121.1391194762657,-121.1393898823264,-121.1516243760736],"lat":[42.86067272720634,42.86967324534542,42.86947495358417,42.86047449749015,42.86067272720634]}]],[[{"lng":[-121.1393897599809,-121.1391193539024,-121.1268832089352,-121.1271553905322,-121.1393897599809],"lat":[42.86047449550129,42.8694749515947,42.86927535285178,42.860274959212,42.86047449550129]}]]],null,"SycanMarsh_als",{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}},"pane":"polygon","stroke":true,"color":"black","weight":2,"opacity":0.9,"fill":true,"fillColor":"#6666ff","fillOpacity":0,"smoothFactor":1,"noClip":false},null,{"maxWidth":800,"minWidth":50,"autoPan":true,"keepInView":false,"closeButton":true,"closeOnClick":true,"className":""},["1","2"],{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},{"stroke":true,"weight":3,"opacity":0.9,"fillOpacity":0,"bringToFront":false,"sendToBack":false}]},{"method":"addScaleBar","args":[{"maxWidth":100,"metric":true,"imperial":true,"updateWhenIdle":true,"position":"bottomleft"}]},{"method":"addPolygons","args":[[[[{"lng":[-121.1456056848988,-121.1454296429296,-121.1355001025844,-121.135677085771,-121.1456056848988],"lat":[42.86261655630993,42.86849578986786,42.86833446533024,42.86245526474691,42.86261655630993]}]]],null,"SycanMarsh_uas_lidar",{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}},"pane":"polygon","stroke":true,"color":"gray","weight":2,"opacity":0.9,"fill":true,"fillColor":"#6666ff","fillOpacity":0,"smoothFactor":1,"noClip":false},null,{"maxWidth":800,"minWidth":50,"autoPan":true,"keepInView":false,"closeButton":true,"closeOnClick":true,"className":""},"1",{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},{"stroke":true,"weight":3,"opacity":0.9,"fillOpacity":0,"bringToFront":false,"sendToBack":false}]},{"method":"addPolygons","args":[[[[{"lng":[-121.1373473783048,-121.1374169439512,-121.1375443412801,-121.1375891966996,-121.1376823019137,-121.1376837239468,-121.1378192946631,-121.1380171019273,-121.1380243488403,-121.1382239257586,-121.1386102165618,-121.1390396761315,-121.1395081793775,-121.1399883548254,-121.1403586243054,-121.1407541569182,-121.1410012977035,-121.1413581616594,-121.1417895028625,-121.1419984038591,-121.1424112827213,-121.1426650360457,-121.142997947872,-121.1432778994964,-121.1437194110858,-121.1441869335336,-121.1446288184504,-121.1448469571976,-121.1450105817855,-121.1449954231575,-121.1448114066614,-121.1447127578605,-121.1444741771837,-121.1442784672213,-121.1440821030362,-121.1438681226393,-121.1436711970734,-121.1434747372723,-121.1433334040553,-121.1431447708347,-121.1428790626337,-121.1427148420214,-121.142594052559,-121.1424731705396,-121.1422801079457,-121.1421262380063,-121.1419799115164,-121.1419019940199,-121.1418098576191,-121.1416666476449,-121.1415537761267,-121.141407168498,-121.1412215537196,-121.1411016045782,-121.1408910142411,-121.1406646793846,-121.140574131561,-121.1405006394177,-121.1403796593252,-121.1403051368941,-121.1402128080061,-121.1401204800191,-121.140031923721,-121.1399588051584,-121.1398688178368,-121.1397404781093,-121.1395526793548,-121.1393742977962,-121.1392563144536,-121.1391672636193,-121.1390605957628,-121.1388403723674,-121.1387258786271,-121.1386077081676,-121.1384812434715,-121.1383710850562,-121.1382564039424,-121.1381249492007,-121.138031471904,-121.1379706979929,-121.1379184995456,-121.1378699775133,-121.1378088295069,-121.1377224246846,-121.1376418755766,-121.137247763963,-121.1371048495636,-121.1369992749036,-121.1368844032274,-121.1367078339592,-121.1366630185089,-121.1365197801961,-121.1363861510511,-121.1363783285027,-121.1363764330219,-121.1363206340807,-121.1362029931321,-121.136183351409,-121.1362258909804,-121.1363452863991,-121.1364607410158,-121.1365466870228,-121.1365527781815,-121.1365387412,-121.1366370119767,-121.1367579002735,-121.136867012683,-121.1369126385582,-121.1370514714993,-121.1371657936735,-121.137197360025,-121.1373015822583,-121.1373431825797,-121.1373473783048],"lat":[42.86461254036364,42.86431116344429,42.86399254998357,42.86395112723326,42.86373748368425,42.86369018588064,42.86348987153467,42.86337396047733,42.86336740994703,42.86345830694204,42.86359571088054,42.86370884006197,42.86393499078272,42.86405518497832,42.86416110300671,42.86427367475557,42.86424022546081,42.86422728978516,42.86427800150555,42.86438753815472,42.86448789759539,42.8645169911721,42.86445371052827,42.86445825270337,42.86445292660726,42.86442928938783,42.86441147798067,42.86449618414206,42.86468504236848,42.86485429251332,42.86490748629173,42.86494333773279,42.8649769203736,42.86499559345809,42.86503610167507,42.86509817093678,42.86515739481669,42.86520102108749,42.86524554188898,42.86531114148314,42.86540045723823,42.86550078155805,42.8655674808608,42.86563730002235,42.86570906756955,42.86574714136721,42.86581654623701,42.86586833659121,42.86596982952023,42.86607673553188,42.86616228774039,42.86624105094451,42.86634726709528,42.86638589116755,42.86647609641194,42.86652547489732,42.86657393775109,42.8666195569289,42.86669249295359,42.86677242561752,42.86688015633738,42.86698788697441,42.867111282785,42.86714442434435,42.86717417118531,42.86720953604168,42.86724705514376,42.86725351815626,42.86722663216118,42.86722518393705,42.86724529627227,42.86723235283112,42.86723049155407,42.86720984396799,42.86718282018842,42.86717790660558,42.86718228303685,42.86718014532599,42.86718486632478,42.86723069076287,42.86727353401122,42.86733516165273,42.86739346415639,42.86744511280197,42.86747070063647,42.86735352405002,42.86731103220522,42.86727964236606,42.86724548836745,42.86713104498718,42.86712202364418,42.86708848254762,42.86701764664659,42.86693713706902,42.86691761972697,42.86679811806904,42.86667487742027,42.86654455035313,42.86639452162208,42.86619394571976,42.86612434801196,42.86595896620636,42.86575654505868,42.86568483894207,42.86556387720687,42.86546183967533,42.86535960950866,42.86531159899111,42.86510259588719,42.86482710737594,42.86478980681524,42.86462130437127,42.86450946665045,42.86461254036364]}]]],null,"aoi_sf - study_site_lab",{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}},"pane":"polygon","stroke":true,"color":"#000080","weight":2,"opacity":0.9,"fill":true,"fillColor":"#6666FF","fillOpacity":0,"smoothFactor":1,"noClip":false},null,{"maxWidth":800,"minWidth":50,"autoPan":true,"keepInView":false,"closeButton":true,"closeOnClick":true,"className":""},"Sycan Marsh (OR)",{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},{"stroke":true,"weight":3,"opacity":0.9,"fillOpacity":0,"bringToFront":false,"sendToBack":false}]},{"method":"addLayersControl","args":[["Esri.WorldImagery","OpenStreetMap"],["SycanMarsh_als","SycanMarsh_uas_lidar","aoi_sf - study_site_lab"],{"collapsed":true,"autoZIndex":true,"position":"topleft"}]},{"method":"addLegend","args":[{"colors":["#6666FF"],"labels":["Sycan Marsh (OR)"],"na_color":null,"na_label":"NA","opacity":1,"position":"topright","type":"factor","title":"","extra":null,"layerId":null,"className":"info legend","group":"aoi_sf - study_site_lab"}]},{"method":"addHomeButton","args":[-121.1516243760736,42.860274959212,-121.1268832089352,42.86967324534542,true,null,"Zoom to full extent","<strong>Zoom full<\/strong>","bottomleft"]}],"limits":{"lat":[42.860274959212,42.86967324534542],"lng":[-121.1516243760736,-121.1268832089352]},"fitBounds":[42.860274959212,-121.1516243760736,42.86967324534542,-121.1268832089352,[]]},"evals":[],"jsHooks":{"render":[{"code":"function(el, x, data) {\n  return (\n      function(el, x, data) {\n      // get the leaflet map\n      var map = this; //HTMLWidgets.find('#' + el.id);\n      // we need a new div element because we have to handle\n      // the mouseover output separately\n      // debugger;\n      function addElement () {\n      // generate new div Element\n      var newDiv = $(document.createElement('div'));\n      // append at end of leaflet htmlwidget container\n      $(el).append(newDiv);\n      //provide ID and style\n      newDiv.addClass('lnlt');\n      newDiv.css({\"position\":\"relative\",\"bottomleft\":\"0px\",\"background-color\":\"rgba(255, 255, 255, 0.7)\",\"box-shadow\":\"0 0 2px #bbb\",\"background-clip\":\"padding-box\",\"margin\":\"0\",\"padding-left\":\"5px\",\"padding-right\":\"5px\",\"color\":\"#333\",\"font-size\":\"9px\",\"font-family\":\"\\\"Helvetica Neue\\\", Arial, Helvetica, sans-serif\",\"text-align\":\"left\",\"z-index\":\"700\"});\n      return newDiv;\n      }\n\n\n      // check for already existing lnlt class to not duplicate\n      var lnlt = $(el).find('.lnlt');\n\n      if(!lnlt.length) {\n      lnlt = addElement();\n\n      // grab the special div we generated in the beginning\n      // and put the mousmove output there\n\n      map.on('mousemove', function (e) {\n      if (e.originalEvent.ctrlKey) {\n      if (document.querySelector('.lnlt') === null) lnlt = addElement();\n      lnlt.text(\n                           ' lon: ' + (e.latlng.lng).toFixed(5) +\n                           ' | lat: ' + (e.latlng.lat).toFixed(5) +\n                           ' | zoom: ' + map.getZoom() +\n                           ' | x: ' + L.CRS.EPSG3857.project(e.latlng).x.toFixed(0) +\n                           ' | y: ' + L.CRS.EPSG3857.project(e.latlng).y.toFixed(0) +\n                           ' | epsg: 3857 ' +\n                           ' | proj4: +proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs ');\n      } else {\n      if (document.querySelector('.lnlt') === null) lnlt = addElement();\n      lnlt.text(\n                      ' lon: ' + (e.latlng.lng).toFixed(5) +\n                      ' | lat: ' + (e.latlng.lat).toFixed(5) +\n                      ' | zoom: ' + map.getZoom() + ' ');\n      }\n      });\n\n      // remove the lnlt div when mouse leaves map\n      map.on('mouseout', function (e) {\n      var strip = document.querySelector('.lnlt');\n      if( strip !==null) strip.remove();\n      });\n\n      };\n\n      //$(el).keypress(67, function(e) {\n      map.on('preclick', function(e) {\n      if (e.originalEvent.ctrlKey) {\n      if (document.querySelector('.lnlt') === null) lnlt = addElement();\n      lnlt.text(\n                      ' lon: ' + (e.latlng.lng).toFixed(5) +\n                      ' | lat: ' + (e.latlng.lat).toFixed(5) +\n                      ' | zoom: ' + map.getZoom() + ' ');\n      var txt = document.querySelector('.lnlt').textContent;\n      console.log(txt);\n      //txt.innerText.focus();\n      //txt.select();\n      setClipboardText('\"' + txt + '\"');\n      }\n      });\n\n      }\n      ).call(this.getMap(), el, x, data);\n}","data":null},{"code":"function(el, x, data) {\n  return (function(el,x,data){\n           var map = this;\n\n           map.on('keypress', function(e) {\n               console.log(e.originalEvent.code);\n               var key = e.originalEvent.code;\n               if (key === 'KeyE') {\n                   var bb = this.getBounds();\n                   var txt = JSON.stringify(bb);\n                   console.log(txt);\n\n                   setClipboardText('\\'' + txt + '\\'');\n               }\n           })\n        }).call(this.getMap(), el, x, data);\n}","data":null}]}}</script>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="sycan-marsh-or.html#cb19-1" tabindex="-1"></a><span class="co"># just get the data we care about</span></span>
+<span id="cb19-2"><a href="sycan-marsh-or.html#cb19-2" tabindex="-1"></a>aoi_study_site <span class="ot">&lt;-</span> <span class="st">&quot;SycanMarsh&quot;</span></span>
+<span id="cb19-3"><a href="sycan-marsh-or.html#cb19-3" tabindex="-1"></a>aoi_sf <span class="ot">&lt;-</span> study_sites_sf <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(study_site <span class="sc">==</span> aoi_study_site)</span>
+<span id="cb19-4"><a href="sycan-marsh-or.html#cb19-4" tabindex="-1"></a>aoi_las_ctg <span class="ot">&lt;-</span> study_sites_las_ctg <span class="sc">%&gt;%</span> </span>
+<span id="cb19-5"><a href="sycan-marsh-or.html#cb19-5" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">keep_at</span>(</span>
+<span id="cb19-6"><a href="sycan-marsh-or.html#cb19-6" tabindex="-1"></a>    <span class="fu">names</span>(study_sites_las_ctg)[</span>
+<span id="cb19-7"><a href="sycan-marsh-or.html#cb19-7" tabindex="-1"></a>      stringr<span class="sc">::</span><span class="fu">str_detect</span>(<span class="fu">names</span>(study_sites_las_ctg), aoi_study_site)</span>
+<span id="cb19-8"><a href="sycan-marsh-or.html#cb19-8" tabindex="-1"></a>    ]</span>
+<span id="cb19-9"><a href="sycan-marsh-or.html#cb19-9" tabindex="-1"></a>  )</span>
+<span id="cb19-10"><a href="sycan-marsh-or.html#cb19-10" tabindex="-1"></a><span class="co"># option to put satellite imagery as base layer of mapview maps</span></span>
+<span id="cb19-11"><a href="sycan-marsh-or.html#cb19-11" tabindex="-1"></a>mapview<span class="sc">::</span><span class="fu">mapviewOptions</span>(</span>
+<span id="cb19-12"><a href="sycan-marsh-or.html#cb19-12" tabindex="-1"></a>  <span class="at">homebutton =</span> <span class="cn">FALSE</span></span>
+<span id="cb19-13"><a href="sycan-marsh-or.html#cb19-13" tabindex="-1"></a>  , <span class="at">basemaps =</span> <span class="fu">c</span>(<span class="st">&quot;Esri.WorldImagery&quot;</span>,<span class="st">&quot;OpenStreetMap&quot;</span>)</span>
+<span id="cb19-14"><a href="sycan-marsh-or.html#cb19-14" tabindex="-1"></a>)</span>
+<span id="cb19-15"><a href="sycan-marsh-or.html#cb19-15" tabindex="-1"></a><span class="co"># map it</span></span>
+<span id="cb19-16"><a href="sycan-marsh-or.html#cb19-16" tabindex="-1"></a><span class="co"># add the study bounds</span></span>
+<span id="cb19-17"><a href="sycan-marsh-or.html#cb19-17" tabindex="-1"></a>mapview<span class="sc">::</span><span class="fu">mapview</span>(</span>
+<span id="cb19-18"><a href="sycan-marsh-or.html#cb19-18" tabindex="-1"></a>  aoi_las_ctg[[<span class="dv">1</span>]]<span class="sc">$</span>geometry</span>
+<span id="cb19-19"><a href="sycan-marsh-or.html#cb19-19" tabindex="-1"></a>  , <span class="at">color =</span> <span class="st">&quot;black&quot;</span></span>
+<span id="cb19-20"><a href="sycan-marsh-or.html#cb19-20" tabindex="-1"></a>  , <span class="at">lwd =</span> <span class="dv">2</span></span>
+<span id="cb19-21"><a href="sycan-marsh-or.html#cb19-21" tabindex="-1"></a>  , <span class="at">alpha.regions =</span> <span class="dv">0</span></span>
+<span id="cb19-22"><a href="sycan-marsh-or.html#cb19-22" tabindex="-1"></a>  , <span class="at">layer.name =</span> <span class="fu">names</span>(aoi_las_ctg[<span class="dv">1</span>])</span>
+<span id="cb19-23"><a href="sycan-marsh-or.html#cb19-23" tabindex="-1"></a>  , <span class="at">legend =</span> F</span>
+<span id="cb19-24"><a href="sycan-marsh-or.html#cb19-24" tabindex="-1"></a>  , <span class="at">popup =</span> F</span>
+<span id="cb19-25"><a href="sycan-marsh-or.html#cb19-25" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb19-26"><a href="sycan-marsh-or.html#cb19-26" tabindex="-1"></a>mapview<span class="sc">::</span><span class="fu">mapview</span>(</span>
+<span id="cb19-27"><a href="sycan-marsh-or.html#cb19-27" tabindex="-1"></a>  aoi_las_ctg[[<span class="dv">2</span>]]<span class="sc">$</span>geometry</span>
+<span id="cb19-28"><a href="sycan-marsh-or.html#cb19-28" tabindex="-1"></a>  , <span class="at">color =</span> <span class="st">&quot;gray&quot;</span></span>
+<span id="cb19-29"><a href="sycan-marsh-or.html#cb19-29" tabindex="-1"></a>  , <span class="at">lwd =</span> <span class="dv">2</span></span>
+<span id="cb19-30"><a href="sycan-marsh-or.html#cb19-30" tabindex="-1"></a>  , <span class="at">alpha.regions =</span> <span class="dv">0</span></span>
+<span id="cb19-31"><a href="sycan-marsh-or.html#cb19-31" tabindex="-1"></a>  , <span class="at">layer.name =</span> <span class="fu">names</span>(aoi_las_ctg[<span class="dv">2</span>])</span>
+<span id="cb19-32"><a href="sycan-marsh-or.html#cb19-32" tabindex="-1"></a>  , <span class="at">legend =</span> F</span>
+<span id="cb19-33"><a href="sycan-marsh-or.html#cb19-33" tabindex="-1"></a>  , <span class="at">popup =</span> F</span>
+<span id="cb19-34"><a href="sycan-marsh-or.html#cb19-34" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb19-35"><a href="sycan-marsh-or.html#cb19-35" tabindex="-1"></a>mapview<span class="sc">::</span><span class="fu">mapview</span>(</span>
+<span id="cb19-36"><a href="sycan-marsh-or.html#cb19-36" tabindex="-1"></a>  aoi_sf</span>
+<span id="cb19-37"><a href="sycan-marsh-or.html#cb19-37" tabindex="-1"></a>  , <span class="at">zcol =</span> <span class="st">&quot;study_site_lab&quot;</span></span>
+<span id="cb19-38"><a href="sycan-marsh-or.html#cb19-38" tabindex="-1"></a>  , <span class="at">color =</span> <span class="st">&quot;navy&quot;</span></span>
+<span id="cb19-39"><a href="sycan-marsh-or.html#cb19-39" tabindex="-1"></a>  , <span class="at">lwd =</span> <span class="dv">2</span></span>
+<span id="cb19-40"><a href="sycan-marsh-or.html#cb19-40" tabindex="-1"></a>  , <span class="at">alpha.regions =</span> <span class="dv">0</span></span>
+<span id="cb19-41"><a href="sycan-marsh-or.html#cb19-41" tabindex="-1"></a>  , <span class="at">legend =</span> T</span>
+<span id="cb19-42"><a href="sycan-marsh-or.html#cb19-42" tabindex="-1"></a>  , <span class="at">popup =</span> F</span>
+<span id="cb19-43"><a href="sycan-marsh-or.html#cb19-43" tabindex="-1"></a>)</span></code></pre></div>
+<div class="leaflet html-widget html-fill-item" id="htmlwidget-1dcf8f1a5d98747b9e23" style="width:1008px;height:672px;"></div>
+<script type="application/json" data-for="htmlwidget-1dcf8f1a5d98747b9e23">{"x":{"options":{"minZoom":1,"maxZoom":52,"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}},"preferCanvas":false,"bounceAtZoomLimits":false,"maxBounds":[[[-90,-370]],[[90,370]]]},"calls":[{"method":"addProviderTiles","args":["Esri.WorldImagery","Esri.WorldImagery","Esri.WorldImagery",{"errorTileUrl":"","noWrap":false,"detectRetina":false,"pane":"tilePane"}]},{"method":"addProviderTiles","args":["OpenStreetMap","OpenStreetMap","OpenStreetMap",{"errorTileUrl":"","noWrap":false,"detectRetina":false,"pane":"tilePane"}]},{"method":"createMapPane","args":["polygon",420]},{"method":"addPolygons","args":[[[[{"lng":[-121.1516243760736,-121.1513557455988,-121.1391194762657,-121.1393898823264,-121.1516243760736],"lat":[42.86067272720634,42.86967324534542,42.86947495358417,42.86047449749015,42.86067272720634]}]],[[{"lng":[-121.1393897599809,-121.1391193539024,-121.1268832089352,-121.1271553905322,-121.1393897599809],"lat":[42.86047449550129,42.8694749515947,42.86927535285178,42.860274959212,42.86047449550129]}]]],null,"SycanMarsh_als",{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}},"pane":"polygon","stroke":true,"color":"black","weight":2,"opacity":0.9,"fill":true,"fillColor":"#6666ff","fillOpacity":0,"smoothFactor":1,"noClip":false},null,{"maxWidth":800,"minWidth":50,"autoPan":true,"keepInView":false,"closeButton":true,"closeOnClick":true,"className":""},["1","2"],{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},{"stroke":true,"weight":3,"opacity":0.9,"fillOpacity":0,"bringToFront":false,"sendToBack":false}]},{"method":"addScaleBar","args":[{"maxWidth":100,"metric":true,"imperial":true,"updateWhenIdle":true,"position":"bottomleft"}]},{"method":"addPolygons","args":[[[[{"lng":[-121.1456056848988,-121.1454296429296,-121.1355001025844,-121.135677085771,-121.1456056848988],"lat":[42.86261655630993,42.86849578986786,42.86833446533024,42.86245526474691,42.86261655630993]}]]],null,"SycanMarsh_uas_lidar",{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}},"pane":"polygon","stroke":true,"color":"gray","weight":2,"opacity":0.9,"fill":true,"fillColor":"#6666ff","fillOpacity":0,"smoothFactor":1,"noClip":false},null,{"maxWidth":800,"minWidth":50,"autoPan":true,"keepInView":false,"closeButton":true,"closeOnClick":true,"className":""},"1",{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},{"stroke":true,"weight":3,"opacity":0.9,"fillOpacity":0,"bringToFront":false,"sendToBack":false}]},{"method":"addPolygons","args":[[[[{"lng":[-121.1373473783048,-121.1374169439512,-121.1375443412801,-121.1375891966996,-121.1376823019137,-121.1376837239468,-121.1378192946631,-121.1380171019273,-121.1380243488403,-121.1382239257586,-121.1386102165618,-121.1390396761315,-121.1395081793775,-121.1399883548254,-121.1403586243054,-121.1407541569182,-121.1410012977035,-121.1413581616594,-121.1417895028625,-121.1419984038591,-121.1424112827213,-121.1426650360457,-121.142997947872,-121.1432778994964,-121.1437194110858,-121.1441869335336,-121.1446288184504,-121.1448469571976,-121.1450105817855,-121.1449954231575,-121.1448114066614,-121.1447127578605,-121.1444741771837,-121.1442784672213,-121.1440821030362,-121.1438681226393,-121.1436711970734,-121.1434747372723,-121.1433334040553,-121.1431447708347,-121.1428790626337,-121.1427148420214,-121.142594052559,-121.1424731705396,-121.1422801079457,-121.1421262380063,-121.1419799115164,-121.1419019940199,-121.1418098576191,-121.1416666476449,-121.1415537761267,-121.141407168498,-121.1412215537196,-121.1411016045782,-121.1408910142411,-121.1406646793846,-121.140574131561,-121.1405006394177,-121.1403796593252,-121.1403051368941,-121.1402128080061,-121.1401204800191,-121.140031923721,-121.1399588051584,-121.1398688178368,-121.1397404781093,-121.1395526793548,-121.1393742977962,-121.1392563144536,-121.1391672636193,-121.1390605957628,-121.1388403723674,-121.1387258786271,-121.1386077081676,-121.1384812434715,-121.1383710850562,-121.1382564039424,-121.1381249492007,-121.138031471904,-121.1379706979929,-121.1379184995456,-121.1378699775133,-121.1378088295069,-121.1377224246846,-121.1376418755766,-121.137247763963,-121.1371048495636,-121.1369992749036,-121.1368844032274,-121.1367078339592,-121.1366630185089,-121.1365197801961,-121.1363861510511,-121.1363783285027,-121.1363764330219,-121.1363206340807,-121.1362029931321,-121.136183351409,-121.1362258909804,-121.1363452863991,-121.1364607410158,-121.1365466870228,-121.1365527781815,-121.1365387412,-121.1366370119767,-121.1367579002735,-121.136867012683,-121.1369126385582,-121.1370514714993,-121.1371657936735,-121.137197360025,-121.1373015822583,-121.1373431825797,-121.1373473783048],"lat":[42.86461254036364,42.86431116344429,42.86399254998357,42.86395112723326,42.86373748368425,42.86369018588064,42.86348987153467,42.86337396047733,42.86336740994703,42.86345830694204,42.86359571088054,42.86370884006197,42.86393499078272,42.86405518497832,42.86416110300671,42.86427367475557,42.86424022546081,42.86422728978516,42.86427800150555,42.86438753815472,42.86448789759539,42.8645169911721,42.86445371052827,42.86445825270337,42.86445292660726,42.86442928938783,42.86441147798067,42.86449618414206,42.86468504236848,42.86485429251332,42.86490748629173,42.86494333773279,42.8649769203736,42.86499559345809,42.86503610167507,42.86509817093678,42.86515739481669,42.86520102108749,42.86524554188898,42.86531114148314,42.86540045723823,42.86550078155805,42.8655674808608,42.86563730002235,42.86570906756955,42.86574714136721,42.86581654623701,42.86586833659121,42.86596982952023,42.86607673553188,42.86616228774039,42.86624105094451,42.86634726709528,42.86638589116755,42.86647609641194,42.86652547489732,42.86657393775109,42.8666195569289,42.86669249295359,42.86677242561752,42.86688015633738,42.86698788697441,42.867111282785,42.86714442434435,42.86717417118531,42.86720953604168,42.86724705514376,42.86725351815626,42.86722663216118,42.86722518393705,42.86724529627227,42.86723235283112,42.86723049155407,42.86720984396799,42.86718282018842,42.86717790660558,42.86718228303685,42.86718014532599,42.86718486632478,42.86723069076287,42.86727353401122,42.86733516165273,42.86739346415639,42.86744511280197,42.86747070063647,42.86735352405002,42.86731103220522,42.86727964236606,42.86724548836745,42.86713104498718,42.86712202364418,42.86708848254762,42.86701764664659,42.86693713706902,42.86691761972697,42.86679811806904,42.86667487742027,42.86654455035313,42.86639452162208,42.86619394571976,42.86612434801196,42.86595896620636,42.86575654505868,42.86568483894207,42.86556387720687,42.86546183967533,42.86535960950866,42.86531159899111,42.86510259588719,42.86482710737594,42.86478980681524,42.86462130437127,42.86450946665045,42.86461254036364]}]]],null,"aoi_sf - study_site_lab",{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}},"pane":"polygon","stroke":true,"color":"#000080","weight":2,"opacity":0.9,"fill":true,"fillColor":"#6666FF","fillOpacity":0,"smoothFactor":1,"noClip":false},null,{"maxWidth":800,"minWidth":50,"autoPan":true,"keepInView":false,"closeButton":true,"closeOnClick":true,"className":""},"Sycan Marsh (OR)",{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},{"stroke":true,"weight":3,"opacity":0.9,"fillOpacity":0,"bringToFront":false,"sendToBack":false}]},{"method":"addLayersControl","args":[["Esri.WorldImagery","OpenStreetMap"],["SycanMarsh_als","SycanMarsh_uas_lidar","aoi_sf - study_site_lab"],{"collapsed":true,"autoZIndex":true,"position":"topleft"}]},{"method":"addLegend","args":[{"colors":["#6666FF"],"labels":["Sycan Marsh (OR)"],"na_color":null,"na_label":"NA","opacity":1,"position":"topright","type":"factor","title":"","extra":null,"layerId":null,"className":"info legend","group":"aoi_sf - study_site_lab"}]},{"method":"addHomeButton","args":[-121.1516243760736,42.860274959212,-121.1268832089352,42.86967324534542,true,null,"Zoom to full extent","<strong>Zoom full<\/strong>","bottomleft"]}],"limits":{"lat":[42.860274959212,42.86967324534542],"lng":[-121.1516243760736,-121.1268832089352]},"fitBounds":[42.860274959212,-121.1516243760736,42.86967324534542,-121.1268832089352,[]]},"evals":[],"jsHooks":{"render":[{"code":"function(el, x, data) {\n  return (\n      function(el, x, data) {\n      // get the leaflet map\n      var map = this; //HTMLWidgets.find('#' + el.id);\n      // we need a new div element because we have to handle\n      // the mouseover output separately\n      // debugger;\n      function addElement () {\n      // generate new div Element\n      var newDiv = $(document.createElement('div'));\n      // append at end of leaflet htmlwidget container\n      $(el).append(newDiv);\n      //provide ID and style\n      newDiv.addClass('lnlt');\n      newDiv.css({\"position\":\"relative\",\"bottomleft\":\"0px\",\"background-color\":\"rgba(255, 255, 255, 0.7)\",\"box-shadow\":\"0 0 2px #bbb\",\"background-clip\":\"padding-box\",\"margin\":\"0\",\"padding-left\":\"5px\",\"padding-right\":\"5px\",\"color\":\"#333\",\"font-size\":\"9px\",\"font-family\":\"\\\"Helvetica Neue\\\", Arial, Helvetica, sans-serif\",\"text-align\":\"left\",\"z-index\":\"700\"});\n      return newDiv;\n      }\n\n\n      // check for already existing lnlt class to not duplicate\n      var lnlt = $(el).find('.lnlt');\n\n      if(!lnlt.length) {\n      lnlt = addElement();\n\n      // grab the special div we generated in the beginning\n      // and put the mousmove output there\n\n      map.on('mousemove', function (e) {\n      if (e.originalEvent.ctrlKey) {\n      if (document.querySelector('.lnlt') === null) lnlt = addElement();\n      lnlt.text(\n                           ' lon: ' + (e.latlng.lng).toFixed(5) +\n                           ' | lat: ' + (e.latlng.lat).toFixed(5) +\n                           ' | zoom: ' + map.getZoom() +\n                           ' | x: ' + L.CRS.EPSG3857.project(e.latlng).x.toFixed(0) +\n                           ' | y: ' + L.CRS.EPSG3857.project(e.latlng).y.toFixed(0) +\n                           ' | epsg: 3857 ' +\n                           ' | proj4: +proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs ');\n      } else {\n      if (document.querySelector('.lnlt') === null) lnlt = addElement();\n      lnlt.text(\n                      ' lon: ' + (e.latlng.lng).toFixed(5) +\n                      ' | lat: ' + (e.latlng.lat).toFixed(5) +\n                      ' | zoom: ' + map.getZoom() + ' ');\n      }\n      });\n\n      // remove the lnlt div when mouse leaves map\n      map.on('mouseout', function (e) {\n      var strip = document.querySelector('.lnlt');\n      if( strip !==null) strip.remove();\n      });\n\n      };\n\n      //$(el).keypress(67, function(e) {\n      map.on('preclick', function(e) {\n      if (e.originalEvent.ctrlKey) {\n      if (document.querySelector('.lnlt') === null) lnlt = addElement();\n      lnlt.text(\n                      ' lon: ' + (e.latlng.lng).toFixed(5) +\n                      ' | lat: ' + (e.latlng.lat).toFixed(5) +\n                      ' | zoom: ' + map.getZoom() + ' ');\n      var txt = document.querySelector('.lnlt').textContent;\n      console.log(txt);\n      //txt.innerText.focus();\n      //txt.select();\n      setClipboardText('\"' + txt + '\"');\n      }\n      });\n\n      }\n      ).call(this.getMap(), el, x, data);\n}","data":null},{"code":"function(el, x, data) {\n  return (function(el,x,data){\n           var map = this;\n\n           map.on('keypress', function(e) {\n               console.log(e.originalEvent.code);\n               var key = e.originalEvent.code;\n               if (key === 'KeyE') {\n                   var bb = this.getBounds();\n                   var txt = JSON.stringify(bb);\n                   console.log(txt);\n\n                   setClipboardText('\\'' + txt + '\\'');\n               }\n           })\n        }).call(this.getMap(), el, x, data);\n}","data":null}]}}</script>
 <p>point cloud data summary</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="sycan-marsh-or.html#cb21-1" tabindex="-1"></a>aoi_las_ctg</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="sycan-marsh-or.html#cb20-1" tabindex="-1"></a>aoi_las_ctg</span></code></pre></div>
 <pre><code>## $SycanMarsh_als
 ## class       : LAScatalog (v1.4 format 6)
 ## extent      : 651000, 653000, 4747000, 4748000 (xmin, xmax, ymin, ymax)
@@ -320,104 +322,103 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="itd-tuning" class="section level3 hasAnchor" number="3.1.1">
 <h3><span class="header-section-number">3.1.1</span> ITD tuning<a href="sycan-marsh-or.html#itd-tuning" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>put las files in a list</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="sycan-marsh-or.html#cb23-1" tabindex="-1"></a><span class="co"># list of all las files</span></span>
-<span id="cb23-2"><a href="sycan-marsh-or.html#cb23-2" tabindex="-1"></a>las_flist_temp <span class="ot">&lt;-</span> aoi_las_ctg[[<span class="st">&quot;SycanMarsh_als&quot;</span>]] <span class="sc">%&gt;%</span> </span>
-<span id="cb23-3"><a href="sycan-marsh-or.html#cb23-3" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">pluck</span>(<span class="st">&quot;data&quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb23-4"><a href="sycan-marsh-or.html#cb23-4" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">pull</span>(filename)</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="sycan-marsh-or.html#cb22-1" tabindex="-1"></a><span class="co"># list of all las files</span></span>
+<span id="cb22-2"><a href="sycan-marsh-or.html#cb22-2" tabindex="-1"></a>las_flist_temp <span class="ot">&lt;-</span> aoi_las_ctg[[<span class="st">&quot;SycanMarsh_als&quot;</span>]] <span class="sc">%&gt;%</span> </span>
+<span id="cb22-3"><a href="sycan-marsh-or.html#cb22-3" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">pluck</span>(<span class="st">&quot;data&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb22-4"><a href="sycan-marsh-or.html#cb22-4" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">pull</span>(filename)</span></code></pre></div>
 <p>run tuning</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="sycan-marsh-or.html#cb24-1" tabindex="-1"></a><span class="co"># if there is an error with tuning...is it because there are no trees for a given ws_fn?</span></span>
-<span id="cb24-2"><a href="sycan-marsh-or.html#cb24-2" tabindex="-1"></a>    <span class="co"># Caused by error in `dplyr::group_by()`:</span></span>
-<span id="cb24-3"><a href="sycan-marsh-or.html#cb24-3" tabindex="-1"></a>    <span class="co"># ! Must group by variables found in `.data`.</span></span>
-<span id="cb24-4"><a href="sycan-marsh-or.html#cb24-4" tabindex="-1"></a>    <span class="co"># Column `ws_fn` is not found.</span></span>
-<span id="cb24-5"><a href="sycan-marsh-or.html#cb24-5" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">file.exists</span>(<span class="st">&quot;../data/itd_tuning_SycanMarsh_als.jpg&quot;</span>)){</span>
-<span id="cb24-6"><a href="sycan-marsh-or.html#cb24-6" tabindex="-1"></a>  <span class="co"># tuning</span></span>
-<span id="cb24-7"><a href="sycan-marsh-or.html#cb24-7" tabindex="-1"></a>  itd_tuning_ans <span class="ot">&lt;-</span> cloud2trees<span class="sc">::</span><span class="fu">itd_tuning</span>(</span>
-<span id="cb24-8"><a href="sycan-marsh-or.html#cb24-8" tabindex="-1"></a>      <span class="at">input_las_dir =</span> las_flist_temp</span>
-<span id="cb24-9"><a href="sycan-marsh-or.html#cb24-9" tabindex="-1"></a>      , <span class="at">n_samples =</span> <span class="dv">2</span></span>
-<span id="cb24-10"><a href="sycan-marsh-or.html#cb24-10" tabindex="-1"></a>      , <span class="at">ws_fn_list =</span> my_ws_functions</span>
-<span id="cb24-11"><a href="sycan-marsh-or.html#cb24-11" tabindex="-1"></a>    )</span>
-<span id="cb24-12"><a href="sycan-marsh-or.html#cb24-12" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">ggsave</span>(</span>
-<span id="cb24-13"><a href="sycan-marsh-or.html#cb24-13" tabindex="-1"></a>    <span class="st">&quot;../data/itd_tuning_SycanMarsh_als.jpg&quot;</span></span>
-<span id="cb24-14"><a href="sycan-marsh-or.html#cb24-14" tabindex="-1"></a>    , <span class="at">plot =</span> itd_tuning_ans<span class="sc">$</span>plot_samples</span>
-<span id="cb24-15"><a href="sycan-marsh-or.html#cb24-15" tabindex="-1"></a>    , <span class="at">dpi =</span> <span class="st">&quot;print&quot;</span></span>
-<span id="cb24-16"><a href="sycan-marsh-or.html#cb24-16" tabindex="-1"></a>    , <span class="at">height =</span> <span class="dv">6</span>, <span class="at">width =</span> <span class="dv">10</span></span>
-<span id="cb24-17"><a href="sycan-marsh-or.html#cb24-17" tabindex="-1"></a>  )</span>
-<span id="cb24-18"><a href="sycan-marsh-or.html#cb24-18" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="sycan-marsh-or.html#cb23-1" tabindex="-1"></a><span class="co"># if there is an error with tuning...is it because there are no trees for a given ws_fn?</span></span>
+<span id="cb23-2"><a href="sycan-marsh-or.html#cb23-2" tabindex="-1"></a>    <span class="co"># Caused by error in `dplyr::group_by()`:</span></span>
+<span id="cb23-3"><a href="sycan-marsh-or.html#cb23-3" tabindex="-1"></a>    <span class="co"># ! Must group by variables found in `.data`.</span></span>
+<span id="cb23-4"><a href="sycan-marsh-or.html#cb23-4" tabindex="-1"></a>    <span class="co"># Column `ws_fn` is not found.</span></span>
+<span id="cb23-5"><a href="sycan-marsh-or.html#cb23-5" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">file.exists</span>(<span class="st">&quot;../data/itd_tuning_SycanMarsh_als.jpg&quot;</span>)){</span>
+<span id="cb23-6"><a href="sycan-marsh-or.html#cb23-6" tabindex="-1"></a>  <span class="co"># tuning</span></span>
+<span id="cb23-7"><a href="sycan-marsh-or.html#cb23-7" tabindex="-1"></a>  itd_tuning_ans <span class="ot">&lt;-</span> cloud2trees<span class="sc">::</span><span class="fu">itd_tuning</span>(</span>
+<span id="cb23-8"><a href="sycan-marsh-or.html#cb23-8" tabindex="-1"></a>      <span class="at">input_las_dir =</span> las_flist_temp</span>
+<span id="cb23-9"><a href="sycan-marsh-or.html#cb23-9" tabindex="-1"></a>      , <span class="at">n_samples =</span> <span class="dv">2</span></span>
+<span id="cb23-10"><a href="sycan-marsh-or.html#cb23-10" tabindex="-1"></a>      , <span class="at">ws_fn_list =</span> my_ws_functions</span>
+<span id="cb23-11"><a href="sycan-marsh-or.html#cb23-11" tabindex="-1"></a>    )</span>
+<span id="cb23-12"><a href="sycan-marsh-or.html#cb23-12" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">ggsave</span>(</span>
+<span id="cb23-13"><a href="sycan-marsh-or.html#cb23-13" tabindex="-1"></a>    <span class="st">&quot;../data/itd_tuning_SycanMarsh_als.jpg&quot;</span></span>
+<span id="cb23-14"><a href="sycan-marsh-or.html#cb23-14" tabindex="-1"></a>    , <span class="at">plot =</span> itd_tuning_ans<span class="sc">$</span>plot_samples</span>
+<span id="cb23-15"><a href="sycan-marsh-or.html#cb23-15" tabindex="-1"></a>    , <span class="at">dpi =</span> <span class="st">&quot;print&quot;</span></span>
+<span id="cb23-16"><a href="sycan-marsh-or.html#cb23-16" tabindex="-1"></a>    , <span class="at">height =</span> <span class="dv">6</span>, <span class="at">width =</span> <span class="dv">10</span></span>
+<span id="cb23-17"><a href="sycan-marsh-or.html#cb23-17" tabindex="-1"></a>  )</span>
+<span id="cb23-18"><a href="sycan-marsh-or.html#cb23-18" tabindex="-1"></a>}</span></code></pre></div>
 <p><img src="https://i.ibb.co/VpqjxXSf/itd-tuning-Sycan-Marsh-als.jpg" width="100%" height="100%" style="display: block; margin: auto;" /></p>
 <p>pick the best function for use in ITD</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="sycan-marsh-or.html#cb25-1" tabindex="-1"></a><span class="co"># pick the best function for use in ITD</span></span>
-<span id="cb25-2"><a href="sycan-marsh-or.html#cb25-2" tabindex="-1"></a>best_ws_fn_temp <span class="ot">&lt;-</span> my_ws_functions<span class="sc">$</span>exp_fn</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="sycan-marsh-or.html#cb24-1" tabindex="-1"></a><span class="co"># pick the best function for use in ITD</span></span>
+<span id="cb24-2"><a href="sycan-marsh-or.html#cb24-2" tabindex="-1"></a>best_ws_fn_temp <span class="ot">&lt;-</span> my_ws_functions<span class="sc">$</span>exp_fn</span></code></pre></div>
 </div>
 <div id="cloud2trees-point-cloud-processing" class="section level3 hasAnchor" number="3.1.2">
 <h3><span class="header-section-number">3.1.2</span> <code>cloud2trees</code> point cloud processing<a href="sycan-marsh-or.html#cloud2trees-point-cloud-processing" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="sycan-marsh-or.html#cb26-1" tabindex="-1"></a>dir_temp <span class="ot">&lt;-</span> <span class="fu">file.path</span>(aoi_sf<span class="sc">$</span>fdir, <span class="st">&quot;als_processing&quot;</span>)</span>
-<span id="cb26-2"><a href="sycan-marsh-or.html#cb26-2" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">dir.exists</span>(dir_temp)){</span>
-<span id="cb26-3"><a href="sycan-marsh-or.html#cb26-3" tabindex="-1"></a>  <span class="fu">dir.create</span>(dir_temp)</span>
-<span id="cb26-4"><a href="sycan-marsh-or.html#cb26-4" tabindex="-1"></a><span class="co"># c2t</span></span>
-<span id="cb26-5"><a href="sycan-marsh-or.html#cb26-5" tabindex="-1"></a>  cloud2trees_ans <span class="ot">&lt;-</span> cloud2trees<span class="sc">::</span><span class="fu">cloud2trees</span>(</span>
-<span id="cb26-6"><a href="sycan-marsh-or.html#cb26-6" tabindex="-1"></a>    <span class="at">input_las_dir =</span> las_flist_temp</span>
-<span id="cb26-7"><a href="sycan-marsh-or.html#cb26-7" tabindex="-1"></a>    , <span class="at">output_dir =</span> dir_temp</span>
-<span id="cb26-8"><a href="sycan-marsh-or.html#cb26-8" tabindex="-1"></a>    , <span class="at">ws =</span> best_ws_fn_temp</span>
-<span id="cb26-9"><a href="sycan-marsh-or.html#cb26-9" tabindex="-1"></a>    , <span class="at">dtm_res_m =</span> <span class="dv">1</span></span>
-<span id="cb26-10"><a href="sycan-marsh-or.html#cb26-10" tabindex="-1"></a>    , <span class="at">chm_res_m =</span> <span class="fl">0.25</span></span>
-<span id="cb26-11"><a href="sycan-marsh-or.html#cb26-11" tabindex="-1"></a>    , <span class="at">estimate_tree_dbh =</span> T</span>
-<span id="cb26-12"><a href="sycan-marsh-or.html#cb26-12" tabindex="-1"></a>    , <span class="at">estimate_tree_type =</span> T</span>
-<span id="cb26-13"><a href="sycan-marsh-or.html#cb26-13" tabindex="-1"></a>    <span class="co"># hmd</span></span>
-<span id="cb26-14"><a href="sycan-marsh-or.html#cb26-14" tabindex="-1"></a>    , <span class="at">estimate_tree_hmd =</span> T</span>
-<span id="cb26-15"><a href="sycan-marsh-or.html#cb26-15" tabindex="-1"></a>    , <span class="at">hmd_tree_sample_prop =</span> <span class="fl">0.5</span></span>
-<span id="cb26-16"><a href="sycan-marsh-or.html#cb26-16" tabindex="-1"></a>    , <span class="at">hmd_estimate_missing_hmd =</span> T</span>
-<span id="cb26-17"><a href="sycan-marsh-or.html#cb26-17" tabindex="-1"></a>    <span class="co"># biomass</span></span>
-<span id="cb26-18"><a href="sycan-marsh-or.html#cb26-18" tabindex="-1"></a>    , <span class="at">estimate_biomass_method =</span> <span class="fu">c</span>(<span class="st">&quot;landfire&quot;</span>,<span class="st">&quot;cruz&quot;</span>)</span>
-<span id="cb26-19"><a href="sycan-marsh-or.html#cb26-19" tabindex="-1"></a>    <span class="co"># cbh</span></span>
-<span id="cb26-20"><a href="sycan-marsh-or.html#cb26-20" tabindex="-1"></a>    , <span class="at">estimate_tree_cbh =</span> T</span>
-<span id="cb26-21"><a href="sycan-marsh-or.html#cb26-21" tabindex="-1"></a>    , <span class="at">cbh_tree_sample_prop =</span> <span class="fl">0.5</span></span>
-<span id="cb26-22"><a href="sycan-marsh-or.html#cb26-22" tabindex="-1"></a>    , <span class="at">cbh_estimate_missing_cbh =</span> T</span>
-<span id="cb26-23"><a href="sycan-marsh-or.html#cb26-23" tabindex="-1"></a>  )</span>
-<span id="cb26-24"><a href="sycan-marsh-or.html#cb26-24" tabindex="-1"></a>}<span class="cf">else</span>{</span>
-<span id="cb26-25"><a href="sycan-marsh-or.html#cb26-25" tabindex="-1"></a>  cloud2trees_ans <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb26-26"><a href="sycan-marsh-or.html#cb26-26" tabindex="-1"></a>    <span class="st">&quot;dtm_rast&quot;</span> <span class="ot">=</span> terra<span class="sc">::</span><span class="fu">rast</span>( <span class="fu">file.path</span>(dir_temp, <span class="st">&quot;point_cloud_processing_delivery&quot;</span>, <span class="st">&quot;dtm_1m.tif&quot;</span>) )</span>
-<span id="cb26-27"><a href="sycan-marsh-or.html#cb26-27" tabindex="-1"></a>    , <span class="st">&quot;chm_rast&quot;</span> <span class="ot">=</span> terra<span class="sc">::</span><span class="fu">rast</span>( <span class="fu">file.path</span>(dir_temp, <span class="st">&quot;point_cloud_processing_delivery&quot;</span>, <span class="st">&quot;chm_0.25m.tif&quot;</span>) )</span>
-<span id="cb26-28"><a href="sycan-marsh-or.html#cb26-28" tabindex="-1"></a>    , <span class="st">&quot;crowns_sf&quot;</span> <span class="ot">=</span> <span class="fu">list.files</span>(</span>
-<span id="cb26-29"><a href="sycan-marsh-or.html#cb26-29" tabindex="-1"></a>        <span class="fu">file.path</span>(dir_temp, <span class="st">&quot;point_cloud_processing_delivery&quot;</span>)</span>
-<span id="cb26-30"><a href="sycan-marsh-or.html#cb26-30" tabindex="-1"></a>        , <span class="at">pattern =</span> <span class="st">&quot;final_detected_crowns.*</span><span class="sc">\\</span><span class="st">.gpkg$&quot;</span></span>
-<span id="cb26-31"><a href="sycan-marsh-or.html#cb26-31" tabindex="-1"></a>        , <span class="at">full.names =</span> T</span>
-<span id="cb26-32"><a href="sycan-marsh-or.html#cb26-32" tabindex="-1"></a>      ) <span class="sc">%&gt;%</span> </span>
-<span id="cb26-33"><a href="sycan-marsh-or.html#cb26-33" tabindex="-1"></a>      <span class="fu">normalizePath</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb26-34"><a href="sycan-marsh-or.html#cb26-34" tabindex="-1"></a>      purrr<span class="sc">::</span><span class="fu">map</span>(\(x)</span>
-<span id="cb26-35"><a href="sycan-marsh-or.html#cb26-35" tabindex="-1"></a>        sf<span class="sc">::</span><span class="fu">st_read</span>(</span>
-<span id="cb26-36"><a href="sycan-marsh-or.html#cb26-36" tabindex="-1"></a>          <span class="at">dsn =</span> x</span>
-<span id="cb26-37"><a href="sycan-marsh-or.html#cb26-37" tabindex="-1"></a>          , <span class="at">quiet =</span> T</span>
-<span id="cb26-38"><a href="sycan-marsh-or.html#cb26-38" tabindex="-1"></a>        )</span>
-<span id="cb26-39"><a href="sycan-marsh-or.html#cb26-39" tabindex="-1"></a>      ) <span class="sc">%&gt;%</span> </span>
-<span id="cb26-40"><a href="sycan-marsh-or.html#cb26-40" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">bind_rows</span>()</span>
-<span id="cb26-41"><a href="sycan-marsh-or.html#cb26-41" tabindex="-1"></a>    , <span class="st">&quot;foresttype_rast&quot;</span> <span class="ot">=</span> terra<span class="sc">::</span><span class="fu">rast</span>( <span class="fu">file.path</span>(dir_temp, <span class="st">&quot;point_cloud_processing_delivery&quot;</span>, <span class="st">&quot;fia_foresttype_raster.tif&quot;</span>) ) <span class="sc">%&gt;%</span> </span>
-<span id="cb26-42"><a href="sycan-marsh-or.html#cb26-42" tabindex="-1"></a>        terra<span class="sc">::</span><span class="fu">subst</span>(<span class="at">from =</span> foresttype_lookup<span class="sc">$</span>forest_type_group_code, <span class="at">to =</span> foresttype_lookup<span class="sc">$</span>forest_type_group)</span>
-<span id="cb26-43"><a href="sycan-marsh-or.html#cb26-43" tabindex="-1"></a>  )</span>
-<span id="cb26-44"><a href="sycan-marsh-or.html#cb26-44" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="sycan-marsh-or.html#cb25-1" tabindex="-1"></a>dir_temp <span class="ot">&lt;-</span> <span class="fu">file.path</span>(aoi_sf<span class="sc">$</span>fdir, <span class="st">&quot;als_processing&quot;</span>)</span>
+<span id="cb25-2"><a href="sycan-marsh-or.html#cb25-2" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">dir.exists</span>(dir_temp)){</span>
+<span id="cb25-3"><a href="sycan-marsh-or.html#cb25-3" tabindex="-1"></a>  <span class="fu">dir.create</span>(dir_temp)</span>
+<span id="cb25-4"><a href="sycan-marsh-or.html#cb25-4" tabindex="-1"></a><span class="co"># c2t</span></span>
+<span id="cb25-5"><a href="sycan-marsh-or.html#cb25-5" tabindex="-1"></a>  cloud2trees_ans <span class="ot">&lt;-</span> cloud2trees<span class="sc">::</span><span class="fu">cloud2trees</span>(</span>
+<span id="cb25-6"><a href="sycan-marsh-or.html#cb25-6" tabindex="-1"></a>    <span class="at">input_las_dir =</span> las_flist_temp</span>
+<span id="cb25-7"><a href="sycan-marsh-or.html#cb25-7" tabindex="-1"></a>    , <span class="at">output_dir =</span> dir_temp</span>
+<span id="cb25-8"><a href="sycan-marsh-or.html#cb25-8" tabindex="-1"></a>    , <span class="at">ws =</span> best_ws_fn_temp</span>
+<span id="cb25-9"><a href="sycan-marsh-or.html#cb25-9" tabindex="-1"></a>    , <span class="at">dtm_res_m =</span> <span class="dv">1</span></span>
+<span id="cb25-10"><a href="sycan-marsh-or.html#cb25-10" tabindex="-1"></a>    , <span class="at">chm_res_m =</span> <span class="fl">0.25</span></span>
+<span id="cb25-11"><a href="sycan-marsh-or.html#cb25-11" tabindex="-1"></a>    , <span class="at">estimate_tree_dbh =</span> T</span>
+<span id="cb25-12"><a href="sycan-marsh-or.html#cb25-12" tabindex="-1"></a>    , <span class="at">estimate_tree_type =</span> T</span>
+<span id="cb25-13"><a href="sycan-marsh-or.html#cb25-13" tabindex="-1"></a>    <span class="co"># hmd</span></span>
+<span id="cb25-14"><a href="sycan-marsh-or.html#cb25-14" tabindex="-1"></a>    , <span class="at">estimate_tree_hmd =</span> T</span>
+<span id="cb25-15"><a href="sycan-marsh-or.html#cb25-15" tabindex="-1"></a>    , <span class="at">hmd_tree_sample_prop =</span> <span class="fl">0.5</span></span>
+<span id="cb25-16"><a href="sycan-marsh-or.html#cb25-16" tabindex="-1"></a>    , <span class="at">hmd_estimate_missing_hmd =</span> T</span>
+<span id="cb25-17"><a href="sycan-marsh-or.html#cb25-17" tabindex="-1"></a>    <span class="co"># biomass</span></span>
+<span id="cb25-18"><a href="sycan-marsh-or.html#cb25-18" tabindex="-1"></a>    , <span class="at">estimate_biomass_method =</span> <span class="fu">c</span>(<span class="st">&quot;landfire&quot;</span>,<span class="st">&quot;cruz&quot;</span>)</span>
+<span id="cb25-19"><a href="sycan-marsh-or.html#cb25-19" tabindex="-1"></a>    <span class="co"># cbh</span></span>
+<span id="cb25-20"><a href="sycan-marsh-or.html#cb25-20" tabindex="-1"></a>    , <span class="at">estimate_tree_cbh =</span> T</span>
+<span id="cb25-21"><a href="sycan-marsh-or.html#cb25-21" tabindex="-1"></a>    , <span class="at">cbh_tree_sample_prop =</span> <span class="fl">0.5</span></span>
+<span id="cb25-22"><a href="sycan-marsh-or.html#cb25-22" tabindex="-1"></a>    , <span class="at">cbh_estimate_missing_cbh =</span> T</span>
+<span id="cb25-23"><a href="sycan-marsh-or.html#cb25-23" tabindex="-1"></a>  )</span>
+<span id="cb25-24"><a href="sycan-marsh-or.html#cb25-24" tabindex="-1"></a>}<span class="cf">else</span>{</span>
+<span id="cb25-25"><a href="sycan-marsh-or.html#cb25-25" tabindex="-1"></a>  cloud2trees_ans <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb25-26"><a href="sycan-marsh-or.html#cb25-26" tabindex="-1"></a>    <span class="st">&quot;dtm_rast&quot;</span> <span class="ot">=</span> terra<span class="sc">::</span><span class="fu">rast</span>( <span class="fu">file.path</span>(dir_temp, <span class="st">&quot;point_cloud_processing_delivery&quot;</span>, <span class="st">&quot;dtm_1m.tif&quot;</span>) )</span>
+<span id="cb25-27"><a href="sycan-marsh-or.html#cb25-27" tabindex="-1"></a>    , <span class="st">&quot;chm_rast&quot;</span> <span class="ot">=</span> terra<span class="sc">::</span><span class="fu">rast</span>( <span class="fu">file.path</span>(dir_temp, <span class="st">&quot;point_cloud_processing_delivery&quot;</span>, <span class="st">&quot;chm_0.25m.tif&quot;</span>) )</span>
+<span id="cb25-28"><a href="sycan-marsh-or.html#cb25-28" tabindex="-1"></a>    , <span class="st">&quot;crowns_sf&quot;</span> <span class="ot">=</span> <span class="fu">list.files</span>(</span>
+<span id="cb25-29"><a href="sycan-marsh-or.html#cb25-29" tabindex="-1"></a>        <span class="fu">file.path</span>(dir_temp, <span class="st">&quot;point_cloud_processing_delivery&quot;</span>)</span>
+<span id="cb25-30"><a href="sycan-marsh-or.html#cb25-30" tabindex="-1"></a>        , <span class="at">pattern =</span> <span class="st">&quot;final_detected_crowns.*</span><span class="sc">\\</span><span class="st">.gpkg$&quot;</span></span>
+<span id="cb25-31"><a href="sycan-marsh-or.html#cb25-31" tabindex="-1"></a>        , <span class="at">full.names =</span> T</span>
+<span id="cb25-32"><a href="sycan-marsh-or.html#cb25-32" tabindex="-1"></a>      ) <span class="sc">%&gt;%</span> </span>
+<span id="cb25-33"><a href="sycan-marsh-or.html#cb25-33" tabindex="-1"></a>      <span class="fu">normalizePath</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb25-34"><a href="sycan-marsh-or.html#cb25-34" tabindex="-1"></a>      purrr<span class="sc">::</span><span class="fu">map</span>(\(x)</span>
+<span id="cb25-35"><a href="sycan-marsh-or.html#cb25-35" tabindex="-1"></a>        sf<span class="sc">::</span><span class="fu">st_read</span>(</span>
+<span id="cb25-36"><a href="sycan-marsh-or.html#cb25-36" tabindex="-1"></a>          <span class="at">dsn =</span> x</span>
+<span id="cb25-37"><a href="sycan-marsh-or.html#cb25-37" tabindex="-1"></a>          , <span class="at">quiet =</span> T</span>
+<span id="cb25-38"><a href="sycan-marsh-or.html#cb25-38" tabindex="-1"></a>        )</span>
+<span id="cb25-39"><a href="sycan-marsh-or.html#cb25-39" tabindex="-1"></a>      ) <span class="sc">%&gt;%</span> </span>
+<span id="cb25-40"><a href="sycan-marsh-or.html#cb25-40" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">bind_rows</span>()</span>
+<span id="cb25-41"><a href="sycan-marsh-or.html#cb25-41" tabindex="-1"></a>    , <span class="st">&quot;foresttype_rast&quot;</span> <span class="ot">=</span> terra<span class="sc">::</span><span class="fu">rast</span>( <span class="fu">file.path</span>(dir_temp, <span class="st">&quot;point_cloud_processing_delivery&quot;</span>, <span class="st">&quot;fia_foresttype_raster.tif&quot;</span>) ) <span class="sc">%&gt;%</span> </span>
+<span id="cb25-42"><a href="sycan-marsh-or.html#cb25-42" tabindex="-1"></a>        terra<span class="sc">::</span><span class="fu">subst</span>(<span class="at">from =</span> foresttype_lookup<span class="sc">$</span>forest_type_group_code, <span class="at">to =</span> foresttype_lookup<span class="sc">$</span>forest_type_group)</span>
+<span id="cb25-43"><a href="sycan-marsh-or.html#cb25-43" tabindex="-1"></a>  )</span>
+<span id="cb25-44"><a href="sycan-marsh-or.html#cb25-44" tabindex="-1"></a>}</span></code></pre></div>
 </div>
 <div id="cloud2trees-results" class="section level3 hasAnchor" number="3.1.3">
 <h3><span class="header-section-number">3.1.3</span> <code>cloud2trees</code> Results<a href="sycan-marsh-or.html#cloud2trees-results" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div id="fia-forest-type-group" class="section level4 hasAnchor" number="3.1.3.1">
 <h4><span class="header-section-number">3.1.3.1</span> FIA Forest Type Group<a href="sycan-marsh-or.html#fia-forest-type-group" class="anchor-section" aria-label="Anchor link to header"></a></h4>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="sycan-marsh-or.html#cb27-1" tabindex="-1"></a><span class="co"># load raster</span></span>
-<span id="cb27-2"><a href="sycan-marsh-or.html#cb27-2" tabindex="-1"></a><span class="fu">plt_rast_poly_fn</span>(</span>
-<span id="cb27-3"><a href="sycan-marsh-or.html#cb27-3" tabindex="-1"></a>  <span class="at">rast =</span> cloud2trees_ans<span class="sc">$</span>foresttype_rast</span>
-<span id="cb27-4"><a href="sycan-marsh-or.html#cb27-4" tabindex="-1"></a>  , <span class="at">poly =</span> aoi_sf</span>
-<span id="cb27-5"><a href="sycan-marsh-or.html#cb27-5" tabindex="-1"></a>  , <span class="at">title =</span> <span class="st">&quot;FIA forest type group&quot;</span></span>
-<span id="cb27-6"><a href="sycan-marsh-or.html#cb27-6" tabindex="-1"></a>  , <span class="at">crop =</span> T</span>
-<span id="cb27-7"><a href="sycan-marsh-or.html#cb27-7" tabindex="-1"></a>  , <span class="at">buff =</span> <span class="dv">22</span></span>
-<span id="cb27-8"><a href="sycan-marsh-or.html#cb27-8" tabindex="-1"></a>  , <span class="at">col =</span> <span class="st">&quot;navy&quot;</span></span>
-<span id="cb27-9"><a href="sycan-marsh-or.html#cb27-9" tabindex="-1"></a>) <span class="sc">+</span></span>
-<span id="cb27-10"><a href="sycan-marsh-or.html#cb27-10" tabindex="-1"></a>  harrypotter<span class="sc">::</span><span class="fu">scale_fill_hp_d</span>(</span>
-<span id="cb27-11"><a href="sycan-marsh-or.html#cb27-11" tabindex="-1"></a>    <span class="at">option =</span> <span class="st">&quot;lunalovegood&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.8</span></span>
-<span id="cb27-12"><a href="sycan-marsh-or.html#cb27-12" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb27-13"><a href="sycan-marsh-or.html#cb27-13" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste0</span>(aoi_sf<span class="sc">$</span>study_site_lab, <span class="st">&quot; - ALS&quot;</span>)) <span class="sc">+</span></span>
-<span id="cb27-14"><a href="sycan-marsh-or.html#cb27-14" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">theme</span>(</span>
-<span id="cb27-15"><a href="sycan-marsh-or.html#cb27-15" tabindex="-1"></a>    <span class="at">legend.text =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">7</span>, <span class="at">angle =</span> <span class="dv">0</span>)</span>
-<span id="cb27-16"><a href="sycan-marsh-or.html#cb27-16" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="sycan-marsh-or.html#cb26-1" tabindex="-1"></a><span class="co"># load raster</span></span>
+<span id="cb26-2"><a href="sycan-marsh-or.html#cb26-2" tabindex="-1"></a><span class="fu">plt_rast_poly_fn</span>(</span>
+<span id="cb26-3"><a href="sycan-marsh-or.html#cb26-3" tabindex="-1"></a>  <span class="at">rast =</span> cloud2trees_ans<span class="sc">$</span>foresttype_rast</span>
+<span id="cb26-4"><a href="sycan-marsh-or.html#cb26-4" tabindex="-1"></a>  , <span class="at">poly =</span> aoi_sf</span>
+<span id="cb26-5"><a href="sycan-marsh-or.html#cb26-5" tabindex="-1"></a>  , <span class="at">title =</span> <span class="st">&quot;FIA forest type group&quot;</span></span>
+<span id="cb26-6"><a href="sycan-marsh-or.html#cb26-6" tabindex="-1"></a>  , <span class="at">crop =</span> T</span>
+<span id="cb26-7"><a href="sycan-marsh-or.html#cb26-7" tabindex="-1"></a>  , <span class="at">buff =</span> <span class="dv">22</span></span>
+<span id="cb26-8"><a href="sycan-marsh-or.html#cb26-8" tabindex="-1"></a>  , <span class="at">col =</span> <span class="st">&quot;navy&quot;</span></span>
+<span id="cb26-9"><a href="sycan-marsh-or.html#cb26-9" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb26-10"><a href="sycan-marsh-or.html#cb26-10" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">scale_fill_viridis_d</span>(<span class="at">option =</span> <span class="st">&quot;turbo&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb26-11"><a href="sycan-marsh-or.html#cb26-11" tabindex="-1"></a>  <span class="co"># harrypotter::scale_fill_hp_d(option = &quot;lunalovegood&quot;, alpha = 0.8) +</span></span>
+<span id="cb26-12"><a href="sycan-marsh-or.html#cb26-12" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste0</span>(aoi_sf<span class="sc">$</span>study_site_lab, <span class="st">&quot; - ALS&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb26-13"><a href="sycan-marsh-or.html#cb26-13" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">theme</span>(</span>
+<span id="cb26-14"><a href="sycan-marsh-or.html#cb26-14" tabindex="-1"></a>    <span class="at">legend.text =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">7</span>, <span class="at">angle =</span> <span class="dv">0</span>)</span>
+<span id="cb26-15"><a href="sycan-marsh-or.html#cb26-15" tabindex="-1"></a>  )</span></code></pre></div>
 <p><img src="dod_cloud2trees_demo_files/figure-html/unnamed-chunk-28-1.png" width="1008" /></p>
 <p>distribution by forest type</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="sycan-marsh-or.html#cb28-1" tabindex="-1"></a><span class="fu">foresttype_sum_fn</span>(<span class="at">crowns =</span> cloud2trees_ans<span class="sc">$</span>crowns_sf, <span class="at">aoi =</span> aoi_sf, <span class="at">unit =</span> aoi_sf<span class="sc">$</span>study_site_lab[<span class="dv">1</span>])</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="sycan-marsh-or.html#cb27-1" tabindex="-1"></a><span class="fu">foresttype_sum_fn</span>(<span class="at">crowns =</span> cloud2trees_ans<span class="sc">$</span>crowns_sf, <span class="at">aoi =</span> aoi_sf, <span class="at">unit =</span> aoi_sf<span class="sc">$</span>study_site_lab[<span class="dv">1</span>])</span></code></pre></div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:unnamed-chunk-29">Table 3.1: </span>Count of trees by FIA Forest Type Group
@@ -457,109 +458,111 @@ Ponderosa pine group
 </div>
 <div id="dtm" class="section level4 hasAnchor" number="3.1.3.2">
 <h4><span class="header-section-number">3.1.3.2</span> DTM<a href="sycan-marsh-or.html#dtm" class="anchor-section" aria-label="Anchor link to header"></a></h4>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="sycan-marsh-or.html#cb29-1" tabindex="-1"></a><span class="fu">plt_rast_poly_fn</span>(</span>
-<span id="cb29-2"><a href="sycan-marsh-or.html#cb29-2" tabindex="-1"></a>  <span class="at">rast =</span> cloud2trees_ans<span class="sc">$</span>dtm_rast</span>
-<span id="cb29-3"><a href="sycan-marsh-or.html#cb29-3" tabindex="-1"></a>  , <span class="at">poly =</span> aoi_sf</span>
-<span id="cb29-4"><a href="sycan-marsh-or.html#cb29-4" tabindex="-1"></a>  , <span class="at">title =</span> <span class="st">&quot;DTM (m)&quot;</span></span>
-<span id="cb29-5"><a href="sycan-marsh-or.html#cb29-5" tabindex="-1"></a>  , <span class="at">crop =</span> T</span>
-<span id="cb29-6"><a href="sycan-marsh-or.html#cb29-6" tabindex="-1"></a>  , <span class="at">buff =</span> <span class="dv">22</span></span>
-<span id="cb29-7"><a href="sycan-marsh-or.html#cb29-7" tabindex="-1"></a>  , <span class="at">col =</span> <span class="st">&quot;navy&quot;</span></span>
-<span id="cb29-8"><a href="sycan-marsh-or.html#cb29-8" tabindex="-1"></a>) <span class="sc">+</span></span>
-<span id="cb29-9"><a href="sycan-marsh-or.html#cb29-9" tabindex="-1"></a>  harrypotter<span class="sc">::</span><span class="fu">scale_fill_hp</span>(</span>
-<span id="cb29-10"><a href="sycan-marsh-or.html#cb29-10" tabindex="-1"></a>    <span class="at">option =</span> <span class="st">&quot;mischief&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.9</span>, <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">comma_format</span>(<span class="at">accuracy=</span><span class="dv">1</span>), <span class="at">breaks =</span> scales<span class="sc">::</span><span class="fu">breaks_extended</span>(<span class="at">n=</span><span class="dv">6</span>)</span>
-<span id="cb29-11"><a href="sycan-marsh-or.html#cb29-11" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb29-12"><a href="sycan-marsh-or.html#cb29-12" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste0</span>(aoi_sf<span class="sc">$</span>study_site_lab, <span class="st">&quot; - ALS&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="sycan-marsh-or.html#cb28-1" tabindex="-1"></a><span class="fu">plt_rast_poly_fn</span>(</span>
+<span id="cb28-2"><a href="sycan-marsh-or.html#cb28-2" tabindex="-1"></a>  <span class="at">rast =</span> cloud2trees_ans<span class="sc">$</span>dtm_rast</span>
+<span id="cb28-3"><a href="sycan-marsh-or.html#cb28-3" tabindex="-1"></a>  , <span class="at">poly =</span> aoi_sf</span>
+<span id="cb28-4"><a href="sycan-marsh-or.html#cb28-4" tabindex="-1"></a>  , <span class="at">title =</span> <span class="st">&quot;DTM (m)&quot;</span></span>
+<span id="cb28-5"><a href="sycan-marsh-or.html#cb28-5" tabindex="-1"></a>  , <span class="at">crop =</span> T</span>
+<span id="cb28-6"><a href="sycan-marsh-or.html#cb28-6" tabindex="-1"></a>  , <span class="at">buff =</span> <span class="dv">22</span></span>
+<span id="cb28-7"><a href="sycan-marsh-or.html#cb28-7" tabindex="-1"></a>  , <span class="at">col =</span> <span class="st">&quot;navy&quot;</span></span>
+<span id="cb28-8"><a href="sycan-marsh-or.html#cb28-8" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb28-9"><a href="sycan-marsh-or.html#cb28-9" tabindex="-1"></a>  harrypotter<span class="sc">::</span><span class="fu">scale_fill_hp</span>(</span>
+<span id="cb28-10"><a href="sycan-marsh-or.html#cb28-10" tabindex="-1"></a>    <span class="at">option =</span> <span class="st">&quot;mischief&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.9</span>, <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">comma_format</span>(<span class="at">accuracy=</span><span class="dv">1</span>), <span class="at">breaks =</span> scales<span class="sc">::</span><span class="fu">breaks_extended</span>(<span class="at">n=</span><span class="dv">6</span>)</span>
+<span id="cb28-11"><a href="sycan-marsh-or.html#cb28-11" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb28-12"><a href="sycan-marsh-or.html#cb28-12" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste0</span>(aoi_sf<span class="sc">$</span>study_site_lab, <span class="st">&quot; - ALS&quot;</span>))</span></code></pre></div>
 <p><img src="dod_cloud2trees_demo_files/figure-html/unnamed-chunk-30-1.png" width="1008" /></p>
 </div>
 <div id="chm" class="section level4 hasAnchor" number="3.1.3.3">
 <h4><span class="header-section-number">3.1.3.3</span> CHM<a href="sycan-marsh-or.html#chm" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>plot the CHM and we’ll also add the extracted trees in gray</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="sycan-marsh-or.html#cb30-1" tabindex="-1"></a><span class="fu">plt_rast_poly_fn</span>(</span>
-<span id="cb30-2"><a href="sycan-marsh-or.html#cb30-2" tabindex="-1"></a>  <span class="at">rast =</span> cloud2trees_ans<span class="sc">$</span>chm_rast</span>
-<span id="cb30-3"><a href="sycan-marsh-or.html#cb30-3" tabindex="-1"></a>  , <span class="at">poly =</span> aoi_sf</span>
-<span id="cb30-4"><a href="sycan-marsh-or.html#cb30-4" tabindex="-1"></a>  , <span class="at">title =</span> <span class="st">&quot;CHM (m)&quot;</span></span>
-<span id="cb30-5"><a href="sycan-marsh-or.html#cb30-5" tabindex="-1"></a>  , <span class="at">crop =</span> T</span>
-<span id="cb30-6"><a href="sycan-marsh-or.html#cb30-6" tabindex="-1"></a>  , <span class="at">buff =</span> <span class="dv">22</span></span>
-<span id="cb30-7"><a href="sycan-marsh-or.html#cb30-7" tabindex="-1"></a>  , <span class="at">col =</span> <span class="st">&quot;navy&quot;</span></span>
-<span id="cb30-8"><a href="sycan-marsh-or.html#cb30-8" tabindex="-1"></a>) <span class="sc">+</span></span>
-<span id="cb30-9"><a href="sycan-marsh-or.html#cb30-9" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">scale_fill_viridis_c</span>(</span>
-<span id="cb30-10"><a href="sycan-marsh-or.html#cb30-10" tabindex="-1"></a>    <span class="at">option =</span> <span class="st">&quot;plasma&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.9</span>, <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">comma_format</span>(<span class="at">accuracy=</span><span class="dv">1</span>), <span class="at">breaks =</span> scales<span class="sc">::</span><span class="fu">breaks_extended</span>(<span class="at">n=</span><span class="dv">6</span>)</span>
-<span id="cb30-11"><a href="sycan-marsh-or.html#cb30-11" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb30-12"><a href="sycan-marsh-or.html#cb30-12" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">geom_sf</span>(</span>
-<span id="cb30-13"><a href="sycan-marsh-or.html#cb30-13" tabindex="-1"></a>    <span class="at">data =</span> cloud2trees_ans<span class="sc">$</span>crowns_sf <span class="sc">%&gt;%</span> </span>
-<span id="cb30-14"><a href="sycan-marsh-or.html#cb30-14" tabindex="-1"></a>      <span class="co"># dplyr::slice_sample(prop = 0.1) %&gt;% </span></span>
-<span id="cb30-15"><a href="sycan-marsh-or.html#cb30-15" tabindex="-1"></a>      sf<span class="sc">::</span><span class="fu">st_intersection</span>(</span>
-<span id="cb30-16"><a href="sycan-marsh-or.html#cb30-16" tabindex="-1"></a>        aoi_sf <span class="sc">%&gt;%</span> sf<span class="sc">::</span><span class="fu">st_transform</span>(sf<span class="sc">::</span><span class="fu">st_crs</span>(cloud2trees_ans<span class="sc">$</span>crowns_sf))</span>
-<span id="cb30-17"><a href="sycan-marsh-or.html#cb30-17" tabindex="-1"></a>      )</span>
-<span id="cb30-18"><a href="sycan-marsh-or.html#cb30-18" tabindex="-1"></a>    , <span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">color =</span> <span class="st">&quot;gray33&quot;</span>, <span class="at">lwd =</span> <span class="fl">0.5</span></span>
-<span id="cb30-19"><a href="sycan-marsh-or.html#cb30-19" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb30-20"><a href="sycan-marsh-or.html#cb30-20" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste0</span>(aoi_sf<span class="sc">$</span>study_site_lab, <span class="st">&quot; - ALS&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="sycan-marsh-or.html#cb29-1" tabindex="-1"></a><span class="fu">plt_rast_poly_fn</span>(</span>
+<span id="cb29-2"><a href="sycan-marsh-or.html#cb29-2" tabindex="-1"></a>  <span class="at">rast =</span> cloud2trees_ans<span class="sc">$</span>chm_rast</span>
+<span id="cb29-3"><a href="sycan-marsh-or.html#cb29-3" tabindex="-1"></a>  , <span class="at">poly =</span> aoi_sf</span>
+<span id="cb29-4"><a href="sycan-marsh-or.html#cb29-4" tabindex="-1"></a>  , <span class="at">title =</span> <span class="st">&quot;CHM (m)&quot;</span></span>
+<span id="cb29-5"><a href="sycan-marsh-or.html#cb29-5" tabindex="-1"></a>  , <span class="at">crop =</span> T</span>
+<span id="cb29-6"><a href="sycan-marsh-or.html#cb29-6" tabindex="-1"></a>  , <span class="at">buff =</span> <span class="dv">22</span></span>
+<span id="cb29-7"><a href="sycan-marsh-or.html#cb29-7" tabindex="-1"></a>  , <span class="at">col =</span> <span class="st">&quot;navy&quot;</span></span>
+<span id="cb29-8"><a href="sycan-marsh-or.html#cb29-8" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb29-9"><a href="sycan-marsh-or.html#cb29-9" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">scale_fill_viridis_c</span>(</span>
+<span id="cb29-10"><a href="sycan-marsh-or.html#cb29-10" tabindex="-1"></a>    <span class="at">option =</span> <span class="st">&quot;plasma&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.9</span>, <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">comma_format</span>(<span class="at">accuracy=</span><span class="dv">1</span>), <span class="at">breaks =</span> scales<span class="sc">::</span><span class="fu">breaks_extended</span>(<span class="at">n=</span><span class="dv">6</span>)</span>
+<span id="cb29-11"><a href="sycan-marsh-or.html#cb29-11" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb29-12"><a href="sycan-marsh-or.html#cb29-12" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">geom_sf</span>(</span>
+<span id="cb29-13"><a href="sycan-marsh-or.html#cb29-13" tabindex="-1"></a>    <span class="at">data =</span> cloud2trees_ans<span class="sc">$</span>crowns_sf <span class="sc">%&gt;%</span> </span>
+<span id="cb29-14"><a href="sycan-marsh-or.html#cb29-14" tabindex="-1"></a>      <span class="co"># dplyr::slice_sample(prop = 0.1) %&gt;% </span></span>
+<span id="cb29-15"><a href="sycan-marsh-or.html#cb29-15" tabindex="-1"></a>      sf<span class="sc">::</span><span class="fu">st_intersection</span>(</span>
+<span id="cb29-16"><a href="sycan-marsh-or.html#cb29-16" tabindex="-1"></a>        aoi_sf <span class="sc">%&gt;%</span> sf<span class="sc">::</span><span class="fu">st_transform</span>(sf<span class="sc">::</span><span class="fu">st_crs</span>(cloud2trees_ans<span class="sc">$</span>crowns_sf))</span>
+<span id="cb29-17"><a href="sycan-marsh-or.html#cb29-17" tabindex="-1"></a>      )</span>
+<span id="cb29-18"><a href="sycan-marsh-or.html#cb29-18" tabindex="-1"></a>    , <span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">color =</span> <span class="st">&quot;gray33&quot;</span>, <span class="at">lwd =</span> <span class="fl">0.5</span></span>
+<span id="cb29-19"><a href="sycan-marsh-or.html#cb29-19" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb29-20"><a href="sycan-marsh-or.html#cb29-20" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste0</span>(aoi_sf<span class="sc">$</span>study_site_lab, <span class="st">&quot; - ALS&quot;</span>))</span></code></pre></div>
 <p><img src="dod_cloud2trees_demo_files/figure-html/unnamed-chunk-31-1.png" width="1008" /></p>
 </div>
 <div id="imagery" class="section level4 hasAnchor" number="3.1.3.4">
 <h4><span class="header-section-number">3.1.3.4</span> Imagery<a href="sycan-marsh-or.html#imagery" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>let’s check the tree extraction results (gray) on satellite imagery with a collection date that may not coincide with the point cloud collection date</p>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="sycan-marsh-or.html#cb31-1" tabindex="-1"></a>plt_aoi_basemap <span class="ot">&lt;-</span> <span class="fu">my_ggmap_basemap</span>(</span>
-<span id="cb31-2"><a href="sycan-marsh-or.html#cb31-2" tabindex="-1"></a>  <span class="at">sf_data =</span> aoi_sf</span>
-<span id="cb31-3"><a href="sycan-marsh-or.html#cb31-3" tabindex="-1"></a>  , <span class="at">zoom_level =</span> <span class="dv">16</span></span>
-<span id="cb31-4"><a href="sycan-marsh-or.html#cb31-4" tabindex="-1"></a>  , <span class="at">buffer_box =</span> <span class="dv">22</span></span>
-<span id="cb31-5"><a href="sycan-marsh-or.html#cb31-5" tabindex="-1"></a>  , <span class="at">my_maptype =</span> <span class="st">&quot;satellite&quot;</span></span>
-<span id="cb31-6"><a href="sycan-marsh-or.html#cb31-6" tabindex="-1"></a>  , <span class="at">add_sf_data =</span> T</span>
-<span id="cb31-7"><a href="sycan-marsh-or.html#cb31-7" tabindex="-1"></a>  , <span class="at">outline_sf_data_col =</span> <span class="st">&quot;navy&quot;</span></span>
-<span id="cb31-8"><a href="sycan-marsh-or.html#cb31-8" tabindex="-1"></a>  , <span class="at">outline_lwd =</span> <span class="dv">1</span></span>
-<span id="cb31-9"><a href="sycan-marsh-or.html#cb31-9" tabindex="-1"></a>)</span>
-<span id="cb31-10"><a href="sycan-marsh-or.html#cb31-10" tabindex="-1"></a><span class="co"># add crowns</span></span>
-<span id="cb31-11"><a href="sycan-marsh-or.html#cb31-11" tabindex="-1"></a>plt_aoi_basemap <span class="sc">+</span></span>
-<span id="cb31-12"><a href="sycan-marsh-or.html#cb31-12" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">geom_sf</span>(</span>
-<span id="cb31-13"><a href="sycan-marsh-or.html#cb31-13" tabindex="-1"></a>    <span class="at">data =</span> cloud2trees_ans<span class="sc">$</span>crowns_sf <span class="sc">%&gt;%</span> </span>
-<span id="cb31-14"><a href="sycan-marsh-or.html#cb31-14" tabindex="-1"></a>      sf<span class="sc">::</span><span class="fu">st_intersection</span>(</span>
-<span id="cb31-15"><a href="sycan-marsh-or.html#cb31-15" tabindex="-1"></a>        aoi_sf <span class="sc">%&gt;%</span> sf<span class="sc">::</span><span class="fu">st_transform</span>(sf<span class="sc">::</span><span class="fu">st_crs</span>(cloud2trees_ans<span class="sc">$</span>crowns_sf))</span>
-<span id="cb31-16"><a href="sycan-marsh-or.html#cb31-16" tabindex="-1"></a>      ) <span class="sc">%&gt;%</span> </span>
-<span id="cb31-17"><a href="sycan-marsh-or.html#cb31-17" tabindex="-1"></a>      sf<span class="sc">::</span><span class="fu">st_transform</span>(<span class="dv">4326</span>)</span>
-<span id="cb31-18"><a href="sycan-marsh-or.html#cb31-18" tabindex="-1"></a>    , <span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">color =</span> <span class="st">&quot;gray77&quot;</span>, <span class="at">lwd =</span> <span class="fl">0.1</span></span>
-<span id="cb31-19"><a href="sycan-marsh-or.html#cb31-19" tabindex="-1"></a>    , <span class="at">inherit.aes =</span> F</span>
-<span id="cb31-20"><a href="sycan-marsh-or.html#cb31-20" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb31-21"><a href="sycan-marsh-or.html#cb31-21" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste0</span>(aoi_sf<span class="sc">$</span>study_site_lab, <span class="st">&quot; - ALS&quot;</span>)) <span class="sc">+</span></span>
-<span id="cb31-22"><a href="sycan-marsh-or.html#cb31-22" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">theme</span>(</span>
-<span id="cb31-23"><a href="sycan-marsh-or.html#cb31-23" tabindex="-1"></a>    <span class="at">plot.title =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>, <span class="at">hjust =</span> <span class="dv">0</span>, <span class="at">margin =</span> ggplot2<span class="sc">::</span><span class="fu">margin</span>(<span class="dv">0</span>,<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">0</span>))</span>
-<span id="cb31-24"><a href="sycan-marsh-or.html#cb31-24" tabindex="-1"></a>  )</span></code></pre></div>
+<p><em>we’ll sample the trees here so the output can be seen more clearly</em></p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="sycan-marsh-or.html#cb30-1" tabindex="-1"></a>plt_aoi_basemap <span class="ot">&lt;-</span> <span class="fu">my_ggmap_basemap</span>(</span>
+<span id="cb30-2"><a href="sycan-marsh-or.html#cb30-2" tabindex="-1"></a>  <span class="at">sf_data =</span> aoi_sf</span>
+<span id="cb30-3"><a href="sycan-marsh-or.html#cb30-3" tabindex="-1"></a>  , <span class="at">zoom_level =</span> <span class="dv">16</span></span>
+<span id="cb30-4"><a href="sycan-marsh-or.html#cb30-4" tabindex="-1"></a>  , <span class="at">buffer_box =</span> <span class="dv">22</span></span>
+<span id="cb30-5"><a href="sycan-marsh-or.html#cb30-5" tabindex="-1"></a>  , <span class="at">my_maptype =</span> <span class="st">&quot;satellite&quot;</span></span>
+<span id="cb30-6"><a href="sycan-marsh-or.html#cb30-6" tabindex="-1"></a>  , <span class="at">add_sf_data =</span> T</span>
+<span id="cb30-7"><a href="sycan-marsh-or.html#cb30-7" tabindex="-1"></a>  , <span class="at">outline_sf_data_col =</span> <span class="st">&quot;navy&quot;</span></span>
+<span id="cb30-8"><a href="sycan-marsh-or.html#cb30-8" tabindex="-1"></a>  , <span class="at">outline_lwd =</span> <span class="dv">1</span></span>
+<span id="cb30-9"><a href="sycan-marsh-or.html#cb30-9" tabindex="-1"></a>)</span>
+<span id="cb30-10"><a href="sycan-marsh-or.html#cb30-10" tabindex="-1"></a><span class="co"># add crowns</span></span>
+<span id="cb30-11"><a href="sycan-marsh-or.html#cb30-11" tabindex="-1"></a>plt_aoi_basemap <span class="sc">+</span></span>
+<span id="cb30-12"><a href="sycan-marsh-or.html#cb30-12" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">geom_sf</span>(</span>
+<span id="cb30-13"><a href="sycan-marsh-or.html#cb30-13" tabindex="-1"></a>    <span class="at">data =</span> cloud2trees_ans<span class="sc">$</span>crowns_sf <span class="sc">%&gt;%</span> </span>
+<span id="cb30-14"><a href="sycan-marsh-or.html#cb30-14" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">slice_sample</span>(<span class="at">prop =</span> <span class="fl">0.6</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb30-15"><a href="sycan-marsh-or.html#cb30-15" tabindex="-1"></a>      sf<span class="sc">::</span><span class="fu">st_intersection</span>(</span>
+<span id="cb30-16"><a href="sycan-marsh-or.html#cb30-16" tabindex="-1"></a>        aoi_sf <span class="sc">%&gt;%</span> sf<span class="sc">::</span><span class="fu">st_transform</span>(sf<span class="sc">::</span><span class="fu">st_crs</span>(cloud2trees_ans<span class="sc">$</span>crowns_sf))</span>
+<span id="cb30-17"><a href="sycan-marsh-or.html#cb30-17" tabindex="-1"></a>      ) <span class="sc">%&gt;%</span> </span>
+<span id="cb30-18"><a href="sycan-marsh-or.html#cb30-18" tabindex="-1"></a>      sf<span class="sc">::</span><span class="fu">st_transform</span>(<span class="dv">4326</span>)</span>
+<span id="cb30-19"><a href="sycan-marsh-or.html#cb30-19" tabindex="-1"></a>    , <span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">color =</span> <span class="st">&quot;gray77&quot;</span>, <span class="at">lwd =</span> <span class="fl">0.1</span></span>
+<span id="cb30-20"><a href="sycan-marsh-or.html#cb30-20" tabindex="-1"></a>    , <span class="at">inherit.aes =</span> F</span>
+<span id="cb30-21"><a href="sycan-marsh-or.html#cb30-21" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb30-22"><a href="sycan-marsh-or.html#cb30-22" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste0</span>(aoi_sf<span class="sc">$</span>study_site_lab, <span class="st">&quot; - ALS&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb30-23"><a href="sycan-marsh-or.html#cb30-23" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">theme</span>(</span>
+<span id="cb30-24"><a href="sycan-marsh-or.html#cb30-24" tabindex="-1"></a>    <span class="at">plot.title =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>, <span class="at">hjust =</span> <span class="dv">0</span>, <span class="at">margin =</span> ggplot2<span class="sc">::</span><span class="fu">margin</span>(<span class="dv">0</span>,<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">0</span>))</span>
+<span id="cb30-25"><a href="sycan-marsh-or.html#cb30-25" tabindex="-1"></a>  )</span></code></pre></div>
 <p><img src="dod_cloud2trees_demo_files/figure-html/unnamed-chunk-32-1.png" width="1008" /></p>
 </div>
 <div id="tree-attributes-spatial" class="section level4 hasAnchor" number="3.1.3.5">
 <h4><span class="header-section-number">3.1.3.5</span> Tree Attributes Spatial<a href="sycan-marsh-or.html#tree-attributes-spatial" class="anchor-section" aria-label="Anchor link to header"></a></h4>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="sycan-marsh-or.html#cb32-1" tabindex="-1"></a>plt_df_temp <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">tibble</span>(</span>
-<span id="cb32-2"><a href="sycan-marsh-or.html#cb32-2" tabindex="-1"></a>  <span class="at">fill_var =</span> <span class="fu">c</span>(<span class="st">&quot;tree_height_m&quot;</span>, <span class="st">&quot;dbh_cm&quot;</span>, <span class="st">&quot;tree_cbh_m&quot;</span>, <span class="st">&quot;max_crown_diam_height_m&quot;</span>, <span class="st">&quot;landfire_crown_biomass_kg&quot;</span>)</span>
-<span id="cb32-3"><a href="sycan-marsh-or.html#cb32-3" tabindex="-1"></a>  , <span class="at">palette =</span> <span class="fu">c</span>(<span class="st">&quot;Blues&quot;</span>, <span class="st">&quot;Oranges&quot;</span>, <span class="st">&quot;Greens&quot;</span>, <span class="st">&quot;Purples&quot;</span>, <span class="st">&quot;Reds&quot;</span>)</span>
-<span id="cb32-4"><a href="sycan-marsh-or.html#cb32-4" tabindex="-1"></a>  , <span class="at">title =</span> <span class="fu">c</span>(<span class="st">&quot;Height (m)&quot;</span>, <span class="st">&quot;DBH (cm)&quot;</span>, <span class="st">&quot;CBH (m)&quot;</span>, <span class="st">&quot;HMD (m)&quot;</span>, <span class="st">&quot;Crown</span><span class="sc">\n</span><span class="st">biomass (kg)&quot;</span>)</span>
-<span id="cb32-5"><a href="sycan-marsh-or.html#cb32-5" tabindex="-1"></a>)</span>
-<span id="cb32-6"><a href="sycan-marsh-or.html#cb32-6" tabindex="-1"></a></span>
-<span id="cb32-7"><a href="sycan-marsh-or.html#cb32-7" tabindex="-1"></a>plts_temp <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(plt_df_temp) <span class="sc">%&gt;%</span> </span>
-<span id="cb32-8"><a href="sycan-marsh-or.html#cb32-8" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">map</span>(</span>
-<span id="cb32-9"><a href="sycan-marsh-or.html#cb32-9" tabindex="-1"></a>    \(x)</span>
-<span id="cb32-10"><a href="sycan-marsh-or.html#cb32-10" tabindex="-1"></a>    <span class="fu">plt_crown_attr_fn</span>(</span>
-<span id="cb32-11"><a href="sycan-marsh-or.html#cb32-11" tabindex="-1"></a>      <span class="at">crowns =</span> cloud2trees_ans<span class="sc">$</span>crowns_sf</span>
-<span id="cb32-12"><a href="sycan-marsh-or.html#cb32-12" tabindex="-1"></a>      , <span class="at">aoi =</span> aoi_sf</span>
-<span id="cb32-13"><a href="sycan-marsh-or.html#cb32-13" tabindex="-1"></a>      , <span class="at">lwd =</span> <span class="fl">0.6</span></span>
-<span id="cb32-14"><a href="sycan-marsh-or.html#cb32-14" tabindex="-1"></a>      , <span class="at">fill_var =</span> plt_df_temp<span class="sc">$</span>fill_var[x]</span>
-<span id="cb32-15"><a href="sycan-marsh-or.html#cb32-15" tabindex="-1"></a>      , <span class="at">palette =</span> plt_df_temp<span class="sc">$</span>palette[x]</span>
-<span id="cb32-16"><a href="sycan-marsh-or.html#cb32-16" tabindex="-1"></a>      , <span class="at">title =</span> plt_df_temp<span class="sc">$</span>title[x]</span>
-<span id="cb32-17"><a href="sycan-marsh-or.html#cb32-17" tabindex="-1"></a>    )  </span>
-<span id="cb32-18"><a href="sycan-marsh-or.html#cb32-18" tabindex="-1"></a>  )</span>
-<span id="cb32-19"><a href="sycan-marsh-or.html#cb32-19" tabindex="-1"></a><span class="co"># combine with patchwork</span></span>
-<span id="cb32-20"><a href="sycan-marsh-or.html#cb32-20" tabindex="-1"></a>patchwork<span class="sc">::</span><span class="fu">wrap_plots</span>(plts_temp, <span class="at">ncol =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb32-21"><a href="sycan-marsh-or.html#cb32-21" tabindex="-1"></a>  patchwork<span class="sc">::</span><span class="fu">plot_annotation</span>(</span>
-<span id="cb32-22"><a href="sycan-marsh-or.html#cb32-22" tabindex="-1"></a>    <span class="at">title =</span> <span class="fu">paste0</span>(aoi_sf<span class="sc">$</span>study_site_lab, <span class="st">&quot; - ALS&quot;</span>)</span>
-<span id="cb32-23"><a href="sycan-marsh-or.html#cb32-23" tabindex="-1"></a>    <span class="co"># , subtitle = &quot;huh&quot;</span></span>
-<span id="cb32-24"><a href="sycan-marsh-or.html#cb32-24" tabindex="-1"></a>    <span class="co"># , caption = &quot;hey&quot;</span></span>
-<span id="cb32-25"><a href="sycan-marsh-or.html#cb32-25" tabindex="-1"></a>    , <span class="at">theme =</span> ggplot2<span class="sc">::</span><span class="fu">theme</span>(</span>
-<span id="cb32-26"><a href="sycan-marsh-or.html#cb32-26" tabindex="-1"></a>      <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">margin =</span> ggplot2<span class="sc">::</span><span class="fu">margin</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">3</span>,<span class="dv">0</span>))</span>
-<span id="cb32-27"><a href="sycan-marsh-or.html#cb32-27" tabindex="-1"></a>    )</span>
-<span id="cb32-28"><a href="sycan-marsh-or.html#cb32-28" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="sycan-marsh-or.html#cb31-1" tabindex="-1"></a>plt_df_temp <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">tibble</span>(</span>
+<span id="cb31-2"><a href="sycan-marsh-or.html#cb31-2" tabindex="-1"></a>  <span class="at">fill_var =</span> <span class="fu">c</span>(<span class="st">&quot;tree_height_m&quot;</span>, <span class="st">&quot;dbh_cm&quot;</span>, <span class="st">&quot;tree_cbh_m&quot;</span>, <span class="st">&quot;max_crown_diam_height_m&quot;</span>, <span class="st">&quot;landfire_crown_biomass_kg&quot;</span>)</span>
+<span id="cb31-3"><a href="sycan-marsh-or.html#cb31-3" tabindex="-1"></a>  , <span class="at">palette =</span> <span class="fu">c</span>(<span class="st">&quot;Blues&quot;</span>, <span class="st">&quot;Oranges&quot;</span>, <span class="st">&quot;Greens&quot;</span>, <span class="st">&quot;Purples&quot;</span>, <span class="st">&quot;Reds&quot;</span>)</span>
+<span id="cb31-4"><a href="sycan-marsh-or.html#cb31-4" tabindex="-1"></a>  , <span class="at">title =</span> <span class="fu">c</span>(<span class="st">&quot;Height (m)&quot;</span>, <span class="st">&quot;DBH (cm)&quot;</span>, <span class="st">&quot;CBH (m)&quot;</span>, <span class="st">&quot;HMD (m)&quot;</span>, <span class="st">&quot;Crown</span><span class="sc">\n</span><span class="st">biomass (kg)&quot;</span>)</span>
+<span id="cb31-5"><a href="sycan-marsh-or.html#cb31-5" tabindex="-1"></a>)</span>
+<span id="cb31-6"><a href="sycan-marsh-or.html#cb31-6" tabindex="-1"></a></span>
+<span id="cb31-7"><a href="sycan-marsh-or.html#cb31-7" tabindex="-1"></a>plts_temp <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(plt_df_temp) <span class="sc">%&gt;%</span> </span>
+<span id="cb31-8"><a href="sycan-marsh-or.html#cb31-8" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">map</span>(</span>
+<span id="cb31-9"><a href="sycan-marsh-or.html#cb31-9" tabindex="-1"></a>    \(x)</span>
+<span id="cb31-10"><a href="sycan-marsh-or.html#cb31-10" tabindex="-1"></a>    <span class="fu">plt_crown_attr_fn</span>(</span>
+<span id="cb31-11"><a href="sycan-marsh-or.html#cb31-11" tabindex="-1"></a>      <span class="at">crowns =</span> cloud2trees_ans<span class="sc">$</span>crowns_sf</span>
+<span id="cb31-12"><a href="sycan-marsh-or.html#cb31-12" tabindex="-1"></a>      , <span class="at">aoi =</span> aoi_sf</span>
+<span id="cb31-13"><a href="sycan-marsh-or.html#cb31-13" tabindex="-1"></a>      , <span class="at">lwd =</span> <span class="fl">0.6</span></span>
+<span id="cb31-14"><a href="sycan-marsh-or.html#cb31-14" tabindex="-1"></a>      , <span class="at">fill_var =</span> plt_df_temp<span class="sc">$</span>fill_var[x]</span>
+<span id="cb31-15"><a href="sycan-marsh-or.html#cb31-15" tabindex="-1"></a>      , <span class="at">palette =</span> plt_df_temp<span class="sc">$</span>palette[x]</span>
+<span id="cb31-16"><a href="sycan-marsh-or.html#cb31-16" tabindex="-1"></a>      , <span class="at">title =</span> plt_df_temp<span class="sc">$</span>title[x]</span>
+<span id="cb31-17"><a href="sycan-marsh-or.html#cb31-17" tabindex="-1"></a>    )  </span>
+<span id="cb31-18"><a href="sycan-marsh-or.html#cb31-18" tabindex="-1"></a>  )</span>
+<span id="cb31-19"><a href="sycan-marsh-or.html#cb31-19" tabindex="-1"></a><span class="co"># combine with patchwork</span></span>
+<span id="cb31-20"><a href="sycan-marsh-or.html#cb31-20" tabindex="-1"></a>patchwork<span class="sc">::</span><span class="fu">wrap_plots</span>(plts_temp, <span class="at">ncol =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb31-21"><a href="sycan-marsh-or.html#cb31-21" tabindex="-1"></a>  patchwork<span class="sc">::</span><span class="fu">plot_annotation</span>(</span>
+<span id="cb31-22"><a href="sycan-marsh-or.html#cb31-22" tabindex="-1"></a>    <span class="at">title =</span> <span class="fu">paste0</span>(aoi_sf<span class="sc">$</span>study_site_lab, <span class="st">&quot; - ALS&quot;</span>)</span>
+<span id="cb31-23"><a href="sycan-marsh-or.html#cb31-23" tabindex="-1"></a>    <span class="co"># , subtitle = &quot;huh&quot;</span></span>
+<span id="cb31-24"><a href="sycan-marsh-or.html#cb31-24" tabindex="-1"></a>    <span class="co"># , caption = &quot;hey&quot;</span></span>
+<span id="cb31-25"><a href="sycan-marsh-or.html#cb31-25" tabindex="-1"></a>    , <span class="at">theme =</span> ggplot2<span class="sc">::</span><span class="fu">theme</span>(</span>
+<span id="cb31-26"><a href="sycan-marsh-or.html#cb31-26" tabindex="-1"></a>      <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">margin =</span> ggplot2<span class="sc">::</span><span class="fu">margin</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">3</span>,<span class="dv">0</span>))</span>
+<span id="cb31-27"><a href="sycan-marsh-or.html#cb31-27" tabindex="-1"></a>    )</span>
+<span id="cb31-28"><a href="sycan-marsh-or.html#cb31-28" tabindex="-1"></a>  )</span></code></pre></div>
 <p><img src="dod_cloud2trees_demo_files/figure-html/unnamed-chunk-33-1.png" width="1008" /></p>
 </div>
 <div id="tree-attributes-summary-stats" class="section level4 hasAnchor" number="3.1.3.6">
 <h4><span class="header-section-number">3.1.3.6</span> Tree Attributes Summary Stats<a href="sycan-marsh-or.html#tree-attributes-summary-stats" class="anchor-section" aria-label="Anchor link to header"></a></h4>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="sycan-marsh-or.html#cb33-1" tabindex="-1"></a><span class="fu">stats_sum_fn</span>(<span class="at">crowns =</span> cloud2trees_ans<span class="sc">$</span>crowns_sf, <span class="at">aoi =</span> aoi_sf, <span class="at">unit =</span> aoi_sf<span class="sc">$</span>study_site_lab[<span class="dv">1</span>])</span></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="sycan-marsh-or.html#cb32-1" tabindex="-1"></a><span class="fu">stats_sum_fn</span>(<span class="at">crowns =</span> cloud2trees_ans<span class="sc">$</span>crowns_sf, <span class="at">aoi =</span> aoi_sf, <span class="at">unit =</span> aoi_sf<span class="sc">$</span>study_site_lab[<span class="dv">1</span>])</span></code></pre></div>
 <table class="table" style="font-size: 13px; margin-left: auto; margin-right: auto;">
 <caption style="font-size: initial !important;">
 <span id="tab:unnamed-chunk-34">Table 3.2: </span>Summary statistics for selected metrics
@@ -702,104 +705,103 @@ LANDFIRE CBD<br>kg m<sup>-3</sup>
 <div id="itd-tuning-1" class="section level3 hasAnchor" number="3.2.1">
 <h3><span class="header-section-number">3.2.1</span> ITD tuning<a href="sycan-marsh-or.html#itd-tuning-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>put las files in a list</p>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="sycan-marsh-or.html#cb34-1" tabindex="-1"></a><span class="co"># list of all las files</span></span>
-<span id="cb34-2"><a href="sycan-marsh-or.html#cb34-2" tabindex="-1"></a>las_flist_temp <span class="ot">&lt;-</span> aoi_las_ctg[[<span class="st">&quot;SycanMarsh_uas_lidar&quot;</span>]] <span class="sc">%&gt;%</span> </span>
-<span id="cb34-3"><a href="sycan-marsh-or.html#cb34-3" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">pluck</span>(<span class="st">&quot;data&quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb34-4"><a href="sycan-marsh-or.html#cb34-4" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">pull</span>(filename)</span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="sycan-marsh-or.html#cb33-1" tabindex="-1"></a><span class="co"># list of all las files</span></span>
+<span id="cb33-2"><a href="sycan-marsh-or.html#cb33-2" tabindex="-1"></a>las_flist_temp <span class="ot">&lt;-</span> aoi_las_ctg[[<span class="st">&quot;SycanMarsh_uas_lidar&quot;</span>]] <span class="sc">%&gt;%</span> </span>
+<span id="cb33-3"><a href="sycan-marsh-or.html#cb33-3" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">pluck</span>(<span class="st">&quot;data&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb33-4"><a href="sycan-marsh-or.html#cb33-4" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">pull</span>(filename)</span></code></pre></div>
 <p>run tuning</p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="sycan-marsh-or.html#cb35-1" tabindex="-1"></a><span class="co"># if there is an error with tuning...is it because there are no trees for a given ws_fn?</span></span>
-<span id="cb35-2"><a href="sycan-marsh-or.html#cb35-2" tabindex="-1"></a>    <span class="co"># Caused by error in `dplyr::group_by()`:</span></span>
-<span id="cb35-3"><a href="sycan-marsh-or.html#cb35-3" tabindex="-1"></a>    <span class="co"># ! Must group by variables found in `.data`.</span></span>
-<span id="cb35-4"><a href="sycan-marsh-or.html#cb35-4" tabindex="-1"></a>    <span class="co"># Column `ws_fn` is not found.</span></span>
-<span id="cb35-5"><a href="sycan-marsh-or.html#cb35-5" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">file.exists</span>(<span class="st">&quot;../data/itd_tuning_SycanMarsh_uas_lidar.jpg&quot;</span>)){</span>
-<span id="cb35-6"><a href="sycan-marsh-or.html#cb35-6" tabindex="-1"></a>  <span class="co"># tuning</span></span>
-<span id="cb35-7"><a href="sycan-marsh-or.html#cb35-7" tabindex="-1"></a>  itd_tuning_ans <span class="ot">&lt;-</span> cloud2trees<span class="sc">::</span><span class="fu">itd_tuning</span>(</span>
-<span id="cb35-8"><a href="sycan-marsh-or.html#cb35-8" tabindex="-1"></a>      <span class="at">input_las_dir =</span> las_flist_temp</span>
-<span id="cb35-9"><a href="sycan-marsh-or.html#cb35-9" tabindex="-1"></a>      , <span class="at">n_samples =</span> <span class="dv">2</span></span>
-<span id="cb35-10"><a href="sycan-marsh-or.html#cb35-10" tabindex="-1"></a>      , <span class="at">ws_fn_list =</span> my_ws_functions</span>
-<span id="cb35-11"><a href="sycan-marsh-or.html#cb35-11" tabindex="-1"></a>    )</span>
-<span id="cb35-12"><a href="sycan-marsh-or.html#cb35-12" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">ggsave</span>(</span>
-<span id="cb35-13"><a href="sycan-marsh-or.html#cb35-13" tabindex="-1"></a>    <span class="st">&quot;../data/itd_tuning_SycanMarsh_uas_lidar.jpg&quot;</span></span>
-<span id="cb35-14"><a href="sycan-marsh-or.html#cb35-14" tabindex="-1"></a>    , <span class="at">plot =</span> itd_tuning_ans<span class="sc">$</span>plot_samples</span>
-<span id="cb35-15"><a href="sycan-marsh-or.html#cb35-15" tabindex="-1"></a>    , <span class="at">dpi =</span> <span class="st">&quot;print&quot;</span></span>
-<span id="cb35-16"><a href="sycan-marsh-or.html#cb35-16" tabindex="-1"></a>    , <span class="at">height =</span> <span class="dv">6</span>, <span class="at">width =</span> <span class="dv">10</span></span>
-<span id="cb35-17"><a href="sycan-marsh-or.html#cb35-17" tabindex="-1"></a>  )</span>
-<span id="cb35-18"><a href="sycan-marsh-or.html#cb35-18" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="sycan-marsh-or.html#cb34-1" tabindex="-1"></a><span class="co"># if there is an error with tuning...is it because there are no trees for a given ws_fn?</span></span>
+<span id="cb34-2"><a href="sycan-marsh-or.html#cb34-2" tabindex="-1"></a>    <span class="co"># Caused by error in `dplyr::group_by()`:</span></span>
+<span id="cb34-3"><a href="sycan-marsh-or.html#cb34-3" tabindex="-1"></a>    <span class="co"># ! Must group by variables found in `.data`.</span></span>
+<span id="cb34-4"><a href="sycan-marsh-or.html#cb34-4" tabindex="-1"></a>    <span class="co"># Column `ws_fn` is not found.</span></span>
+<span id="cb34-5"><a href="sycan-marsh-or.html#cb34-5" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">file.exists</span>(<span class="st">&quot;../data/itd_tuning_SycanMarsh_uas_lidar.jpg&quot;</span>)){</span>
+<span id="cb34-6"><a href="sycan-marsh-or.html#cb34-6" tabindex="-1"></a>  <span class="co"># tuning</span></span>
+<span id="cb34-7"><a href="sycan-marsh-or.html#cb34-7" tabindex="-1"></a>  itd_tuning_ans <span class="ot">&lt;-</span> cloud2trees<span class="sc">::</span><span class="fu">itd_tuning</span>(</span>
+<span id="cb34-8"><a href="sycan-marsh-or.html#cb34-8" tabindex="-1"></a>      <span class="at">input_las_dir =</span> las_flist_temp</span>
+<span id="cb34-9"><a href="sycan-marsh-or.html#cb34-9" tabindex="-1"></a>      , <span class="at">n_samples =</span> <span class="dv">2</span></span>
+<span id="cb34-10"><a href="sycan-marsh-or.html#cb34-10" tabindex="-1"></a>      , <span class="at">ws_fn_list =</span> my_ws_functions</span>
+<span id="cb34-11"><a href="sycan-marsh-or.html#cb34-11" tabindex="-1"></a>    )</span>
+<span id="cb34-12"><a href="sycan-marsh-or.html#cb34-12" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">ggsave</span>(</span>
+<span id="cb34-13"><a href="sycan-marsh-or.html#cb34-13" tabindex="-1"></a>    <span class="st">&quot;../data/itd_tuning_SycanMarsh_uas_lidar.jpg&quot;</span></span>
+<span id="cb34-14"><a href="sycan-marsh-or.html#cb34-14" tabindex="-1"></a>    , <span class="at">plot =</span> itd_tuning_ans<span class="sc">$</span>plot_samples</span>
+<span id="cb34-15"><a href="sycan-marsh-or.html#cb34-15" tabindex="-1"></a>    , <span class="at">dpi =</span> <span class="st">&quot;print&quot;</span></span>
+<span id="cb34-16"><a href="sycan-marsh-or.html#cb34-16" tabindex="-1"></a>    , <span class="at">height =</span> <span class="dv">6</span>, <span class="at">width =</span> <span class="dv">10</span></span>
+<span id="cb34-17"><a href="sycan-marsh-or.html#cb34-17" tabindex="-1"></a>  )</span>
+<span id="cb34-18"><a href="sycan-marsh-or.html#cb34-18" tabindex="-1"></a>}</span></code></pre></div>
 <p><img src="https://i.ibb.co/mdBgNsv/itd-tuning-Sycan-Marsh-uas-lidar.jpg" width="100%" height="100%" style="display: block; margin: auto;" /></p>
 <p>pick the best function for use in ITD</p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="sycan-marsh-or.html#cb36-1" tabindex="-1"></a><span class="co"># pick the best function for use in ITD</span></span>
-<span id="cb36-2"><a href="sycan-marsh-or.html#cb36-2" tabindex="-1"></a>best_ws_fn_temp <span class="ot">&lt;-</span> my_ws_functions<span class="sc">$</span>lin_fn</span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="sycan-marsh-or.html#cb35-1" tabindex="-1"></a><span class="co"># pick the best function for use in ITD</span></span>
+<span id="cb35-2"><a href="sycan-marsh-or.html#cb35-2" tabindex="-1"></a>best_ws_fn_temp <span class="ot">&lt;-</span> my_ws_functions<span class="sc">$</span>lin_fn</span></code></pre></div>
 </div>
 <div id="cloud2trees-point-cloud-processing-1" class="section level3 hasAnchor" number="3.2.2">
 <h3><span class="header-section-number">3.2.2</span> <code>cloud2trees</code> point cloud processing<a href="sycan-marsh-or.html#cloud2trees-point-cloud-processing-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="sycan-marsh-or.html#cb37-1" tabindex="-1"></a>dir_temp <span class="ot">&lt;-</span> <span class="fu">file.path</span>(aoi_sf<span class="sc">$</span>fdir, <span class="st">&quot;uas_lidar_processing&quot;</span>)</span>
-<span id="cb37-2"><a href="sycan-marsh-or.html#cb37-2" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">dir.exists</span>(dir_temp)){</span>
-<span id="cb37-3"><a href="sycan-marsh-or.html#cb37-3" tabindex="-1"></a>  <span class="fu">dir.create</span>(dir_temp)</span>
-<span id="cb37-4"><a href="sycan-marsh-or.html#cb37-4" tabindex="-1"></a><span class="co"># c2t</span></span>
-<span id="cb37-5"><a href="sycan-marsh-or.html#cb37-5" tabindex="-1"></a>  cloud2trees_ans <span class="ot">&lt;-</span> cloud2trees<span class="sc">::</span><span class="fu">cloud2trees</span>(</span>
-<span id="cb37-6"><a href="sycan-marsh-or.html#cb37-6" tabindex="-1"></a>    <span class="at">input_las_dir =</span> las_flist_temp</span>
-<span id="cb37-7"><a href="sycan-marsh-or.html#cb37-7" tabindex="-1"></a>    , <span class="at">output_dir =</span> dir_temp</span>
-<span id="cb37-8"><a href="sycan-marsh-or.html#cb37-8" tabindex="-1"></a>    , <span class="at">ws =</span> best_ws_fn_temp</span>
-<span id="cb37-9"><a href="sycan-marsh-or.html#cb37-9" tabindex="-1"></a>    , <span class="at">dtm_res_m =</span> <span class="dv">1</span></span>
-<span id="cb37-10"><a href="sycan-marsh-or.html#cb37-10" tabindex="-1"></a>    , <span class="at">chm_res_m =</span> <span class="fl">0.25</span></span>
-<span id="cb37-11"><a href="sycan-marsh-or.html#cb37-11" tabindex="-1"></a>    , <span class="at">estimate_tree_dbh =</span> T</span>
-<span id="cb37-12"><a href="sycan-marsh-or.html#cb37-12" tabindex="-1"></a>    , <span class="at">estimate_tree_type =</span> T</span>
-<span id="cb37-13"><a href="sycan-marsh-or.html#cb37-13" tabindex="-1"></a>    <span class="co"># hmd</span></span>
-<span id="cb37-14"><a href="sycan-marsh-or.html#cb37-14" tabindex="-1"></a>    , <span class="at">estimate_tree_hmd =</span> T</span>
-<span id="cb37-15"><a href="sycan-marsh-or.html#cb37-15" tabindex="-1"></a>    , <span class="at">hmd_tree_sample_prop =</span> <span class="fl">0.5</span></span>
-<span id="cb37-16"><a href="sycan-marsh-or.html#cb37-16" tabindex="-1"></a>    , <span class="at">hmd_estimate_missing_hmd =</span> T</span>
-<span id="cb37-17"><a href="sycan-marsh-or.html#cb37-17" tabindex="-1"></a>    <span class="co"># biomass</span></span>
-<span id="cb37-18"><a href="sycan-marsh-or.html#cb37-18" tabindex="-1"></a>    , <span class="at">estimate_biomass_method =</span> <span class="fu">c</span>(<span class="st">&quot;landfire&quot;</span>,<span class="st">&quot;cruz&quot;</span>)</span>
-<span id="cb37-19"><a href="sycan-marsh-or.html#cb37-19" tabindex="-1"></a>    <span class="co"># cbh</span></span>
-<span id="cb37-20"><a href="sycan-marsh-or.html#cb37-20" tabindex="-1"></a>    , <span class="at">estimate_tree_cbh =</span> T</span>
-<span id="cb37-21"><a href="sycan-marsh-or.html#cb37-21" tabindex="-1"></a>    , <span class="at">cbh_tree_sample_prop =</span> <span class="fl">0.5</span></span>
-<span id="cb37-22"><a href="sycan-marsh-or.html#cb37-22" tabindex="-1"></a>    , <span class="at">cbh_estimate_missing_cbh =</span> T</span>
-<span id="cb37-23"><a href="sycan-marsh-or.html#cb37-23" tabindex="-1"></a>  )</span>
-<span id="cb37-24"><a href="sycan-marsh-or.html#cb37-24" tabindex="-1"></a>}<span class="cf">else</span>{</span>
-<span id="cb37-25"><a href="sycan-marsh-or.html#cb37-25" tabindex="-1"></a>  cloud2trees_ans <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb37-26"><a href="sycan-marsh-or.html#cb37-26" tabindex="-1"></a>    <span class="st">&quot;dtm_rast&quot;</span> <span class="ot">=</span> terra<span class="sc">::</span><span class="fu">rast</span>( <span class="fu">file.path</span>(dir_temp, <span class="st">&quot;point_cloud_processing_delivery&quot;</span>, <span class="st">&quot;dtm_1m.tif&quot;</span>) )</span>
-<span id="cb37-27"><a href="sycan-marsh-or.html#cb37-27" tabindex="-1"></a>    , <span class="st">&quot;chm_rast&quot;</span> <span class="ot">=</span> terra<span class="sc">::</span><span class="fu">rast</span>( <span class="fu">file.path</span>(dir_temp, <span class="st">&quot;point_cloud_processing_delivery&quot;</span>, <span class="st">&quot;chm_0.25m.tif&quot;</span>) )</span>
-<span id="cb37-28"><a href="sycan-marsh-or.html#cb37-28" tabindex="-1"></a>    , <span class="st">&quot;crowns_sf&quot;</span> <span class="ot">=</span> <span class="fu">list.files</span>(</span>
-<span id="cb37-29"><a href="sycan-marsh-or.html#cb37-29" tabindex="-1"></a>        <span class="fu">file.path</span>(dir_temp, <span class="st">&quot;point_cloud_processing_delivery&quot;</span>)</span>
-<span id="cb37-30"><a href="sycan-marsh-or.html#cb37-30" tabindex="-1"></a>        , <span class="at">pattern =</span> <span class="st">&quot;final_detected_crowns.*</span><span class="sc">\\</span><span class="st">.gpkg$&quot;</span></span>
-<span id="cb37-31"><a href="sycan-marsh-or.html#cb37-31" tabindex="-1"></a>        , <span class="at">full.names =</span> T</span>
-<span id="cb37-32"><a href="sycan-marsh-or.html#cb37-32" tabindex="-1"></a>      ) <span class="sc">%&gt;%</span> </span>
-<span id="cb37-33"><a href="sycan-marsh-or.html#cb37-33" tabindex="-1"></a>      <span class="fu">normalizePath</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb37-34"><a href="sycan-marsh-or.html#cb37-34" tabindex="-1"></a>      purrr<span class="sc">::</span><span class="fu">map</span>(\(x)</span>
-<span id="cb37-35"><a href="sycan-marsh-or.html#cb37-35" tabindex="-1"></a>        sf<span class="sc">::</span><span class="fu">st_read</span>(</span>
-<span id="cb37-36"><a href="sycan-marsh-or.html#cb37-36" tabindex="-1"></a>          <span class="at">dsn =</span> x</span>
-<span id="cb37-37"><a href="sycan-marsh-or.html#cb37-37" tabindex="-1"></a>          , <span class="at">quiet =</span> T</span>
-<span id="cb37-38"><a href="sycan-marsh-or.html#cb37-38" tabindex="-1"></a>        )</span>
-<span id="cb37-39"><a href="sycan-marsh-or.html#cb37-39" tabindex="-1"></a>      ) <span class="sc">%&gt;%</span> </span>
-<span id="cb37-40"><a href="sycan-marsh-or.html#cb37-40" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">bind_rows</span>()</span>
-<span id="cb37-41"><a href="sycan-marsh-or.html#cb37-41" tabindex="-1"></a>    , <span class="st">&quot;foresttype_rast&quot;</span> <span class="ot">=</span> terra<span class="sc">::</span><span class="fu">rast</span>( <span class="fu">file.path</span>(dir_temp, <span class="st">&quot;point_cloud_processing_delivery&quot;</span>, <span class="st">&quot;fia_foresttype_raster.tif&quot;</span>) ) <span class="sc">%&gt;%</span> </span>
-<span id="cb37-42"><a href="sycan-marsh-or.html#cb37-42" tabindex="-1"></a>        terra<span class="sc">::</span><span class="fu">subst</span>(<span class="at">from =</span> foresttype_lookup<span class="sc">$</span>forest_type_group_code, <span class="at">to =</span> foresttype_lookup<span class="sc">$</span>forest_type_group)</span>
-<span id="cb37-43"><a href="sycan-marsh-or.html#cb37-43" tabindex="-1"></a>  )</span>
-<span id="cb37-44"><a href="sycan-marsh-or.html#cb37-44" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="sycan-marsh-or.html#cb36-1" tabindex="-1"></a>dir_temp <span class="ot">&lt;-</span> <span class="fu">file.path</span>(aoi_sf<span class="sc">$</span>fdir, <span class="st">&quot;uas_lidar_processing&quot;</span>)</span>
+<span id="cb36-2"><a href="sycan-marsh-or.html#cb36-2" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">dir.exists</span>(dir_temp)){</span>
+<span id="cb36-3"><a href="sycan-marsh-or.html#cb36-3" tabindex="-1"></a>  <span class="fu">dir.create</span>(dir_temp)</span>
+<span id="cb36-4"><a href="sycan-marsh-or.html#cb36-4" tabindex="-1"></a><span class="co"># c2t</span></span>
+<span id="cb36-5"><a href="sycan-marsh-or.html#cb36-5" tabindex="-1"></a>  cloud2trees_ans <span class="ot">&lt;-</span> cloud2trees<span class="sc">::</span><span class="fu">cloud2trees</span>(</span>
+<span id="cb36-6"><a href="sycan-marsh-or.html#cb36-6" tabindex="-1"></a>    <span class="at">input_las_dir =</span> las_flist_temp</span>
+<span id="cb36-7"><a href="sycan-marsh-or.html#cb36-7" tabindex="-1"></a>    , <span class="at">output_dir =</span> dir_temp</span>
+<span id="cb36-8"><a href="sycan-marsh-or.html#cb36-8" tabindex="-1"></a>    , <span class="at">ws =</span> best_ws_fn_temp</span>
+<span id="cb36-9"><a href="sycan-marsh-or.html#cb36-9" tabindex="-1"></a>    , <span class="at">dtm_res_m =</span> <span class="dv">1</span></span>
+<span id="cb36-10"><a href="sycan-marsh-or.html#cb36-10" tabindex="-1"></a>    , <span class="at">chm_res_m =</span> <span class="fl">0.25</span></span>
+<span id="cb36-11"><a href="sycan-marsh-or.html#cb36-11" tabindex="-1"></a>    , <span class="at">estimate_tree_dbh =</span> T</span>
+<span id="cb36-12"><a href="sycan-marsh-or.html#cb36-12" tabindex="-1"></a>    , <span class="at">estimate_tree_type =</span> T</span>
+<span id="cb36-13"><a href="sycan-marsh-or.html#cb36-13" tabindex="-1"></a>    <span class="co"># hmd</span></span>
+<span id="cb36-14"><a href="sycan-marsh-or.html#cb36-14" tabindex="-1"></a>    , <span class="at">estimate_tree_hmd =</span> T</span>
+<span id="cb36-15"><a href="sycan-marsh-or.html#cb36-15" tabindex="-1"></a>    , <span class="at">hmd_tree_sample_prop =</span> <span class="fl">0.5</span></span>
+<span id="cb36-16"><a href="sycan-marsh-or.html#cb36-16" tabindex="-1"></a>    , <span class="at">hmd_estimate_missing_hmd =</span> T</span>
+<span id="cb36-17"><a href="sycan-marsh-or.html#cb36-17" tabindex="-1"></a>    <span class="co"># biomass</span></span>
+<span id="cb36-18"><a href="sycan-marsh-or.html#cb36-18" tabindex="-1"></a>    , <span class="at">estimate_biomass_method =</span> <span class="fu">c</span>(<span class="st">&quot;landfire&quot;</span>,<span class="st">&quot;cruz&quot;</span>)</span>
+<span id="cb36-19"><a href="sycan-marsh-or.html#cb36-19" tabindex="-1"></a>    <span class="co"># cbh</span></span>
+<span id="cb36-20"><a href="sycan-marsh-or.html#cb36-20" tabindex="-1"></a>    , <span class="at">estimate_tree_cbh =</span> T</span>
+<span id="cb36-21"><a href="sycan-marsh-or.html#cb36-21" tabindex="-1"></a>    , <span class="at">cbh_tree_sample_prop =</span> <span class="fl">0.5</span></span>
+<span id="cb36-22"><a href="sycan-marsh-or.html#cb36-22" tabindex="-1"></a>    , <span class="at">cbh_estimate_missing_cbh =</span> T</span>
+<span id="cb36-23"><a href="sycan-marsh-or.html#cb36-23" tabindex="-1"></a>  )</span>
+<span id="cb36-24"><a href="sycan-marsh-or.html#cb36-24" tabindex="-1"></a>}<span class="cf">else</span>{</span>
+<span id="cb36-25"><a href="sycan-marsh-or.html#cb36-25" tabindex="-1"></a>  cloud2trees_ans <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb36-26"><a href="sycan-marsh-or.html#cb36-26" tabindex="-1"></a>    <span class="st">&quot;dtm_rast&quot;</span> <span class="ot">=</span> terra<span class="sc">::</span><span class="fu">rast</span>( <span class="fu">file.path</span>(dir_temp, <span class="st">&quot;point_cloud_processing_delivery&quot;</span>, <span class="st">&quot;dtm_1m.tif&quot;</span>) )</span>
+<span id="cb36-27"><a href="sycan-marsh-or.html#cb36-27" tabindex="-1"></a>    , <span class="st">&quot;chm_rast&quot;</span> <span class="ot">=</span> terra<span class="sc">::</span><span class="fu">rast</span>( <span class="fu">file.path</span>(dir_temp, <span class="st">&quot;point_cloud_processing_delivery&quot;</span>, <span class="st">&quot;chm_0.25m.tif&quot;</span>) )</span>
+<span id="cb36-28"><a href="sycan-marsh-or.html#cb36-28" tabindex="-1"></a>    , <span class="st">&quot;crowns_sf&quot;</span> <span class="ot">=</span> <span class="fu">list.files</span>(</span>
+<span id="cb36-29"><a href="sycan-marsh-or.html#cb36-29" tabindex="-1"></a>        <span class="fu">file.path</span>(dir_temp, <span class="st">&quot;point_cloud_processing_delivery&quot;</span>)</span>
+<span id="cb36-30"><a href="sycan-marsh-or.html#cb36-30" tabindex="-1"></a>        , <span class="at">pattern =</span> <span class="st">&quot;final_detected_crowns.*</span><span class="sc">\\</span><span class="st">.gpkg$&quot;</span></span>
+<span id="cb36-31"><a href="sycan-marsh-or.html#cb36-31" tabindex="-1"></a>        , <span class="at">full.names =</span> T</span>
+<span id="cb36-32"><a href="sycan-marsh-or.html#cb36-32" tabindex="-1"></a>      ) <span class="sc">%&gt;%</span> </span>
+<span id="cb36-33"><a href="sycan-marsh-or.html#cb36-33" tabindex="-1"></a>      <span class="fu">normalizePath</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb36-34"><a href="sycan-marsh-or.html#cb36-34" tabindex="-1"></a>      purrr<span class="sc">::</span><span class="fu">map</span>(\(x)</span>
+<span id="cb36-35"><a href="sycan-marsh-or.html#cb36-35" tabindex="-1"></a>        sf<span class="sc">::</span><span class="fu">st_read</span>(</span>
+<span id="cb36-36"><a href="sycan-marsh-or.html#cb36-36" tabindex="-1"></a>          <span class="at">dsn =</span> x</span>
+<span id="cb36-37"><a href="sycan-marsh-or.html#cb36-37" tabindex="-1"></a>          , <span class="at">quiet =</span> T</span>
+<span id="cb36-38"><a href="sycan-marsh-or.html#cb36-38" tabindex="-1"></a>        )</span>
+<span id="cb36-39"><a href="sycan-marsh-or.html#cb36-39" tabindex="-1"></a>      ) <span class="sc">%&gt;%</span> </span>
+<span id="cb36-40"><a href="sycan-marsh-or.html#cb36-40" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">bind_rows</span>()</span>
+<span id="cb36-41"><a href="sycan-marsh-or.html#cb36-41" tabindex="-1"></a>    , <span class="st">&quot;foresttype_rast&quot;</span> <span class="ot">=</span> terra<span class="sc">::</span><span class="fu">rast</span>( <span class="fu">file.path</span>(dir_temp, <span class="st">&quot;point_cloud_processing_delivery&quot;</span>, <span class="st">&quot;fia_foresttype_raster.tif&quot;</span>) ) <span class="sc">%&gt;%</span> </span>
+<span id="cb36-42"><a href="sycan-marsh-or.html#cb36-42" tabindex="-1"></a>        terra<span class="sc">::</span><span class="fu">subst</span>(<span class="at">from =</span> foresttype_lookup<span class="sc">$</span>forest_type_group_code, <span class="at">to =</span> foresttype_lookup<span class="sc">$</span>forest_type_group)</span>
+<span id="cb36-43"><a href="sycan-marsh-or.html#cb36-43" tabindex="-1"></a>  )</span>
+<span id="cb36-44"><a href="sycan-marsh-or.html#cb36-44" tabindex="-1"></a>}</span></code></pre></div>
 </div>
 <div id="cloud2trees-results-1" class="section level3 hasAnchor" number="3.2.3">
 <h3><span class="header-section-number">3.2.3</span> <code>cloud2trees</code> Results<a href="sycan-marsh-or.html#cloud2trees-results-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div id="fia-forest-type-group-1" class="section level4 hasAnchor" number="3.2.3.1">
 <h4><span class="header-section-number">3.2.3.1</span> FIA Forest Type Group<a href="sycan-marsh-or.html#fia-forest-type-group-1" class="anchor-section" aria-label="Anchor link to header"></a></h4>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="sycan-marsh-or.html#cb38-1" tabindex="-1"></a><span class="co"># load raster</span></span>
-<span id="cb38-2"><a href="sycan-marsh-or.html#cb38-2" tabindex="-1"></a><span class="fu">plt_rast_poly_fn</span>(</span>
-<span id="cb38-3"><a href="sycan-marsh-or.html#cb38-3" tabindex="-1"></a>  <span class="at">rast =</span> cloud2trees_ans<span class="sc">$</span>foresttype_rast</span>
-<span id="cb38-4"><a href="sycan-marsh-or.html#cb38-4" tabindex="-1"></a>  , <span class="at">poly =</span> aoi_sf</span>
-<span id="cb38-5"><a href="sycan-marsh-or.html#cb38-5" tabindex="-1"></a>  , <span class="at">title =</span> <span class="st">&quot;FIA forest type group&quot;</span></span>
-<span id="cb38-6"><a href="sycan-marsh-or.html#cb38-6" tabindex="-1"></a>  , <span class="at">crop =</span> T</span>
-<span id="cb38-7"><a href="sycan-marsh-or.html#cb38-7" tabindex="-1"></a>  , <span class="at">buff =</span> <span class="dv">22</span></span>
-<span id="cb38-8"><a href="sycan-marsh-or.html#cb38-8" tabindex="-1"></a>  , <span class="at">col =</span> <span class="st">&quot;navy&quot;</span></span>
-<span id="cb38-9"><a href="sycan-marsh-or.html#cb38-9" tabindex="-1"></a>) <span class="sc">+</span></span>
-<span id="cb38-10"><a href="sycan-marsh-or.html#cb38-10" tabindex="-1"></a>  harrypotter<span class="sc">::</span><span class="fu">scale_fill_hp_d</span>(</span>
-<span id="cb38-11"><a href="sycan-marsh-or.html#cb38-11" tabindex="-1"></a>    <span class="at">option =</span> <span class="st">&quot;lunalovegood&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.8</span></span>
-<span id="cb38-12"><a href="sycan-marsh-or.html#cb38-12" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb38-13"><a href="sycan-marsh-or.html#cb38-13" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste0</span>(aoi_sf<span class="sc">$</span>study_site_lab, <span class="st">&quot; - UAS Lidar&quot;</span>)) <span class="sc">+</span></span>
-<span id="cb38-14"><a href="sycan-marsh-or.html#cb38-14" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">theme</span>(</span>
-<span id="cb38-15"><a href="sycan-marsh-or.html#cb38-15" tabindex="-1"></a>    <span class="at">legend.text =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">7</span>, <span class="at">angle =</span> <span class="dv">0</span>)</span>
-<span id="cb38-16"><a href="sycan-marsh-or.html#cb38-16" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="sycan-marsh-or.html#cb37-1" tabindex="-1"></a><span class="co"># load raster</span></span>
+<span id="cb37-2"><a href="sycan-marsh-or.html#cb37-2" tabindex="-1"></a><span class="fu">plt_rast_poly_fn</span>(</span>
+<span id="cb37-3"><a href="sycan-marsh-or.html#cb37-3" tabindex="-1"></a>  <span class="at">rast =</span> cloud2trees_ans<span class="sc">$</span>foresttype_rast</span>
+<span id="cb37-4"><a href="sycan-marsh-or.html#cb37-4" tabindex="-1"></a>  , <span class="at">poly =</span> aoi_sf</span>
+<span id="cb37-5"><a href="sycan-marsh-or.html#cb37-5" tabindex="-1"></a>  , <span class="at">title =</span> <span class="st">&quot;FIA forest type group&quot;</span></span>
+<span id="cb37-6"><a href="sycan-marsh-or.html#cb37-6" tabindex="-1"></a>  , <span class="at">crop =</span> T</span>
+<span id="cb37-7"><a href="sycan-marsh-or.html#cb37-7" tabindex="-1"></a>  , <span class="at">buff =</span> <span class="dv">22</span></span>
+<span id="cb37-8"><a href="sycan-marsh-or.html#cb37-8" tabindex="-1"></a>  , <span class="at">col =</span> <span class="st">&quot;navy&quot;</span></span>
+<span id="cb37-9"><a href="sycan-marsh-or.html#cb37-9" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb37-10"><a href="sycan-marsh-or.html#cb37-10" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">scale_fill_viridis_d</span>(<span class="at">option =</span> <span class="st">&quot;turbo&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb37-11"><a href="sycan-marsh-or.html#cb37-11" tabindex="-1"></a>  <span class="co"># harrypotter::scale_fill_hp_d(option = &quot;lunalovegood&quot;, alpha = 0.8) +</span></span>
+<span id="cb37-12"><a href="sycan-marsh-or.html#cb37-12" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste0</span>(aoi_sf<span class="sc">$</span>study_site_lab, <span class="st">&quot; - UAS Lidar&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb37-13"><a href="sycan-marsh-or.html#cb37-13" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">theme</span>(</span>
+<span id="cb37-14"><a href="sycan-marsh-or.html#cb37-14" tabindex="-1"></a>    <span class="at">legend.text =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">7</span>, <span class="at">angle =</span> <span class="dv">0</span>)</span>
+<span id="cb37-15"><a href="sycan-marsh-or.html#cb37-15" tabindex="-1"></a>  )</span></code></pre></div>
 <p><img src="dod_cloud2trees_demo_files/figure-html/unnamed-chunk-41-1.png" width="1008" /></p>
 <p>distribution by forest type</p>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="sycan-marsh-or.html#cb39-1" tabindex="-1"></a><span class="fu">foresttype_sum_fn</span>(<span class="at">crowns =</span> cloud2trees_ans<span class="sc">$</span>crowns_sf, <span class="at">aoi =</span> aoi_sf, <span class="at">unit =</span> aoi_sf<span class="sc">$</span>study_site_lab[<span class="dv">1</span>])</span></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="sycan-marsh-or.html#cb38-1" tabindex="-1"></a><span class="fu">foresttype_sum_fn</span>(<span class="at">crowns =</span> cloud2trees_ans<span class="sc">$</span>crowns_sf, <span class="at">aoi =</span> aoi_sf, <span class="at">unit =</span> aoi_sf<span class="sc">$</span>study_site_lab[<span class="dv">1</span>])</span></code></pre></div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:unnamed-chunk-42">Table 3.3: </span>Count of trees by FIA Forest Type Group
@@ -839,100 +841,102 @@ Ponderosa pine group
 </div>
 <div id="dtm-1" class="section level4 hasAnchor" number="3.2.3.2">
 <h4><span class="header-section-number">3.2.3.2</span> DTM<a href="sycan-marsh-or.html#dtm-1" class="anchor-section" aria-label="Anchor link to header"></a></h4>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="sycan-marsh-or.html#cb40-1" tabindex="-1"></a><span class="fu">plt_rast_poly_fn</span>(</span>
-<span id="cb40-2"><a href="sycan-marsh-or.html#cb40-2" tabindex="-1"></a>  <span class="at">rast =</span> cloud2trees_ans<span class="sc">$</span>dtm_rast</span>
-<span id="cb40-3"><a href="sycan-marsh-or.html#cb40-3" tabindex="-1"></a>  , <span class="at">poly =</span> aoi_sf</span>
-<span id="cb40-4"><a href="sycan-marsh-or.html#cb40-4" tabindex="-1"></a>  , <span class="at">title =</span> <span class="st">&quot;DTM (m)&quot;</span></span>
-<span id="cb40-5"><a href="sycan-marsh-or.html#cb40-5" tabindex="-1"></a>  , <span class="at">crop =</span> T</span>
-<span id="cb40-6"><a href="sycan-marsh-or.html#cb40-6" tabindex="-1"></a>  , <span class="at">buff =</span> <span class="dv">22</span></span>
-<span id="cb40-7"><a href="sycan-marsh-or.html#cb40-7" tabindex="-1"></a>  , <span class="at">col =</span> <span class="st">&quot;navy&quot;</span></span>
-<span id="cb40-8"><a href="sycan-marsh-or.html#cb40-8" tabindex="-1"></a>) <span class="sc">+</span></span>
-<span id="cb40-9"><a href="sycan-marsh-or.html#cb40-9" tabindex="-1"></a>  harrypotter<span class="sc">::</span><span class="fu">scale_fill_hp</span>(</span>
-<span id="cb40-10"><a href="sycan-marsh-or.html#cb40-10" tabindex="-1"></a>    <span class="at">option =</span> <span class="st">&quot;mischief&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.9</span>, <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">comma_format</span>(<span class="at">accuracy=</span><span class="dv">1</span>), <span class="at">breaks =</span> scales<span class="sc">::</span><span class="fu">breaks_extended</span>(<span class="at">n=</span><span class="dv">6</span>)</span>
-<span id="cb40-11"><a href="sycan-marsh-or.html#cb40-11" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb40-12"><a href="sycan-marsh-or.html#cb40-12" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste0</span>(aoi_sf<span class="sc">$</span>study_site_lab, <span class="st">&quot; - UAS Lidar&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="sycan-marsh-or.html#cb39-1" tabindex="-1"></a><span class="fu">plt_rast_poly_fn</span>(</span>
+<span id="cb39-2"><a href="sycan-marsh-or.html#cb39-2" tabindex="-1"></a>  <span class="at">rast =</span> cloud2trees_ans<span class="sc">$</span>dtm_rast</span>
+<span id="cb39-3"><a href="sycan-marsh-or.html#cb39-3" tabindex="-1"></a>  , <span class="at">poly =</span> aoi_sf</span>
+<span id="cb39-4"><a href="sycan-marsh-or.html#cb39-4" tabindex="-1"></a>  , <span class="at">title =</span> <span class="st">&quot;DTM (m)&quot;</span></span>
+<span id="cb39-5"><a href="sycan-marsh-or.html#cb39-5" tabindex="-1"></a>  , <span class="at">crop =</span> T</span>
+<span id="cb39-6"><a href="sycan-marsh-or.html#cb39-6" tabindex="-1"></a>  , <span class="at">buff =</span> <span class="dv">22</span></span>
+<span id="cb39-7"><a href="sycan-marsh-or.html#cb39-7" tabindex="-1"></a>  , <span class="at">col =</span> <span class="st">&quot;navy&quot;</span></span>
+<span id="cb39-8"><a href="sycan-marsh-or.html#cb39-8" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb39-9"><a href="sycan-marsh-or.html#cb39-9" tabindex="-1"></a>  harrypotter<span class="sc">::</span><span class="fu">scale_fill_hp</span>(</span>
+<span id="cb39-10"><a href="sycan-marsh-or.html#cb39-10" tabindex="-1"></a>    <span class="at">option =</span> <span class="st">&quot;mischief&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.9</span>, <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">comma_format</span>(<span class="at">accuracy=</span><span class="dv">1</span>), <span class="at">breaks =</span> scales<span class="sc">::</span><span class="fu">breaks_extended</span>(<span class="at">n=</span><span class="dv">6</span>)</span>
+<span id="cb39-11"><a href="sycan-marsh-or.html#cb39-11" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb39-12"><a href="sycan-marsh-or.html#cb39-12" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste0</span>(aoi_sf<span class="sc">$</span>study_site_lab, <span class="st">&quot; - UAS Lidar&quot;</span>))</span></code></pre></div>
 <p><img src="dod_cloud2trees_demo_files/figure-html/unnamed-chunk-43-1.png" width="1008" /></p>
 </div>
 <div id="chm-1" class="section level4 hasAnchor" number="3.2.3.3">
 <h4><span class="header-section-number">3.2.3.3</span> CHM<a href="sycan-marsh-or.html#chm-1" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>plot the CHM and we’ll also add the extracted trees in gray</p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="sycan-marsh-or.html#cb41-1" tabindex="-1"></a><span class="fu">plt_rast_poly_fn</span>(</span>
-<span id="cb41-2"><a href="sycan-marsh-or.html#cb41-2" tabindex="-1"></a>  <span class="at">rast =</span> cloud2trees_ans<span class="sc">$</span>chm_rast</span>
-<span id="cb41-3"><a href="sycan-marsh-or.html#cb41-3" tabindex="-1"></a>  , <span class="at">poly =</span> aoi_sf</span>
-<span id="cb41-4"><a href="sycan-marsh-or.html#cb41-4" tabindex="-1"></a>  , <span class="at">title =</span> <span class="st">&quot;CHM (m)&quot;</span></span>
-<span id="cb41-5"><a href="sycan-marsh-or.html#cb41-5" tabindex="-1"></a>  , <span class="at">crop =</span> T</span>
-<span id="cb41-6"><a href="sycan-marsh-or.html#cb41-6" tabindex="-1"></a>  , <span class="at">buff =</span> <span class="dv">22</span></span>
-<span id="cb41-7"><a href="sycan-marsh-or.html#cb41-7" tabindex="-1"></a>  , <span class="at">col =</span> <span class="st">&quot;navy&quot;</span></span>
-<span id="cb41-8"><a href="sycan-marsh-or.html#cb41-8" tabindex="-1"></a>) <span class="sc">+</span></span>
-<span id="cb41-9"><a href="sycan-marsh-or.html#cb41-9" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">scale_fill_viridis_c</span>(</span>
-<span id="cb41-10"><a href="sycan-marsh-or.html#cb41-10" tabindex="-1"></a>    <span class="at">option =</span> <span class="st">&quot;plasma&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.9</span>, <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">comma_format</span>(<span class="at">accuracy=</span><span class="dv">1</span>), <span class="at">breaks =</span> scales<span class="sc">::</span><span class="fu">breaks_extended</span>(<span class="at">n=</span><span class="dv">6</span>)</span>
-<span id="cb41-11"><a href="sycan-marsh-or.html#cb41-11" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb41-12"><a href="sycan-marsh-or.html#cb41-12" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">geom_sf</span>(</span>
-<span id="cb41-13"><a href="sycan-marsh-or.html#cb41-13" tabindex="-1"></a>    <span class="at">data =</span> cloud2trees_ans<span class="sc">$</span>crowns_sf <span class="sc">%&gt;%</span> </span>
-<span id="cb41-14"><a href="sycan-marsh-or.html#cb41-14" tabindex="-1"></a>      <span class="co"># dplyr::slice_sample(prop = 0.1) %&gt;% </span></span>
-<span id="cb41-15"><a href="sycan-marsh-or.html#cb41-15" tabindex="-1"></a>      sf<span class="sc">::</span><span class="fu">st_intersection</span>(</span>
-<span id="cb41-16"><a href="sycan-marsh-or.html#cb41-16" tabindex="-1"></a>        aoi_sf <span class="sc">%&gt;%</span> sf<span class="sc">::</span><span class="fu">st_transform</span>(sf<span class="sc">::</span><span class="fu">st_crs</span>(cloud2trees_ans<span class="sc">$</span>crowns_sf))</span>
-<span id="cb41-17"><a href="sycan-marsh-or.html#cb41-17" tabindex="-1"></a>      )</span>
-<span id="cb41-18"><a href="sycan-marsh-or.html#cb41-18" tabindex="-1"></a>    , <span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">color =</span> <span class="st">&quot;gray33&quot;</span>, <span class="at">lwd =</span> <span class="fl">0.5</span></span>
-<span id="cb41-19"><a href="sycan-marsh-or.html#cb41-19" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb41-20"><a href="sycan-marsh-or.html#cb41-20" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste0</span>(aoi_sf<span class="sc">$</span>study_site_lab, <span class="st">&quot; - UAS Lidar&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="sycan-marsh-or.html#cb40-1" tabindex="-1"></a><span class="fu">plt_rast_poly_fn</span>(</span>
+<span id="cb40-2"><a href="sycan-marsh-or.html#cb40-2" tabindex="-1"></a>  <span class="at">rast =</span> cloud2trees_ans<span class="sc">$</span>chm_rast</span>
+<span id="cb40-3"><a href="sycan-marsh-or.html#cb40-3" tabindex="-1"></a>  , <span class="at">poly =</span> aoi_sf</span>
+<span id="cb40-4"><a href="sycan-marsh-or.html#cb40-4" tabindex="-1"></a>  , <span class="at">title =</span> <span class="st">&quot;CHM (m)&quot;</span></span>
+<span id="cb40-5"><a href="sycan-marsh-or.html#cb40-5" tabindex="-1"></a>  , <span class="at">crop =</span> T</span>
+<span id="cb40-6"><a href="sycan-marsh-or.html#cb40-6" tabindex="-1"></a>  , <span class="at">buff =</span> <span class="dv">22</span></span>
+<span id="cb40-7"><a href="sycan-marsh-or.html#cb40-7" tabindex="-1"></a>  , <span class="at">col =</span> <span class="st">&quot;navy&quot;</span></span>
+<span id="cb40-8"><a href="sycan-marsh-or.html#cb40-8" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb40-9"><a href="sycan-marsh-or.html#cb40-9" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">scale_fill_viridis_c</span>(</span>
+<span id="cb40-10"><a href="sycan-marsh-or.html#cb40-10" tabindex="-1"></a>    <span class="at">option =</span> <span class="st">&quot;plasma&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.9</span>, <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">comma_format</span>(<span class="at">accuracy=</span><span class="dv">1</span>), <span class="at">breaks =</span> scales<span class="sc">::</span><span class="fu">breaks_extended</span>(<span class="at">n=</span><span class="dv">6</span>)</span>
+<span id="cb40-11"><a href="sycan-marsh-or.html#cb40-11" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb40-12"><a href="sycan-marsh-or.html#cb40-12" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">geom_sf</span>(</span>
+<span id="cb40-13"><a href="sycan-marsh-or.html#cb40-13" tabindex="-1"></a>    <span class="at">data =</span> cloud2trees_ans<span class="sc">$</span>crowns_sf <span class="sc">%&gt;%</span> </span>
+<span id="cb40-14"><a href="sycan-marsh-or.html#cb40-14" tabindex="-1"></a>      <span class="co"># dplyr::slice_sample(prop = 0.1) %&gt;% </span></span>
+<span id="cb40-15"><a href="sycan-marsh-or.html#cb40-15" tabindex="-1"></a>      sf<span class="sc">::</span><span class="fu">st_intersection</span>(</span>
+<span id="cb40-16"><a href="sycan-marsh-or.html#cb40-16" tabindex="-1"></a>        aoi_sf <span class="sc">%&gt;%</span> sf<span class="sc">::</span><span class="fu">st_transform</span>(sf<span class="sc">::</span><span class="fu">st_crs</span>(cloud2trees_ans<span class="sc">$</span>crowns_sf))</span>
+<span id="cb40-17"><a href="sycan-marsh-or.html#cb40-17" tabindex="-1"></a>      )</span>
+<span id="cb40-18"><a href="sycan-marsh-or.html#cb40-18" tabindex="-1"></a>    , <span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">color =</span> <span class="st">&quot;gray33&quot;</span>, <span class="at">lwd =</span> <span class="fl">0.5</span></span>
+<span id="cb40-19"><a href="sycan-marsh-or.html#cb40-19" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb40-20"><a href="sycan-marsh-or.html#cb40-20" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste0</span>(aoi_sf<span class="sc">$</span>study_site_lab, <span class="st">&quot; - UAS Lidar&quot;</span>))</span></code></pre></div>
 <p><img src="dod_cloud2trees_demo_files/figure-html/unnamed-chunk-44-1.png" width="1008" /></p>
 </div>
 <div id="imagery-1" class="section level4 hasAnchor" number="3.2.3.4">
 <h4><span class="header-section-number">3.2.3.4</span> Imagery<a href="sycan-marsh-or.html#imagery-1" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>let’s check the tree extraction results (gray) on satellite imagery with a collection date that may not coincide with the point cloud collection date</p>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="sycan-marsh-or.html#cb42-1" tabindex="-1"></a><span class="co"># add crowns</span></span>
-<span id="cb42-2"><a href="sycan-marsh-or.html#cb42-2" tabindex="-1"></a>plt_aoi_basemap <span class="sc">+</span></span>
-<span id="cb42-3"><a href="sycan-marsh-or.html#cb42-3" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">geom_sf</span>(</span>
-<span id="cb42-4"><a href="sycan-marsh-or.html#cb42-4" tabindex="-1"></a>    <span class="at">data =</span> cloud2trees_ans<span class="sc">$</span>crowns_sf <span class="sc">%&gt;%</span> </span>
-<span id="cb42-5"><a href="sycan-marsh-or.html#cb42-5" tabindex="-1"></a>      sf<span class="sc">::</span><span class="fu">st_intersection</span>(</span>
-<span id="cb42-6"><a href="sycan-marsh-or.html#cb42-6" tabindex="-1"></a>        aoi_sf <span class="sc">%&gt;%</span> sf<span class="sc">::</span><span class="fu">st_transform</span>(sf<span class="sc">::</span><span class="fu">st_crs</span>(cloud2trees_ans<span class="sc">$</span>crowns_sf))</span>
-<span id="cb42-7"><a href="sycan-marsh-or.html#cb42-7" tabindex="-1"></a>      ) <span class="sc">%&gt;%</span> </span>
-<span id="cb42-8"><a href="sycan-marsh-or.html#cb42-8" tabindex="-1"></a>      sf<span class="sc">::</span><span class="fu">st_transform</span>(<span class="dv">4326</span>)</span>
-<span id="cb42-9"><a href="sycan-marsh-or.html#cb42-9" tabindex="-1"></a>    , <span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">color =</span> <span class="st">&quot;gray77&quot;</span>, <span class="at">lwd =</span> <span class="fl">0.1</span></span>
-<span id="cb42-10"><a href="sycan-marsh-or.html#cb42-10" tabindex="-1"></a>    , <span class="at">inherit.aes =</span> F</span>
-<span id="cb42-11"><a href="sycan-marsh-or.html#cb42-11" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb42-12"><a href="sycan-marsh-or.html#cb42-12" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste0</span>(aoi_sf<span class="sc">$</span>study_site_lab, <span class="st">&quot; - UAS Lidar&quot;</span>)) <span class="sc">+</span></span>
-<span id="cb42-13"><a href="sycan-marsh-or.html#cb42-13" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">theme</span>(</span>
-<span id="cb42-14"><a href="sycan-marsh-or.html#cb42-14" tabindex="-1"></a>    <span class="at">plot.title =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>, <span class="at">hjust =</span> <span class="dv">0</span>, <span class="at">margin =</span> ggplot2<span class="sc">::</span><span class="fu">margin</span>(<span class="dv">0</span>,<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">0</span>))</span>
-<span id="cb42-15"><a href="sycan-marsh-or.html#cb42-15" tabindex="-1"></a>  )</span></code></pre></div>
+<p><em>we’ll sample the trees here so the output can be seen more clearly</em></p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="sycan-marsh-or.html#cb41-1" tabindex="-1"></a><span class="co"># add crowns</span></span>
+<span id="cb41-2"><a href="sycan-marsh-or.html#cb41-2" tabindex="-1"></a>plt_aoi_basemap <span class="sc">+</span></span>
+<span id="cb41-3"><a href="sycan-marsh-or.html#cb41-3" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">geom_sf</span>(</span>
+<span id="cb41-4"><a href="sycan-marsh-or.html#cb41-4" tabindex="-1"></a>    <span class="at">data =</span> cloud2trees_ans<span class="sc">$</span>crowns_sf <span class="sc">%&gt;%</span> </span>
+<span id="cb41-5"><a href="sycan-marsh-or.html#cb41-5" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">slice_sample</span>(<span class="at">prop =</span> <span class="fl">0.6</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb41-6"><a href="sycan-marsh-or.html#cb41-6" tabindex="-1"></a>      sf<span class="sc">::</span><span class="fu">st_intersection</span>(</span>
+<span id="cb41-7"><a href="sycan-marsh-or.html#cb41-7" tabindex="-1"></a>        aoi_sf <span class="sc">%&gt;%</span> sf<span class="sc">::</span><span class="fu">st_transform</span>(sf<span class="sc">::</span><span class="fu">st_crs</span>(cloud2trees_ans<span class="sc">$</span>crowns_sf))</span>
+<span id="cb41-8"><a href="sycan-marsh-or.html#cb41-8" tabindex="-1"></a>      ) <span class="sc">%&gt;%</span> </span>
+<span id="cb41-9"><a href="sycan-marsh-or.html#cb41-9" tabindex="-1"></a>      sf<span class="sc">::</span><span class="fu">st_transform</span>(<span class="dv">4326</span>)</span>
+<span id="cb41-10"><a href="sycan-marsh-or.html#cb41-10" tabindex="-1"></a>    , <span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">color =</span> <span class="st">&quot;gray77&quot;</span>, <span class="at">lwd =</span> <span class="fl">0.1</span></span>
+<span id="cb41-11"><a href="sycan-marsh-or.html#cb41-11" tabindex="-1"></a>    , <span class="at">inherit.aes =</span> F</span>
+<span id="cb41-12"><a href="sycan-marsh-or.html#cb41-12" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb41-13"><a href="sycan-marsh-or.html#cb41-13" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste0</span>(aoi_sf<span class="sc">$</span>study_site_lab, <span class="st">&quot; - UAS Lidar&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb41-14"><a href="sycan-marsh-or.html#cb41-14" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">theme</span>(</span>
+<span id="cb41-15"><a href="sycan-marsh-or.html#cb41-15" tabindex="-1"></a>    <span class="at">plot.title =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>, <span class="at">hjust =</span> <span class="dv">0</span>, <span class="at">margin =</span> ggplot2<span class="sc">::</span><span class="fu">margin</span>(<span class="dv">0</span>,<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">0</span>))</span>
+<span id="cb41-16"><a href="sycan-marsh-or.html#cb41-16" tabindex="-1"></a>  )</span></code></pre></div>
 <p><img src="dod_cloud2trees_demo_files/figure-html/unnamed-chunk-45-1.png" width="1008" /></p>
 </div>
 <div id="tree-attributes-spatial-1" class="section level4 hasAnchor" number="3.2.3.5">
 <h4><span class="header-section-number">3.2.3.5</span> Tree Attributes Spatial<a href="sycan-marsh-or.html#tree-attributes-spatial-1" class="anchor-section" aria-label="Anchor link to header"></a></h4>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="sycan-marsh-or.html#cb43-1" tabindex="-1"></a>plt_df_temp <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">tibble</span>(</span>
-<span id="cb43-2"><a href="sycan-marsh-or.html#cb43-2" tabindex="-1"></a>  <span class="at">fill_var =</span> <span class="fu">c</span>(<span class="st">&quot;tree_height_m&quot;</span>, <span class="st">&quot;dbh_cm&quot;</span>, <span class="st">&quot;tree_cbh_m&quot;</span>, <span class="st">&quot;max_crown_diam_height_m&quot;</span>, <span class="st">&quot;landfire_crown_biomass_kg&quot;</span>)</span>
-<span id="cb43-3"><a href="sycan-marsh-or.html#cb43-3" tabindex="-1"></a>  , <span class="at">palette =</span> <span class="fu">c</span>(<span class="st">&quot;Blues&quot;</span>, <span class="st">&quot;Oranges&quot;</span>, <span class="st">&quot;Greens&quot;</span>, <span class="st">&quot;Purples&quot;</span>, <span class="st">&quot;Reds&quot;</span>)</span>
-<span id="cb43-4"><a href="sycan-marsh-or.html#cb43-4" tabindex="-1"></a>  , <span class="at">title =</span> <span class="fu">c</span>(<span class="st">&quot;Height (m)&quot;</span>, <span class="st">&quot;DBH (cm)&quot;</span>, <span class="st">&quot;CBH (m)&quot;</span>, <span class="st">&quot;HMD (m)&quot;</span>, <span class="st">&quot;Crown</span><span class="sc">\n</span><span class="st">biomass (kg)&quot;</span>)</span>
-<span id="cb43-5"><a href="sycan-marsh-or.html#cb43-5" tabindex="-1"></a>)</span>
-<span id="cb43-6"><a href="sycan-marsh-or.html#cb43-6" tabindex="-1"></a></span>
-<span id="cb43-7"><a href="sycan-marsh-or.html#cb43-7" tabindex="-1"></a>plts_temp <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(plt_df_temp) <span class="sc">%&gt;%</span> </span>
-<span id="cb43-8"><a href="sycan-marsh-or.html#cb43-8" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">map</span>(</span>
-<span id="cb43-9"><a href="sycan-marsh-or.html#cb43-9" tabindex="-1"></a>    \(x)</span>
-<span id="cb43-10"><a href="sycan-marsh-or.html#cb43-10" tabindex="-1"></a>    <span class="fu">plt_crown_attr_fn</span>(</span>
-<span id="cb43-11"><a href="sycan-marsh-or.html#cb43-11" tabindex="-1"></a>      <span class="at">crowns =</span> cloud2trees_ans<span class="sc">$</span>crowns_sf</span>
-<span id="cb43-12"><a href="sycan-marsh-or.html#cb43-12" tabindex="-1"></a>      , <span class="at">aoi =</span> aoi_sf</span>
-<span id="cb43-13"><a href="sycan-marsh-or.html#cb43-13" tabindex="-1"></a>      , <span class="at">lwd =</span> <span class="fl">0.6</span></span>
-<span id="cb43-14"><a href="sycan-marsh-or.html#cb43-14" tabindex="-1"></a>      , <span class="at">fill_var =</span> plt_df_temp<span class="sc">$</span>fill_var[x]</span>
-<span id="cb43-15"><a href="sycan-marsh-or.html#cb43-15" tabindex="-1"></a>      , <span class="at">palette =</span> plt_df_temp<span class="sc">$</span>palette[x]</span>
-<span id="cb43-16"><a href="sycan-marsh-or.html#cb43-16" tabindex="-1"></a>      , <span class="at">title =</span> plt_df_temp<span class="sc">$</span>title[x]</span>
-<span id="cb43-17"><a href="sycan-marsh-or.html#cb43-17" tabindex="-1"></a>    )  </span>
-<span id="cb43-18"><a href="sycan-marsh-or.html#cb43-18" tabindex="-1"></a>  )</span>
-<span id="cb43-19"><a href="sycan-marsh-or.html#cb43-19" tabindex="-1"></a><span class="co"># combine with patchwork</span></span>
-<span id="cb43-20"><a href="sycan-marsh-or.html#cb43-20" tabindex="-1"></a>patchwork<span class="sc">::</span><span class="fu">wrap_plots</span>(plts_temp, <span class="at">ncol =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb43-21"><a href="sycan-marsh-or.html#cb43-21" tabindex="-1"></a>  patchwork<span class="sc">::</span><span class="fu">plot_annotation</span>(</span>
-<span id="cb43-22"><a href="sycan-marsh-or.html#cb43-22" tabindex="-1"></a>    <span class="at">title =</span> <span class="fu">paste0</span>(aoi_sf<span class="sc">$</span>study_site_lab, <span class="st">&quot; - UAS Lidar&quot;</span>)</span>
-<span id="cb43-23"><a href="sycan-marsh-or.html#cb43-23" tabindex="-1"></a>    <span class="co"># , subtitle = &quot;huh&quot;</span></span>
-<span id="cb43-24"><a href="sycan-marsh-or.html#cb43-24" tabindex="-1"></a>    <span class="co"># , caption = &quot;hey&quot;</span></span>
-<span id="cb43-25"><a href="sycan-marsh-or.html#cb43-25" tabindex="-1"></a>    , <span class="at">theme =</span> ggplot2<span class="sc">::</span><span class="fu">theme</span>(</span>
-<span id="cb43-26"><a href="sycan-marsh-or.html#cb43-26" tabindex="-1"></a>      <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">margin =</span> ggplot2<span class="sc">::</span><span class="fu">margin</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">3</span>,<span class="dv">0</span>))</span>
-<span id="cb43-27"><a href="sycan-marsh-or.html#cb43-27" tabindex="-1"></a>    )</span>
-<span id="cb43-28"><a href="sycan-marsh-or.html#cb43-28" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="sycan-marsh-or.html#cb42-1" tabindex="-1"></a>plt_df_temp <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">tibble</span>(</span>
+<span id="cb42-2"><a href="sycan-marsh-or.html#cb42-2" tabindex="-1"></a>  <span class="at">fill_var =</span> <span class="fu">c</span>(<span class="st">&quot;tree_height_m&quot;</span>, <span class="st">&quot;dbh_cm&quot;</span>, <span class="st">&quot;tree_cbh_m&quot;</span>, <span class="st">&quot;max_crown_diam_height_m&quot;</span>, <span class="st">&quot;landfire_crown_biomass_kg&quot;</span>)</span>
+<span id="cb42-3"><a href="sycan-marsh-or.html#cb42-3" tabindex="-1"></a>  , <span class="at">palette =</span> <span class="fu">c</span>(<span class="st">&quot;Blues&quot;</span>, <span class="st">&quot;Oranges&quot;</span>, <span class="st">&quot;Greens&quot;</span>, <span class="st">&quot;Purples&quot;</span>, <span class="st">&quot;Reds&quot;</span>)</span>
+<span id="cb42-4"><a href="sycan-marsh-or.html#cb42-4" tabindex="-1"></a>  , <span class="at">title =</span> <span class="fu">c</span>(<span class="st">&quot;Height (m)&quot;</span>, <span class="st">&quot;DBH (cm)&quot;</span>, <span class="st">&quot;CBH (m)&quot;</span>, <span class="st">&quot;HMD (m)&quot;</span>, <span class="st">&quot;Crown</span><span class="sc">\n</span><span class="st">biomass (kg)&quot;</span>)</span>
+<span id="cb42-5"><a href="sycan-marsh-or.html#cb42-5" tabindex="-1"></a>)</span>
+<span id="cb42-6"><a href="sycan-marsh-or.html#cb42-6" tabindex="-1"></a></span>
+<span id="cb42-7"><a href="sycan-marsh-or.html#cb42-7" tabindex="-1"></a>plts_temp <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(plt_df_temp) <span class="sc">%&gt;%</span> </span>
+<span id="cb42-8"><a href="sycan-marsh-or.html#cb42-8" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">map</span>(</span>
+<span id="cb42-9"><a href="sycan-marsh-or.html#cb42-9" tabindex="-1"></a>    \(x)</span>
+<span id="cb42-10"><a href="sycan-marsh-or.html#cb42-10" tabindex="-1"></a>    <span class="fu">plt_crown_attr_fn</span>(</span>
+<span id="cb42-11"><a href="sycan-marsh-or.html#cb42-11" tabindex="-1"></a>      <span class="at">crowns =</span> cloud2trees_ans<span class="sc">$</span>crowns_sf</span>
+<span id="cb42-12"><a href="sycan-marsh-or.html#cb42-12" tabindex="-1"></a>      , <span class="at">aoi =</span> aoi_sf</span>
+<span id="cb42-13"><a href="sycan-marsh-or.html#cb42-13" tabindex="-1"></a>      , <span class="at">lwd =</span> <span class="fl">0.6</span></span>
+<span id="cb42-14"><a href="sycan-marsh-or.html#cb42-14" tabindex="-1"></a>      , <span class="at">fill_var =</span> plt_df_temp<span class="sc">$</span>fill_var[x]</span>
+<span id="cb42-15"><a href="sycan-marsh-or.html#cb42-15" tabindex="-1"></a>      , <span class="at">palette =</span> plt_df_temp<span class="sc">$</span>palette[x]</span>
+<span id="cb42-16"><a href="sycan-marsh-or.html#cb42-16" tabindex="-1"></a>      , <span class="at">title =</span> plt_df_temp<span class="sc">$</span>title[x]</span>
+<span id="cb42-17"><a href="sycan-marsh-or.html#cb42-17" tabindex="-1"></a>    )  </span>
+<span id="cb42-18"><a href="sycan-marsh-or.html#cb42-18" tabindex="-1"></a>  )</span>
+<span id="cb42-19"><a href="sycan-marsh-or.html#cb42-19" tabindex="-1"></a><span class="co"># combine with patchwork</span></span>
+<span id="cb42-20"><a href="sycan-marsh-or.html#cb42-20" tabindex="-1"></a>patchwork<span class="sc">::</span><span class="fu">wrap_plots</span>(plts_temp, <span class="at">ncol =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb42-21"><a href="sycan-marsh-or.html#cb42-21" tabindex="-1"></a>  patchwork<span class="sc">::</span><span class="fu">plot_annotation</span>(</span>
+<span id="cb42-22"><a href="sycan-marsh-or.html#cb42-22" tabindex="-1"></a>    <span class="at">title =</span> <span class="fu">paste0</span>(aoi_sf<span class="sc">$</span>study_site_lab, <span class="st">&quot; - UAS Lidar&quot;</span>)</span>
+<span id="cb42-23"><a href="sycan-marsh-or.html#cb42-23" tabindex="-1"></a>    <span class="co"># , subtitle = &quot;huh&quot;</span></span>
+<span id="cb42-24"><a href="sycan-marsh-or.html#cb42-24" tabindex="-1"></a>    <span class="co"># , caption = &quot;hey&quot;</span></span>
+<span id="cb42-25"><a href="sycan-marsh-or.html#cb42-25" tabindex="-1"></a>    , <span class="at">theme =</span> ggplot2<span class="sc">::</span><span class="fu">theme</span>(</span>
+<span id="cb42-26"><a href="sycan-marsh-or.html#cb42-26" tabindex="-1"></a>      <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">margin =</span> ggplot2<span class="sc">::</span><span class="fu">margin</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">3</span>,<span class="dv">0</span>))</span>
+<span id="cb42-27"><a href="sycan-marsh-or.html#cb42-27" tabindex="-1"></a>    )</span>
+<span id="cb42-28"><a href="sycan-marsh-or.html#cb42-28" tabindex="-1"></a>  )</span></code></pre></div>
 <p><img src="dod_cloud2trees_demo_files/figure-html/unnamed-chunk-46-1.png" width="1008" /></p>
 </div>
 <div id="tree-attributes-summary-stats-1" class="section level4 hasAnchor" number="3.2.3.6">
 <h4><span class="header-section-number">3.2.3.6</span> Tree Attributes Summary Stats<a href="sycan-marsh-or.html#tree-attributes-summary-stats-1" class="anchor-section" aria-label="Anchor link to header"></a></h4>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="sycan-marsh-or.html#cb44-1" tabindex="-1"></a><span class="fu">stats_sum_fn</span>(<span class="at">crowns =</span> cloud2trees_ans<span class="sc">$</span>crowns_sf, <span class="at">aoi =</span> aoi_sf, <span class="at">unit =</span> aoi_sf<span class="sc">$</span>study_site_lab[<span class="dv">1</span>])</span></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="sycan-marsh-or.html#cb43-1" tabindex="-1"></a><span class="fu">stats_sum_fn</span>(<span class="at">crowns =</span> cloud2trees_ans<span class="sc">$</span>crowns_sf, <span class="at">aoi =</span> aoi_sf, <span class="at">unit =</span> aoi_sf<span class="sc">$</span>study_site_lab[<span class="dv">1</span>])</span></code></pre></div>
 <table class="table" style="font-size: 13px; margin-left: auto; margin-right: auto;">
 <caption style="font-size: initial !important;">
 <span id="tab:unnamed-chunk-47">Table 3.4: </span>Summary statistics for selected metrics

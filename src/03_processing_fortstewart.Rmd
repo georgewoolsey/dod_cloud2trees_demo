@@ -98,7 +98,7 @@ best_ws_fn_temp <- my_ws_functions$exp_fn
 
 ### `cloud2trees` point cloud processing
 
-```{r fortstewart-als}
+```{r fortstewart-als, results=F}
 dir_temp <- file.path(aoi_sf$fdir, "als_processing")
 if(!dir.exists(dir_temp)){
   dir.create(dir_temp)
@@ -167,9 +167,8 @@ plt_rast_poly_fn(
   , buff = 22
   , col = "navy"
 ) +
-  harrypotter::scale_fill_hp_d(
-    option = "lunalovegood", alpha = 0.8
-  ) +
+  ggplot2::scale_fill_viridis_d(option = "turbo", alpha = 0.8) +
+  # harrypotter::scale_fill_hp_d(option = "lunalovegood", alpha = 0.8) +
   ggplot2::labs(title = paste0(aoi_sf$study_site_lab, " - ALS")) +
   ggplot2::theme(
     legend.text = ggplot2::element_text(size = 7, angle = 0)
@@ -184,9 +183,9 @@ foresttype_sum_fn(crowns = cloud2trees_ans$crowns_sf, aoi = aoi_sf, unit = aoi_s
 
 #### DTM
 
-**this is a large area so we're going to make the raster more coarse**
+*this is a large area so we're going to make the raster more coarse*
 
-```{r}
+```{r, results='hide', fig.show=T}
 plt_rast_poly_fn(
   rast = cloud2trees_ans$dtm_rast %>% terra::aggregate(fact = 2, cores = lasR::half_cores())
   , poly = aoi_sf
@@ -201,15 +200,15 @@ plt_rast_poly_fn(
   ggplot2::labs(title = paste0(aoi_sf$study_site_lab, " - ALS"))
 ```
 
-**this was already height-normalized or is it lowland??**
+*this was already height-normalized or is it lowland??*
 
 #### CHM
 
 plot the CHM and we'll also add the extracted trees in gray
 
-**this is a large area so we're going to make the raster more coarse and sample from the tree list**
+*this is a large area so we're going to make the raster more coarse and sample from the tree list*
 
-```{r}
+```{r, results='hide', fig.show=T}
 crowns_temp <- cloud2trees_ans$crowns_sf %>% dplyr::slice_sample(prop = 0.1)
 
 plt_rast_poly_fn(
@@ -237,7 +236,7 @@ plt_rast_poly_fn(
 
 let's check the tree extraction results (gray) on satellite imagery with a collection date that may not coincide with the point cloud collection date
 
-**this is a large area so we're going to zoom way in on the image and sample from the tree list**
+*this is a large area so we're going to zoom way in on the image and sample from the tree list*
 
 ```{r}
 plt_aoi_basemap <- my_ggmap_basemap(
@@ -268,7 +267,7 @@ plt_aoi_basemap +
 
 #### Tree Attributes Spatial
 
-**this is a large area so we're going to sample from the tree list**
+*this is a large area so we're going to sample from the tree list*
 
 ```{r, fig.height=8}
 crowns_temp <- cloud2trees_ans$crowns_sf %>% dplyr::slice_sample(prop = 0.2)

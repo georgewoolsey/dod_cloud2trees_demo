@@ -106,7 +106,7 @@ best_ws_fn_temp <- my_ws_functions$log_les_ccv_fn
 
 ### `cloud2trees` point cloud processing
 
-```{r saltcabin-als}
+```{r saltcabin-als, results=F}
 dir_temp <- file.path(aoi_sf$fdir, "als_processing")
 if(!dir.exists(dir_temp)){
   dir.create(dir_temp)
@@ -131,7 +131,7 @@ if(!dir.exists(dir_temp)){
     , cbh_estimate_missing_cbh = T
   )
 }else{
-  cloud2raster_ans <- list(
+  cloud2trees_ans <- list(
     "dtm_rast" = terra::rast( file.path(dir_temp, "point_cloud_processing_delivery", "dtm_1m.tif") )
     , "chm_rast" = terra::rast( file.path(dir_temp, "point_cloud_processing_delivery", "chm_0.25m.tif") )
     , "crowns_sf" = list.files(
@@ -147,6 +147,8 @@ if(!dir.exists(dir_temp)){
         )
       ) %>% 
       dplyr::bind_rows()
+    , "foresttype_rast" = terra::rast( file.path(dir_temp, "point_cloud_processing_delivery", "fia_foresttype_raster.tif") ) %>% 
+        terra::subst(from = foresttype_lookup$forest_type_group_code, to = foresttype_lookup$forest_type_group)
   )
 }
 ```
@@ -154,6 +156,157 @@ if(!dir.exists(dir_temp)){
 ```{r, warning=FALSE, message=FALSE, echo=FALSE, include=FALSE}
 remove(list = ls()[grep("_temp",ls())])
 remove(itd_tuning_ans)
+gc()
+```
+
+### `cloud2trees` Results
+
+#### FIA Forest Type Group
+
+```{r}
+# load raster
+plt_rast_poly_fn(
+  rast = cloud2trees_ans$foresttype_rast
+  , poly = aoi_sf
+  , title = "FIA forest type group"
+  , crop = T
+  , buff = 22
+  , col = "navy"
+) +
+  ggplot2::scale_fill_viridis_d(option = "turbo", alpha = 0.8) +
+  # harrypotter::scale_fill_hp_d(option = "lunalovegood", alpha = 0.8) +
+  ggplot2::labs(title = paste0(aoi_sf$study_site_lab, " - ALS")) +
+  ggplot2::theme(
+    legend.text = ggplot2::element_text(size = 7, angle = 0)
+  )
+```
+
+distribution by forest type
+
+```{r}
+foresttype_sum_fn(crowns = cloud2trees_ans$crowns_sf, aoi = aoi_sf, unit = aoi_sf$study_site_lab[1])
+```
+
+#### DTM
+
+```{r}
+plt_rast_poly_fn(
+  rast = cloud2trees_ans$dtm_rast
+  , poly = aoi_sf
+  , title = "DTM (m)"
+  , crop = T
+  , buff = 22
+  , col = "navy"
+) +
+  harrypotter::scale_fill_hp(
+    option = "mischief", alpha = 0.9, labels = scales::comma_format(accuracy=1), breaks = scales::breaks_extended(n=6)
+  ) +
+  ggplot2::labs(title = paste0(aoi_sf$study_site_lab, " - ALS"))
+```
+
+#### CHM
+
+plot the CHM and we'll also add the extracted trees in gray
+
+```{r}
+plt_rast_poly_fn(
+  rast = cloud2trees_ans$chm_rast
+  , poly = aoi_sf
+  , title = "CHM (m)"
+  , crop = T
+  , buff = 22
+  , col = "navy"
+) +
+  ggplot2::scale_fill_viridis_c(
+    option = "plasma", alpha = 0.9, labels = scales::comma_format(accuracy=1), breaks = scales::breaks_extended(n=6)
+  ) +
+  ggplot2::geom_sf(
+    data = cloud2trees_ans$crowns_sf %>% 
+      # dplyr::slice_sample(prop = 0.1) %>% 
+      sf::st_intersection(
+        aoi_sf %>% sf::st_transform(sf::st_crs(cloud2trees_ans$crowns_sf))
+      )
+    , fill = NA, color = "gray33", lwd = 0.5
+  ) +
+  ggplot2::labs(title = paste0(aoi_sf$study_site_lab, " - ALS"))
+```
+
+#### Imagery
+
+let's check the tree extraction results (gray) on satellite imagery with a collection date that may not coincide with the point cloud collection date
+
+*we'll sample the trees here so the output can be seen more clearly*
+
+```{r}
+plt_aoi_basemap <- my_ggmap_basemap(
+  sf_data = aoi_sf
+  , zoom_level = 16
+  , buffer_box = 22
+  , my_maptype = "satellite"
+  , add_sf_data = T
+  , outline_sf_data_col = "navy"
+  , outline_lwd = 1
+)
+# add crowns
+plt_aoi_basemap +
+  ggplot2::geom_sf(
+    data = cloud2trees_ans$crowns_sf %>% 
+      dplyr::slice_sample(prop = 0.6) %>% 
+      sf::st_intersection(
+        aoi_sf %>% sf::st_transform(sf::st_crs(cloud2trees_ans$crowns_sf))
+      ) %>% 
+      sf::st_transform(4326)
+    , fill = NA, color = "gray77", lwd = 0.1
+    , inherit.aes = F
+  ) +
+  ggplot2::labs(title = paste0(aoi_sf$study_site_lab, " - ALS")) +
+  ggplot2::theme(
+    plot.title = ggplot2::element_text(size = 12, hjust = 0, margin = ggplot2::margin(0,3,3,0))
+  )
+```
+
+#### Tree Attributes Spatial
+
+```{r, fig.height=8}
+plt_df_temp <- dplyr::tibble(
+  fill_var = c("tree_height_m", "dbh_cm", "tree_cbh_m", "max_crown_diam_height_m", "landfire_crown_biomass_kg")
+  , palette = c("Blues", "Oranges", "Greens", "Purples", "Reds")
+  , title = c("Height (m)", "DBH (cm)", "CBH (m)", "HMD (m)", "Crown\nbiomass (kg)")
+)
+
+plts_temp <- 1:nrow(plt_df_temp) %>% 
+  purrr::map(
+    \(x)
+    plt_crown_attr_fn(
+      crowns = cloud2trees_ans$crowns_sf
+      , aoi = aoi_sf
+      , lwd = 0.6
+      , fill_var = plt_df_temp$fill_var[x]
+      , palette = plt_df_temp$palette[x]
+      , title = plt_df_temp$title[x]
+    )  
+  )
+# combine with patchwork
+patchwork::wrap_plots(plts_temp, ncol = 2) +
+  patchwork::plot_annotation(
+    title = paste0(aoi_sf$study_site_lab, " - ALS")
+    # , subtitle = "huh"
+    # , caption = "hey"
+    , theme = ggplot2::theme(
+      plot.title = element_text(hjust = 0.5, margin = ggplot2::margin(0,0,3,0))
+    )
+  )
+```
+
+#### Tree Attributes Summary Stats
+
+```{r}
+stats_sum_fn(crowns = cloud2trees_ans$crowns_sf, aoi = aoi_sf, unit = aoi_sf$study_site_lab[1])
+```
+
+```{r, warning=FALSE, message=FALSE, echo=FALSE, include=FALSE}
+remove(list = ls()[grep("_temp",ls())])
+remove(cloud2trees_ans)
 gc()
 ```
 
@@ -207,7 +360,7 @@ best_ws_fn_temp <- my_ws_functions$log_les_ccv_fn
 
 ### `cloud2trees` point cloud processing
 
-```{r saltcabin-uas}
+```{r saltcabin-uas, results=F}
 dir_temp <- file.path(aoi_sf$fdir, "uas_sfm_processing")
 if(!dir.exists(dir_temp)){
   dir.create(dir_temp)
@@ -232,7 +385,7 @@ if(!dir.exists(dir_temp)){
     , cbh_estimate_missing_cbh = T
   )
 }else{
-  cloud2raster_ans <- list(
+  cloud2trees_ans <- list(
     "dtm_rast" = terra::rast( file.path(dir_temp, "point_cloud_processing_delivery", "dtm_1m.tif") )
     , "chm_rast" = terra::rast( file.path(dir_temp, "point_cloud_processing_delivery", "chm_0.25m.tif") )
     , "crowns_sf" = list.files(
@@ -248,6 +401,8 @@ if(!dir.exists(dir_temp)){
         )
       ) %>% 
       dplyr::bind_rows()
+    , "foresttype_rast" = terra::rast( file.path(dir_temp, "point_cloud_processing_delivery", "fia_foresttype_raster.tif") ) %>% 
+        terra::subst(from = foresttype_lookup$forest_type_group_code, to = foresttype_lookup$forest_type_group)
   )
 }
 ```
@@ -255,5 +410,147 @@ if(!dir.exists(dir_temp)){
 ```{r, warning=FALSE, message=FALSE, echo=FALSE, include=FALSE}
 remove(list = ls()[grep("_temp",ls())])
 remove(itd_tuning_ans)
+gc()
+```
+
+### `cloud2trees` Results
+
+#### FIA Forest Type Group
+
+```{r}
+# load raster
+plt_rast_poly_fn(
+  rast = cloud2trees_ans$foresttype_rast
+  , poly = aoi_sf
+  , title = "FIA forest type group"
+  , crop = T
+  , buff = 22
+  , col = "navy"
+) +
+  ggplot2::scale_fill_viridis_d(option = "turbo", alpha = 0.8) +
+  # harrypotter::scale_fill_hp_d(option = "lunalovegood", alpha = 0.8) +
+  ggplot2::labs(title = paste0(aoi_sf$study_site_lab, " - UAS SfM")) +
+  ggplot2::theme(
+    legend.text = ggplot2::element_text(size = 7, angle = 0)
+  )
+```
+
+distribution by forest type
+
+```{r}
+foresttype_sum_fn(crowns = cloud2trees_ans$crowns_sf, aoi = aoi_sf, unit = aoi_sf$study_site_lab[1])
+```
+
+#### DTM
+
+```{r}
+plt_rast_poly_fn(
+  rast = cloud2trees_ans$dtm_rast
+  , poly = aoi_sf
+  , title = "DTM (m)"
+  , crop = T
+  , buff = 22
+  , col = "navy"
+) +
+  harrypotter::scale_fill_hp(
+    option = "mischief", alpha = 0.9, labels = scales::comma_format(accuracy=1), breaks = scales::breaks_extended(n=6)
+  ) +
+  ggplot2::labs(title = paste0(aoi_sf$study_site_lab, " - UAS SfM"))
+```
+
+#### CHM
+
+plot the CHM and we'll also add the extracted trees in gray
+
+```{r}
+plt_rast_poly_fn(
+  rast = cloud2trees_ans$chm_rast
+  , poly = aoi_sf
+  , title = "CHM (m)"
+  , crop = T
+  , buff = 22
+  , col = "navy"
+) +
+  ggplot2::scale_fill_viridis_c(
+    option = "plasma", alpha = 0.9, labels = scales::comma_format(accuracy=1), breaks = scales::breaks_extended(n=6)
+  ) +
+  ggplot2::geom_sf(
+    data = cloud2trees_ans$crowns_sf %>% 
+      # dplyr::slice_sample(prop = 0.1) %>% 
+      sf::st_intersection(
+        aoi_sf %>% sf::st_transform(sf::st_crs(cloud2trees_ans$crowns_sf))
+      )
+    , fill = NA, color = "gray33", lwd = 0.5
+  ) +
+  ggplot2::labs(title = paste0(aoi_sf$study_site_lab, " - UAS SfM"))
+```
+
+#### Imagery
+
+let's check the tree extraction results (gray) on satellite imagery with a collection date that may not coincide with the point cloud collection date
+
+*we'll sample the trees here so the output can be seen more clearly*
+
+```{r}
+# add crowns
+plt_aoi_basemap +
+  ggplot2::geom_sf(
+    data = cloud2trees_ans$crowns_sf %>% 
+      dplyr::slice_sample(prop = 0.6) %>% 
+      sf::st_intersection(
+        aoi_sf %>% sf::st_transform(sf::st_crs(cloud2trees_ans$crowns_sf))
+      ) %>% 
+      sf::st_transform(4326)
+    , fill = NA, color = "gray77", lwd = 0.1
+    , inherit.aes = F
+  ) +
+  ggplot2::labs(title = paste0(aoi_sf$study_site_lab, " - UAS SfM")) +
+  ggplot2::theme(
+    plot.title = ggplot2::element_text(size = 12, hjust = 0, margin = ggplot2::margin(0,3,3,0))
+  )
+```
+
+#### Tree Attributes Spatial
+
+```{r, fig.height=8}
+plt_df_temp <- dplyr::tibble(
+  fill_var = c("tree_height_m", "dbh_cm", "tree_cbh_m", "max_crown_diam_height_m", "landfire_crown_biomass_kg")
+  , palette = c("Blues", "Oranges", "Greens", "Purples", "Reds")
+  , title = c("Height (m)", "DBH (cm)", "CBH (m)", "HMD (m)", "Crown\nbiomass (kg)")
+)
+
+plts_temp <- 1:nrow(plt_df_temp) %>% 
+  purrr::map(
+    \(x)
+    plt_crown_attr_fn(
+      crowns = cloud2trees_ans$crowns_sf
+      , aoi = aoi_sf
+      , lwd = 0.6
+      , fill_var = plt_df_temp$fill_var[x]
+      , palette = plt_df_temp$palette[x]
+      , title = plt_df_temp$title[x]
+    )  
+  )
+# combine with patchwork
+patchwork::wrap_plots(plts_temp, ncol = 2) +
+  patchwork::plot_annotation(
+    title = paste0(aoi_sf$study_site_lab, " - UAS SfM")
+    # , subtitle = "huh"
+    # , caption = "hey"
+    , theme = ggplot2::theme(
+      plot.title = element_text(hjust = 0.5, margin = ggplot2::margin(0,0,3,0))
+    )
+  )
+```
+
+#### Tree Attributes Summary Stats
+
+```{r}
+stats_sum_fn(crowns = cloud2trees_ans$crowns_sf, aoi = aoi_sf, unit = aoi_sf$study_site_lab[1])
+```
+
+```{r, warning=FALSE, message=FALSE, echo=FALSE, include=FALSE}
+remove(list = ls()[grep("_temp",ls())])
+remove(cloud2trees_ans)
 gc()
 ```
