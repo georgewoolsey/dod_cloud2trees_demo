@@ -138,7 +138,9 @@ if(!dir.exists(dir_temp)){
           , quiet = T
         )
       ) %>% 
-      dplyr::bind_rows()
+      dplyr::bind_rows() %>% 
+      ## !!!!!!!!!!!!!!!!!!!!!!!! cruz_tree_kg_per_m3 empty here
+      dplyr::mutate(cruz_tree_kg_per_m3 = as.numeric(NA))
     , "foresttype_rast" = terra::rast( file.path(dir_temp, "point_cloud_processing_delivery", "fia_foresttype_raster.tif") ) %>% 
         terra::subst(from = foresttype_lookup$forest_type_group_code, to = foresttype_lookup$forest_type_group)
   )
@@ -182,9 +184,11 @@ foresttype_sum_fn(crowns = cloud2trees_ans$crowns_sf, aoi = aoi_sf, unit = aoi_s
 
 #### DTM
 
+**this is a large area so we're going to make the raster more coarse**
+
 ```{r}
 plt_rast_poly_fn(
-  rast = cloud2trees_ans$dtm_rast
+  rast = cloud2trees_ans$dtm_rast %>% terra::aggregate(fact = 2, cores = lasR::half_cores())
   , poly = aoi_sf
   , title = "DTM (m)"
   , crop = T
@@ -197,7 +201,7 @@ plt_rast_poly_fn(
   ggplot2::labs(title = paste0(aoi_sf$study_site_lab, " - ALS"))
 ```
 
-**this was already height-normalized or it is lowland??**
+**this was already height-normalized or is it lowland??**
 
 #### CHM
 
@@ -206,6 +210,8 @@ plot the CHM and we'll also add the extracted trees in gray
 **this is a large area so we're going to make the raster more coarse and sample from the tree list**
 
 ```{r}
+crowns_temp <- cloud2trees_ans$crowns_sf %>% dplyr::slice_sample(prop = 0.1)
+
 plt_rast_poly_fn(
   rast = cloud2trees_ans$chm_rast %>% terra::aggregate(fact = 2, cores = lasR::half_cores())
   , poly = aoi_sf
@@ -218,8 +224,7 @@ plt_rast_poly_fn(
     option = "plasma", alpha = 0.9, labels = scales::comma_format(accuracy=1), breaks = scales::breaks_extended(n=6)
   ) +
   ggplot2::geom_sf(
-    data = cloud2trees_ans$crowns_sf %>% 
-      dplyr::slice_sample(prop = 0.2) %>%
+    data = crowns_temp %>%
       sf::st_intersection(
         aoi_sf %>% sf::st_transform(sf::st_crs(cloud2trees_ans$crowns_sf))
       )
@@ -263,14 +268,16 @@ plt_aoi_basemap +
 
 #### Tree Attributes Spatial
 
+**this is a large area so we're going to sample from the tree list**
+
 ```{r, fig.height=8}
+crowns_temp <- cloud2trees_ans$crowns_sf %>% dplyr::slice_sample(prop = 0.2)
+
 plt_df_temp <- dplyr::tibble(
   fill_var = c("tree_height_m", "dbh_cm", "tree_cbh_m", "max_crown_diam_height_m", "landfire_crown_biomass_kg")
   , palette = c("Blues", "Oranges", "Greens", "Purples", "Reds")
   , title = c("Height (m)", "DBH (cm)", "CBH (m)", "HMD (m)", "Crown\nbiomass (kg)")
 )
-
-crowns_temp <- cloud2trees_ans$crowns_sf %>% dplyr::slice_sample(prop = 0.1)
 
 plts_temp <- 1:nrow(plt_df_temp) %>% 
   purrr::map(
@@ -301,7 +308,6 @@ patchwork::wrap_plots(plts_temp, ncol = 2) +
 ```{r}
 stats_sum_fn(crowns = cloud2trees_ans$crowns_sf, aoi = aoi_sf, unit = aoi_sf$study_site_lab[1])
 ```
-
 
 ```{r, warning=FALSE, message=FALSE, echo=FALSE, include=FALSE}
 remove(list = ls()[grep("_temp",ls())])

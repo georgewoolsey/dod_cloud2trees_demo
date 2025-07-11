@@ -402,7 +402,7 @@ my_ggmap_basemap(
 
 make a function specific to this data and task to grab the basemap with `my_ggmap_basemap()` and overlay the point cloud data and the study area bounds
 
-```{r, eval = F}
+```{r, eval = T}
 plt_fn_temp <- function(
   record_study_sites_las_ctg
   , my_study_sites_las_ctg = study_sites_las_ctg
@@ -479,7 +479,7 @@ patchwork::wrap_plots(plts_temp, ncol = 2)
 # 
 ```
 
-```{r, include=FALSE, eval=F}
+```{r, include=FALSE, eval=T}
 ggplot2::ggsave(
   "../data/ptcld_aoi_extents.jpg"
   , dpi = "print"
