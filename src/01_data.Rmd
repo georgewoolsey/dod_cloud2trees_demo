@@ -907,6 +907,127 @@ ggplot2::ggplot(
     , legend.text = ggplot2::element_text(size = 6)
   )
 }
+# load our FIA forest type group raster for use later
+# load lookup
+  foresttype_lookup <- file.path(cloud2trees::find_ext_data()[["foresttype_dir"]], "foresttype_lookup.csv") %>% 
+    readr::read_csv(progress = F, show_col_types = F) %>% 
+    dplyr::distinct(forest_type_group_code, forest_type_group, hardwood_softwood) %>% 
+    dplyr::mutate(forest_type_group = stringr::str_remove(forest_type_group, " group"))
+  
+# forest type group summary
+foresttype_sum_fn <- function(crowns, aoi, unit) {
+  crowns %>% 
+    sf::st_intersection(
+      aoi %>% sf::st_transform(sf::st_crs(crowns))
+    ) %>% 
+    sf::st_drop_geometry() %>% 
+  dplyr::mutate(unit_name = unit) %>% 
+    sf::st_drop_geometry() %>% 
+    dplyr::count(unit_name, forest_type_group) %>% 
+    dplyr::arrange(unit_name, desc(n)) %>% 
+    dplyr::group_by(unit_name) %>% 
+    dplyr::mutate(
+      pct = scales::percent(n/sum(n), accuracy = 0.1) 
+    ) %>% 
+    dplyr::ungroup() %>% 
+    dplyr::mutate(n = scales::comma(n,accuracy=1)) %>% 
+    kableExtra::kbl(
+      caption = "Count of trees by FIA Forest Type Group"
+      , digits = 2
+      , col.names = c(
+        "."
+        , ""
+        , "# trees"
+        , "% trees"
+      )
+    ) %>% 
+    kableExtra::kable_styling() %>% 
+    kableExtra::collapse_rows(columns = 1, valign = "top")
+}
+
+# summarize tree metrics
+stats_sum_fn <- function(crowns, aoi, unit) {
+  crowns %>% 
+    sf::st_intersection(
+      aoi %>% sf::st_transform(sf::st_crs(crowns))
+    ) %>% 
+    sf::st_drop_geometry() %>% 
+  dplyr::mutate(unit_name = unit) %>% 
+    dplyr::group_by( unit_name) %>%
+    dplyr::summarise(
+      dplyr::across(
+        c(tree_height_m, dbh_cm, tree_cbh_m, max_crown_diam_height_m, cruz_tree_kg_per_m3, landfire_tree_kg_per_m3)
+        , .fns = list(mean = mean, median = median, sd = sd, min = min, max = max)
+      )
+      , n = dplyr::n()
+    ) %>% 
+    dplyr::ungroup() %>% 
+    tidyr::pivot_longer(cols = -c( unit_name,n)) %>% 
+    dplyr::mutate(
+      agg = stringr::word(name,-1,sep = "_")
+      , metric = stringr::str_remove_all(name, paste0("_",agg))
+    ) %>% 
+    dplyr::select(-name) %>% 
+    dplyr::mutate(
+      value = dplyr::case_when(
+        metric == "tree_height_m" ~ scales::comma(value,accuracy=0.1)
+        , metric == "dbh_cm" ~ scales::comma(value,accuracy=0.1)
+        , metric == "tree_cbh_m" ~ scales::comma(value,accuracy=0.1)
+        , metric == "max_crown_diam_height_m" ~ scales::comma(value,accuracy=0.1)
+        , metric == "cruz_tree_kg_per_m3" ~ scales::comma(value,accuracy=0.001)
+        , metric == "landfire_tree_kg_per_m3" ~ scales::comma(value,accuracy=0.001)
+        , T ~ scales::comma(value,accuracy=0.1)
+      )
+    ) %>% 
+    tidyr::pivot_wider(names_from = agg, values_from = value) %>% 
+    dplyr::mutate(
+      unit_lab = paste0(
+        unit_name
+        ,"<br>("
+        , scales::comma(n,accuracy=1)
+        ," trees)"
+      )
+      , range = paste0(min, "—", max)
+    ) %>% 
+    dplyr::arrange( unit_name, desc(n)) %>% 
+    dplyr::select(-c(unit_name,n,min,max)) %>% 
+    dplyr::relocate(unit_lab) %>% 
+    dplyr::mutate(
+      metric = factor(
+        metric
+        , ordered = T
+        , levels = c(
+            "tree_height_m"
+            , "dbh_cm"
+            , "tree_cbh_m"
+            , "max_crown_diam_height_m"
+            , "cruz_tree_kg_per_m3"
+            , "landfire_tree_kg_per_m3"
+          )
+        , labels = c(
+            "Height (m)"
+            , "DBH (cm)"
+            , "Crown Base Ht. (m)"
+            , "HMD (m)"
+            , "Cruz CBD<br>kg m<sup>-3</sup>"
+            , "LANDFIRE CBD<br>kg m<sup>-3</sup>"
+          )
+      )
+    ) %>% 
+    kableExtra::kbl(
+      caption = "Summary statistics for selected metrics"
+      , col.names = c(
+        "Unit Name", "Metric"
+        , "Mean", "Median"
+        , "Std Dev", "Range"
+      )
+      , escape = F
+      # , digits = 2
+    ) %>% 
+    kableExtra::kable_styling(font_size = 13) %>% 
+    kableExtra::collapse_rows(columns = 1, valign = "top")
+}
+  
 ```
 
 
