@@ -1,0 +1,25 @@
+# Processing Time Analysis
+
+let's look into the processing time comparison across data sets
+
+the `cloud2trees::cloud2trees()` program automatically tracks processing time for all sections and stores the tracking data in the "point_cloud_processing_delivery" directory in a file called "processed_tracking_data.csv"
+
+```{r}
+dir_temp <- "../data"
+
+# what vector data?
+# df_temp <-
+  list.files(
+    dir_temp
+    , pattern = "processed_tracking_data.csv"
+    , recursive = T
+  ) %>% 
+  dplyr::tibble() %>% 
+  setNames("fpath") %>% 
+  dplyr::mutate(
+    study_site = stringr::word(fpath, sep = "/")
+    , fpath = file.path(dir_temp, fpath)
+    , fdir = dirname(fpath)
+  ) 
+```
+

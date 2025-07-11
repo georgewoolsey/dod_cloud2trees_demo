@@ -107,7 +107,7 @@ best_ws_fn_temp <- my_ws_functions$exp_fn
 ### `cloud2trees` point cloud processing
 
 ```{r sycanmarsh-als, results=F}
-dir_temp <- file.path(aoi_sf$fdir, "als_processing")
+dir_temp <- file.path(aoi_sf$fdir, "als_2021_processing")
 if(!dir.exists(dir_temp)){
   dir.create(dir_temp)
 # c2t
