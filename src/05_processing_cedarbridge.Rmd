@@ -1,12 +1,12 @@
-# Fort Stewart (GA)
+# Cedar Bridge (NJ)
 
-process the point cloud data for the Fort Stewart (GA) study site
+process the point cloud data for the Cedar Bridge (NJ) study site
 
 let's check out the data we have and the area
 
 ```{r}
 # just get the data we care about
-aoi_study_site <- "FortStewart"
+aoi_study_site <- "NewJersey"
 aoi_sf <- study_sites_sf %>% dplyr::filter(study_site == aoi_study_site)
 aoi_las_ctg <- study_sites_las_ctg %>% 
   purrr::keep_at(
@@ -14,7 +14,6 @@ aoi_las_ctg <- study_sites_las_ctg %>%
       stringr::str_detect(names(study_sites_las_ctg), aoi_study_site)
     ]
   )
-
 # option to put satellite imagery as base layer of mapview maps
 mapview::mapviewOptions(
   homebutton = FALSE
@@ -23,20 +22,11 @@ mapview::mapviewOptions(
 # map it
 # add the study bounds
 mapview::mapview(
-  aoi_las_ctg[[1]]$geometry
+  sf::st_set_crs(aoi_las_ctg[[1]]$geometry, value = 32618)
   , color = "black"
   , lwd = 2
   , alpha.regions = 0
   , layer.name = names(aoi_las_ctg[1])
-  , legend = F
-  , popup = F
-) +
-mapview::mapview(
-  sf::st_set_crs(aoi_las_ctg[[2]]$geometry, value = 6346)
-  , color = "gray"
-  , lwd = 2
-  , alpha.regions = 0
-  , layer.name = names(aoi_las_ctg[2])
   , legend = F
   , popup = F
 ) +
@@ -51,13 +41,6 @@ mapview::mapview(
 )
 ```
 
-yikes. that uas-lidar data is a mess. let's figure out which tile is the smaller tile that fully covers the north-western portion of the unit
-
-```{r}
-xxxxx
-```
-
-
 point cloud data summary
 
 ```{r}
@@ -71,7 +54,7 @@ aoi_las_ctg
 put las files in a list
 ```{r}
 # list of all las files
-las_flist_temp <- aoi_las_ctg[["FortStewart_als"]] %>% 
+las_flist_temp <- aoi_las_ctg[["NewJersey_als"]] %>% 
   purrr::pluck("data") %>% 
   dplyr::pull(filename)
 ```
@@ -83,16 +66,15 @@ run tuning
     # Caused by error in `dplyr::group_by()`:
     # ! Must group by variables found in `.data`.
     # Column `ws_fn` is not found.
-if(!file.exists("../data/itd_tuning_FortStewart_als.jpg")){
+if(!file.exists("../data/itd_tuning_NewJersey_als.jpg")){
   # tuning
   itd_tuning_ans <- cloud2trees::itd_tuning(
       input_las_dir = las_flist_temp
       , n_samples = 3
       , ws_fn_list = my_ws_functions
-      , chm_res_m = 0.3
     )
   ggplot2::ggsave(
-    "../data/itd_tuning_FortStewart_als.jpg"
+    "../data/itd_tuning_NewJersey_als.jpg"
     , plot = itd_tuning_ans$plot_samples
     , dpi = "print"
     , height = 7, width = 10
@@ -102,30 +84,34 @@ if(!file.exists("../data/itd_tuning_FortStewart_als.jpg")){
 
 ```{r, echo=FALSE, out.width="100%", out.height="100%", fig.align='center', fig.show='hold', results='asis'}
 # this is so we get the actual result that we used for tuning
-# knitr::include_graphics("../data/itd_tuning_FortStewart_als.jpg")
-knitr::include_graphics("https://i.ibb.co/RG1LdCq9/itd-tuning-Fort-Stewart-als.jpg")
+# knitr::include_graphics("../data/itd_tuning_NewJersey_als.jpg")
+knitr::include_graphics("https://i.ibb.co/DHrJBKSn/itd-tuning-New-Jersey-als.jpg")
 ```
 
 pick the best function for use in ITD
 
 ```{r}
 # pick the best function for use in ITD
-best_ws_fn_temp <- my_ws_functions$exp_fn
+best_ws_fn_temp <- my_ws_functions$log_fn
 ```
 
 ### `cloud2trees` point cloud processing
 
-```{r fortstewart-als, results=F}
+```{r newjersey-als, results=F}
 dir_temp <- file.path(aoi_sf$fdir, "als_processing")
 if(!dir.exists(dir_temp)){
   dir.create(dir_temp)
 # c2t
   cloud2trees_ans <- cloud2trees::cloud2trees(
     input_las_dir = las_flist_temp
+    ## !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! This data has a missing CRS ;[
+    ## !!!!! setting new_crs to the epsg code of the crs i was told
+    ## !!!!! The EPSG code for UTM zone 18N in the World Geodetic System of 1984 (WGS 84) is 32618
+    , new_crs = 32618
     , output_dir = dir_temp
     , ws = best_ws_fn_temp
     , dtm_res_m = 1
-    , chm_res_m = 0.3
+    , chm_res_m = 0.25
     , estimate_tree_dbh = T
     , estimate_tree_type = T
     # hmd
@@ -142,7 +128,7 @@ if(!dir.exists(dir_temp)){
 }else{
   cloud2trees_ans <- list(
     "dtm_rast" = terra::rast( file.path(dir_temp, "point_cloud_processing_delivery", "dtm_1m.tif") )
-    , "chm_rast" = terra::rast( file.path(dir_temp, "point_cloud_processing_delivery", "chm_0.3m.tif") )
+    , "chm_rast" = terra::rast( file.path(dir_temp, "point_cloud_processing_delivery", "chm_0.25m.tif") )
     , "crowns_sf" = list.files(
         file.path(dir_temp, "point_cloud_processing_delivery")
         , pattern = "final_detected_crowns.*\\.gpkg$"
@@ -155,13 +141,12 @@ if(!dir.exists(dir_temp)){
           , quiet = T
         )
       ) %>% 
-      dplyr::bind_rows() %>% 
-      ## !!!!!!!!!!!!!!!!!!!!!!!! cruz_tree_kg_per_m3 empty here
-      dplyr::mutate(cruz_tree_kg_per_m3 = as.numeric(NA))
+      dplyr::bind_rows()
     , "foresttype_rast" = terra::rast( file.path(dir_temp, "point_cloud_processing_delivery", "fia_foresttype_raster.tif") ) %>% 
         terra::subst(from = foresttype_lookup$forest_type_group_code, to = foresttype_lookup$forest_type_group)
   )
 }
+
 ```
 
 ```{r, warning=FALSE, message=FALSE, echo=FALSE, include=FALSE}
@@ -200,11 +185,9 @@ foresttype_sum_fn(crowns = cloud2trees_ans$crowns_sf, aoi = aoi_sf, unit = aoi_s
 
 #### DTM
 
-*this is a large area so we're going to make the raster more coarse*
-
-```{r, results='hide', fig.show=T}
+```{r}
 plt_rast_poly_fn(
-  rast = cloud2trees_ans$dtm_rast %>% terra::aggregate(fact = 2, cores = lasR::half_cores())
+  rast = cloud2trees_ans$dtm_rast
   , poly = aoi_sf
   , title = "DTM (m)"
   , crop = T
@@ -217,19 +200,13 @@ plt_rast_poly_fn(
   ggplot2::labs(title = paste0(aoi_sf$study_site_lab, " - ALS"))
 ```
 
-*this was already height-normalized or is it lowland??*
-
 #### CHM
 
 plot the CHM and we'll also add the extracted trees in gray
 
-*this is a large area so we're going to make the raster more coarse and sample from the tree list*
-
-```{r, results='hide', fig.show=T}
-crowns_temp <- cloud2trees_ans$crowns_sf %>% dplyr::slice_sample(prop = 0.1)
-
+```{r}
 plt_rast_poly_fn(
-  rast = cloud2trees_ans$chm_rast %>% terra::aggregate(fact = 2, cores = lasR::half_cores())
+  rast = cloud2trees_ans$chm_rast
   , poly = aoi_sf
   , title = "CHM (m)"
   , crop = T
@@ -240,11 +217,12 @@ plt_rast_poly_fn(
     option = "plasma", alpha = 0.9, labels = scales::comma_format(accuracy=1), breaks = scales::breaks_extended(n=6)
   ) +
   ggplot2::geom_sf(
-    data = crowns_temp %>%
+    data = cloud2trees_ans$crowns_sf %>% 
+      # dplyr::slice_sample(prop = 0.1) %>% 
       sf::st_intersection(
         aoi_sf %>% sf::st_transform(sf::st_crs(cloud2trees_ans$crowns_sf))
       )
-    , fill = NA, color = "gray33", lwd = 0.1
+    , fill = NA, color = "gray33", lwd = 0.5
   ) +
   ggplot2::labs(title = paste0(aoi_sf$study_site_lab, " - ALS"))
 ```
@@ -253,24 +231,25 @@ plt_rast_poly_fn(
 
 let's check the tree extraction results (gray) on satellite imagery with a collection date that may not coincide with the point cloud collection date
 
-*this is a large area so we're going to zoom way in on the image and sample from the tree list*
+*we'll sample the trees here so the output can be seen more clearly*
 
 ```{r}
 plt_aoi_basemap <- my_ggmap_basemap(
-  sf_data = aoi_sf %>% sf::st_centroid() %>% sf::st_buffer(100, endCapStyle = "SQUARE")
-  , zoom_level = 17
+  sf_data = aoi_sf
+  , zoom_level = 16
   , buffer_box = 22
   , my_maptype = "satellite"
-  , add_sf_data = F
+  , add_sf_data = T
+  , outline_sf_data_col = "navy"
+  , outline_lwd = 1
 )
 # add crowns
 plt_aoi_basemap +
   ggplot2::geom_sf(
     data = cloud2trees_ans$crowns_sf %>% 
-      # dplyr::slice_sample(prop = 0.1) %>% 
+      dplyr::slice_sample(prop = 0.6) %>% 
       sf::st_intersection(
-        aoi_sf %>% sf::st_centroid() %>% sf::st_buffer(100, endCapStyle = "SQUARE") %>% 
-          sf::st_transform(sf::st_crs(cloud2trees_ans$crowns_sf))
+        aoi_sf %>% sf::st_transform(sf::st_crs(cloud2trees_ans$crowns_sf))
       ) %>% 
       sf::st_transform(4326)
     , fill = NA, color = "gray77", lwd = 0.1
@@ -284,11 +263,7 @@ plt_aoi_basemap +
 
 #### Tree Attributes Spatial
 
-*this is a large area so we're going to sample from the tree list*
-
 ```{r, fig.height=8}
-crowns_temp <- cloud2trees_ans$crowns_sf %>% dplyr::slice_sample(prop = 0.2)
-
 plt_df_temp <- dplyr::tibble(
   fill_var = c("tree_height_m", "dbh_cm", "tree_cbh_m", "max_crown_diam_height_m", "landfire_crown_biomass_kg")
   , palette = c("Blues", "Oranges", "Greens", "Purples", "Reds")
@@ -299,7 +274,7 @@ plts_temp <- 1:nrow(plt_df_temp) %>%
   purrr::map(
     \(x)
     plt_crown_attr_fn(
-      crowns = crowns_temp
+      crowns = cloud2trees_ans$crowns_sf
       , aoi = aoi_sf
       , lwd = 0.6
       , fill_var = plt_df_temp$fill_var[x]
@@ -325,6 +300,7 @@ patchwork::wrap_plots(plts_temp, ncol = 2) +
 stats_sum_fn(crowns = cloud2trees_ans$crowns_sf, aoi = aoi_sf, unit = aoi_sf$study_site_lab[1])
 ```
 
+
 ```{r, warning=FALSE, message=FALSE, echo=FALSE, include=FALSE}
 remove(list = ls()[grep("_temp",ls())])
 remove(cloud2trees_ans)
@@ -338,7 +314,7 @@ gc()
 put las files in a list
 ```{r}
 # list of all las files
-las_flist_temp <- aoi_las_ctg[["FortStewart_uas_lidar"]] %>% 
+las_flist_temp <- aoi_las_ctg[["NewJersey_uas_lidar"]] %>% 
   purrr::pluck("data") %>% 
   dplyr::pull(filename)
 ```
@@ -350,25 +326,25 @@ run tuning
     # Caused by error in `dplyr::group_by()`:
     # ! Must group by variables found in `.data`.
     # Column `ws_fn` is not found.
-if(!file.exists("../data/itd_tuning_FortStewart_uas_lidar.jpg")){
+if(!file.exists("../data/itd_tuning_NewJersey_uas_lidar.jpg")){
   # tuning
   itd_tuning_ans <- cloud2trees::itd_tuning(
       input_las_dir = las_flist_temp
-      , n_samples = 3
+      , n_samples = 2
       , ws_fn_list = my_ws_functions
     )
   ggplot2::ggsave(
-    "../data/itd_tuning_FortStewart_uas_lidar.jpg"
+    "../data/itd_tuning_NewJersey_uas_lidar.jpg"
     , plot = itd_tuning_ans$plot_samples
     , dpi = "print"
-    , height = 7, width = 10
+    , height = 6, width = 10
   )
 }
 ```
 
 ```{r, echo=FALSE, out.width="100%", out.height="100%", fig.align='center', fig.show='hold', results='asis'}
 # this is so we get the actual result that we used for tuning
-# knitr::include_graphics("../data/itd_tuning_FortStewart_uas_lidar.jpg")
+# knitr::include_graphics("../data/itd_tuning_NewJersey_uas_lidar.jpg")
 knitr::include_graphics("https://i.ibb.co/mdBgNsv/itd-tuning-Sycan-Marsh-uas-lidar.jpg")
 ```
 
@@ -432,4 +408,140 @@ if(!dir.exists(dir_temp)){
 remove(list = ls()[grep("_temp",ls())])
 remove(itd_tuning_ans)
 gc()
+```
+
+### `cloud2trees` Results
+
+#### FIA Forest Type Group
+
+```{r}
+# load raster
+plt_rast_poly_fn(
+  rast = cloud2trees_ans$foresttype_rast
+  , poly = aoi_sf
+  , title = "FIA forest type group"
+  , crop = T
+  , buff = 22
+  , col = "navy"
+) +
+  ggplot2::scale_fill_viridis_d(option = "turbo", alpha = 0.8) +
+  # harrypotter::scale_fill_hp_d(option = "lunalovegood", alpha = 0.8) +
+  ggplot2::labs(title = paste0(aoi_sf$study_site_lab, " - UAS Lidar")) +
+  ggplot2::theme(
+    legend.text = ggplot2::element_text(size = 7, angle = 0)
+  )
+```
+
+distribution by forest type
+
+```{r}
+foresttype_sum_fn(crowns = cloud2trees_ans$crowns_sf, aoi = aoi_sf, unit = aoi_sf$study_site_lab[1])
+```
+
+#### DTM
+
+```{r}
+plt_rast_poly_fn(
+  rast = cloud2trees_ans$dtm_rast
+  , poly = aoi_sf
+  , title = "DTM (m)"
+  , crop = T
+  , buff = 22
+  , col = "navy"
+) +
+  harrypotter::scale_fill_hp(
+    option = "mischief", alpha = 0.9, labels = scales::comma_format(accuracy=1), breaks = scales::breaks_extended(n=6)
+  ) +
+  ggplot2::labs(title = paste0(aoi_sf$study_site_lab, " - UAS Lidar"))
+```
+
+#### CHM
+
+plot the CHM and we'll also add the extracted trees in gray
+
+```{r}
+plt_rast_poly_fn(
+  rast = cloud2trees_ans$chm_rast
+  , poly = aoi_sf
+  , title = "CHM (m)"
+  , crop = T
+  , buff = 22
+  , col = "navy"
+) +
+  ggplot2::scale_fill_viridis_c(
+    option = "plasma", alpha = 0.9, labels = scales::comma_format(accuracy=1), breaks = scales::breaks_extended(n=6)
+  ) +
+  ggplot2::geom_sf(
+    data = cloud2trees_ans$crowns_sf %>% 
+      # dplyr::slice_sample(prop = 0.1) %>% 
+      sf::st_intersection(
+        aoi_sf %>% sf::st_transform(sf::st_crs(cloud2trees_ans$crowns_sf))
+      )
+    , fill = NA, color = "gray33", lwd = 0.5
+  ) +
+  ggplot2::labs(title = paste0(aoi_sf$study_site_lab, " - UAS Lidar"))
+```
+
+#### Imagery
+
+let's check the tree extraction results (gray) on satellite imagery with a collection date that may not coincide with the point cloud collection date
+
+*we'll sample the trees here so the output can be seen more clearly*
+
+```{r}
+# add crowns
+plt_aoi_basemap +
+  ggplot2::geom_sf(
+    data = cloud2trees_ans$crowns_sf %>% 
+      dplyr::slice_sample(prop = 0.6) %>% 
+      sf::st_intersection(
+        aoi_sf %>% sf::st_transform(sf::st_crs(cloud2trees_ans$crowns_sf))
+      ) %>% 
+      sf::st_transform(4326)
+    , fill = NA, color = "gray77", lwd = 0.1
+    , inherit.aes = F
+  ) +
+  ggplot2::labs(title = paste0(aoi_sf$study_site_lab, " - UAS Lidar")) +
+  ggplot2::theme(
+    plot.title = ggplot2::element_text(size = 12, hjust = 0, margin = ggplot2::margin(0,3,3,0))
+  )
+```
+
+#### Tree Attributes Spatial
+
+```{r, fig.height=8}
+plt_df_temp <- dplyr::tibble(
+  fill_var = c("tree_height_m", "dbh_cm", "tree_cbh_m", "max_crown_diam_height_m", "landfire_crown_biomass_kg")
+  , palette = c("Blues", "Oranges", "Greens", "Purples", "Reds")
+  , title = c("Height (m)", "DBH (cm)", "CBH (m)", "HMD (m)", "Crown\nbiomass (kg)")
+)
+
+plts_temp <- 1:nrow(plt_df_temp) %>% 
+  purrr::map(
+    \(x)
+    plt_crown_attr_fn(
+      crowns = cloud2trees_ans$crowns_sf
+      , aoi = aoi_sf
+      , lwd = 0.6
+      , fill_var = plt_df_temp$fill_var[x]
+      , palette = plt_df_temp$palette[x]
+      , title = plt_df_temp$title[x]
+    )  
+  )
+# combine with patchwork
+patchwork::wrap_plots(plts_temp, ncol = 2) +
+  patchwork::plot_annotation(
+    title = paste0(aoi_sf$study_site_lab, " - UAS Lidar")
+    # , subtitle = "huh"
+    # , caption = "hey"
+    , theme = ggplot2::theme(
+      plot.title = element_text(hjust = 0.5, margin = ggplot2::margin(0,0,3,0))
+    )
+  )
+```
+
+#### Tree Attributes Summary Stats
+
+```{r}
+stats_sum_fn(crowns = cloud2trees_ans$crowns_sf, aoi = aoi_sf, unit = aoi_sf$study_site_lab[1])
 ```

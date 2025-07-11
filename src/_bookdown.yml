@@ -2,7 +2,7 @@ book_filename: "dod_cloud2trees_demo"
 output_dir: "../docs"
 output: 
   bookdown::gitbook:
-    toc_depth: 4
+    toc_depth: 5
     includes:
       in_header: header.html
 language:
