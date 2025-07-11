@@ -63,7 +63,7 @@ aoi_las_ctg
 put las files in a list
 ```{r}
 # list of all las files
-las_flist_temp <- aoi_las_ctg[["SycanMarsh_als"]] %>% 
+las_flist_temp <- aoi_las_ctg[["SycanMarsh_als_2021"]] %>% 
   purrr::pluck("data") %>% 
   dplyr::pull(filename)
 ```
@@ -130,6 +130,9 @@ if(!dir.exists(dir_temp)){
     , cbh_tree_sample_prop = 0.5
     , cbh_estimate_missing_cbh = T
   )
+  # add foresttype
+  cloud2trees_ans$foresttype_rast <- terra::rast( file.path(dir_temp, "point_cloud_processing_delivery", "fia_foresttype_raster.tif") ) %>% 
+    terra::subst(from = foresttype_lookup$forest_type_group_code, to = foresttype_lookup$forest_type_group)
 }else{
   cloud2trees_ans <- list(
     "dtm_rast" = terra::rast( file.path(dir_temp, "point_cloud_processing_delivery", "dtm_1m.tif") )
@@ -386,6 +389,9 @@ if(!dir.exists(dir_temp)){
     , cbh_tree_sample_prop = 0.5
     , cbh_estimate_missing_cbh = T
   )
+  # add foresttype
+  cloud2trees_ans$foresttype_rast <- terra::rast( file.path(dir_temp, "point_cloud_processing_delivery", "fia_foresttype_raster.tif") ) %>% 
+    terra::subst(from = foresttype_lookup$forest_type_group_code, to = foresttype_lookup$forest_type_group)
 }else{
   cloud2trees_ans <- list(
     "dtm_rast" = terra::rast( file.path(dir_temp, "point_cloud_processing_delivery", "dtm_1m.tif") )

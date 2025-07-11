@@ -32,7 +32,7 @@ mapview::mapview(
   , popup = F
 ) +
 mapview::mapview(
-  sf::st_set_crs(aoi_las_ctg[[2]]$geometry, value = 6346)
+  aoi_las_ctg[[2]]$geometry
   , color = "gray"
   , lwd = 2
   , alpha.regions = 0
@@ -51,27 +51,20 @@ mapview::mapview(
 )
 ```
 
-yikes. that uas-lidar data is a mess. let's figure out which tile is the smaller tile that fully covers the north-western portion of the unit
-
-```{r}
-xxxxx
-```
-
-
 point cloud data summary
 
 ```{r}
 aoi_las_ctg
 ```
 
-## ALS Processing
+## ALS (2018) Processing
 
 ### ITD tuning
 
 put las files in a list
 ```{r}
 # list of all las files
-las_flist_temp <- aoi_las_ctg[["FortStewart_als"]] %>% 
+las_flist_temp <- aoi_las_ctg[["FortStewart_als_2018"]] %>% 
   purrr::pluck("data") %>% 
   dplyr::pull(filename)
 ```
@@ -139,6 +132,9 @@ if(!dir.exists(dir_temp)){
     , cbh_tree_sample_prop = 0.5
     , cbh_estimate_missing_cbh = T
   )
+  # add foresttype
+  cloud2trees_ans$foresttype_rast <- terra::rast( file.path(dir_temp, "point_cloud_processing_delivery", "fia_foresttype_raster.tif") ) %>% 
+    terra::subst(from = foresttype_lookup$forest_type_group_code, to = foresttype_lookup$forest_type_group)
 }else{
   cloud2trees_ans <- list(
     "dtm_rast" = terra::rast( file.path(dir_temp, "point_cloud_processing_delivery", "dtm_1m.tif") )
@@ -155,9 +151,7 @@ if(!dir.exists(dir_temp)){
           , quiet = T
         )
       ) %>% 
-      dplyr::bind_rows() %>% 
-      ## !!!!!!!!!!!!!!!!!!!!!!!! cruz_tree_kg_per_m3 empty here
-      dplyr::mutate(cruz_tree_kg_per_m3 = as.numeric(NA))
+      dplyr::bind_rows()
     , "foresttype_rast" = terra::rast( file.path(dir_temp, "point_cloud_processing_delivery", "fia_foresttype_raster.tif") ) %>% 
         terra::subst(from = foresttype_lookup$forest_type_group_code, to = foresttype_lookup$forest_type_group)
   )
@@ -266,10 +260,12 @@ plt_aoi_basemap <- my_ggmap_basemap(
 # add crowns
 plt_aoi_basemap +
   ggplot2::geom_sf(
-    data = cloud2trees_ans$crowns_sf %>% 
-      # dplyr::slice_sample(prop = 0.1) %>% 
+    data = 
+      crowns_temp %>% 
+      # cloud2trees_ans$crowns_sf %>% 
       sf::st_intersection(
-        aoi_sf %>% sf::st_centroid() %>% sf::st_buffer(100, endCapStyle = "SQUARE") %>% 
+        aoi_sf %>% 
+          # sf::st_centroid() %>% sf::st_buffer(100, endCapStyle = "SQUARE") %>% 
           sf::st_transform(sf::st_crs(cloud2trees_ans$crowns_sf))
       ) %>% 
       sf::st_transform(4326)
@@ -322,7 +318,13 @@ patchwork::wrap_plots(plts_temp, ncol = 2) +
 #### Tree Attributes Summary Stats
 
 ```{r}
-stats_sum_fn(crowns = cloud2trees_ans$crowns_sf, aoi = aoi_sf, unit = aoi_sf$study_site_lab[1])
+stats_sum_fn(
+  crowns = cloud2trees_ans$crowns_sf %>% 
+    ## !!!!!!!!!!!!!!!!!!!!!!!! cruz_tree_kg_per_m3 empty here
+    dplyr::mutate(cruz_tree_kg_per_m3 = as.numeric(NA))
+  , aoi = aoi_sf
+  , unit = aoi_sf$study_site_lab[1]
+)
 ```
 
 ```{r, warning=FALSE, message=FALSE, echo=FALSE, include=FALSE}
@@ -331,14 +333,14 @@ remove(cloud2trees_ans)
 gc()
 ```
 
-## UAS lidar Processing
+## ALS (2025) Processing
 
 ### ITD tuning
 
 put las files in a list
 ```{r}
 # list of all las files
-las_flist_temp <- aoi_las_ctg[["FortStewart_uas_lidar"]] %>% 
+las_flist_temp <- aoi_las_ctg[["FortStewart_als_2025"]] %>% 
   purrr::pluck("data") %>% 
   dplyr::pull(filename)
 ```
@@ -350,15 +352,16 @@ run tuning
     # Caused by error in `dplyr::group_by()`:
     # ! Must group by variables found in `.data`.
     # Column `ws_fn` is not found.
-if(!file.exists("../data/itd_tuning_FortStewart_uas_lidar.jpg")){
+if(!file.exists("../data/FortStewart_als_2025.jpg")){
   # tuning
   itd_tuning_ans <- cloud2trees::itd_tuning(
       input_las_dir = las_flist_temp
       , n_samples = 3
       , ws_fn_list = my_ws_functions
+      , chm_res_m = 0.25
     )
   ggplot2::ggsave(
-    "../data/itd_tuning_FortStewart_uas_lidar.jpg"
+    "../data/FortStewart_als_2025.jpg"
     , plot = itd_tuning_ans$plot_samples
     , dpi = "print"
     , height = 7, width = 10
@@ -368,21 +371,21 @@ if(!file.exists("../data/itd_tuning_FortStewart_uas_lidar.jpg")){
 
 ```{r, echo=FALSE, out.width="100%", out.height="100%", fig.align='center', fig.show='hold', results='asis'}
 # this is so we get the actual result that we used for tuning
-# knitr::include_graphics("../data/itd_tuning_FortStewart_uas_lidar.jpg")
-knitr::include_graphics("https://i.ibb.co/mdBgNsv/itd-tuning-Sycan-Marsh-uas-lidar.jpg")
+# knitr::include_graphics("../data/FortStewart_als_2025.jpg")
+knitr::include_graphics("https://i.ibb.co/xqXsVKjZ/Fort-Stewart-als-2025.jpg")
 ```
 
 pick the best function for use in ITD
 
 ```{r}
 # pick the best function for use in ITD
-best_ws_fn_temp <- my_ws_functions$lin_fn
+best_ws_fn_temp <- my_ws_functions$exp_fn
 ```
 
 ### `cloud2trees` point cloud processing
 
-```{r sycanmarsh-uas, results=F}
-dir_temp <- file.path(aoi_sf$fdir, "uas_lidar_processing")
+```{r fortstewart-als, results=F}
+dir_temp <- file.path(aoi_sf$fdir, "als_2025_processing")
 if(!dir.exists(dir_temp)){
   dir.create(dir_temp)
 # c2t
@@ -405,6 +408,9 @@ if(!dir.exists(dir_temp)){
     , cbh_tree_sample_prop = 0.5
     , cbh_estimate_missing_cbh = T
   )
+  # add foresttype
+  cloud2trees_ans$foresttype_rast <- terra::rast( file.path(dir_temp, "point_cloud_processing_delivery", "fia_foresttype_raster.tif") ) %>% 
+    terra::subst(from = foresttype_lookup$forest_type_group_code, to = foresttype_lookup$forest_type_group)
 }else{
   cloud2trees_ans <- list(
     "dtm_rast" = terra::rast( file.path(dir_temp, "point_cloud_processing_delivery", "dtm_1m.tif") )

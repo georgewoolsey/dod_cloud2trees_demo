@@ -60,6 +60,33 @@ remove(list = ls())
 gc()
 ```
 
+```{r, include=FALSE, eval=FALSE}
+# i used this to keep only las tile files that overlapped with the aoi
+# for Fort Stewart data I got from Ben Bright at: https://app.box.com/folder/330006690980
+# in the folder "ft_stewart/als/Ft_Stewart_ALS_2025/LAZ"
+library(tidyverse)
+library(lidR)
+setwd("c:/data/usfs/dod_cloud2trees_demo/src")
+las_ctg <- lidR::readLAScatalog("../data/FortStewart/Ft_Stewart_ALS_2025/LAZ/")
+las_ctg@data %>% dplyr::glimpse()
+las_ctg@data %>% sf::st_crs()
+aoi <- sf::st_read("c:/data/usfs/dod_cloud2trees_demo/data/FortStewart/Burn Unit F6_6.shp") %>% 
+  sf::st_transform(sf::st_crs(las_ctg@data))
+mapview::mapview(las_ctg@data) + mapview::mapview(aoi)
+keep <- las_ctg@data %>% 
+  sf::st_intersection(aoi %>% sf::st_buffer(50)) %>% 
+  dplyr::pull(filename)
+keep
+las_ctg@data %>% 
+  dplyr::filter(
+    !filename %in% keep
+  ) %>% 
+  dplyr::pull(filename) %>% 
+  purrr::map(unlink)
+las_ctg <- lidR::readLAScatalog("../data/FortStewart/Ft_Stewart_ALS_2025/LAZ/")
+mapview::mapview(las_ctg@data) + mapview::mapview(aoi)
+```
+
 ## Study Sites
 
 let's check out the vector data of the study sites
@@ -97,7 +124,7 @@ study_sites_sf <- 1:nrow(df_temp) %>%
   dplyr::bind_rows() %>% 
   dplyr::inner_join(df_temp, by = "study_site")
 # figure out where the point cloud data is
-ptcld_df_temp <- 
+ptcld_df_temp <-
   1:nrow(study_sites_sf) %>% 
   purrr::map(function(x){
     # look for dirs with las/laz
@@ -184,7 +211,8 @@ gc()
 Let's check out the point cloud data we got
 
 ```{r}
-las_df_temp <- study_sites_sf %>% 
+las_df_temp <-
+  study_sites_sf %>% 
   sf::st_drop_geometry() %>% 
   dplyr::select(study_site, tidyselect::ends_with("_dir")) %>% 
   tidyr::pivot_longer(
@@ -193,7 +221,12 @@ las_df_temp <- study_sites_sf %>%
   ) %>% 
   dplyr::mutate(
     name = stringr::str_remove_all(name, "_dir")
-    , nm = stringr::str_c(study_site, name, sep = "_")
+    , als_nm = stringr::str_extract(value,"als_(\\d{4})")
+    , nm = stringr::str_c(
+      study_site
+      , dplyr::coalesce(als_nm, name)
+      , sep = "_"
+    )
   )
 # directory with the downloaded .las|.laz files
 study_sites_las_ctg <- 1:nrow(las_df_temp) %>% 
@@ -1029,7 +1062,6 @@ stats_sum_fn <- function(crowns, aoi, unit) {
 }
   
 ```
-
 
 ```{r, warning=FALSE, message=FALSE, echo=FALSE, include=FALSE}
 remove(list = ls()[grep("_temp",ls())])
