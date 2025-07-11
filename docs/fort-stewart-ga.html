@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en-US" xml:lang="en-US">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Section 4 Fort Stewart (GA) | DoD cloud2trees Demonstration: Forest Fuel Quantification for Wildfire Modeling using QUIC-Fire</title>
+  <meta name="description" content="Using the bookdown package to write a book of data exploration. The output format for this example is bookdown::gitbook." />
+  <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Section 4 Fort Stewart (GA) | DoD cloud2trees Demonstration: Forest Fuel Quantification for Wildfire Modeling using QUIC-Fire" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Using the bookdown package to write a book of data exploration. The output format for this example is bookdown::gitbook." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Section 4 Fort Stewart (GA) | DoD cloud2trees Demonstration: Forest Fuel Quantification for Wildfire Modeling using QUIC-Fire" />
+  
+  <meta name="twitter:description" content="Using the bookdown package to write a book of data exploration. The output format for this example is bookdown::gitbook." />
+  
+
+<meta name="author" content="George Woolsey" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="sycan-marsh-or.html"/>
+<link rel="next" href="salt-cabin-co.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<link href="libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet" />
+<script src="libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-1.3.1/leaflet.js"></script>
+<link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
+<script src="libs/proj4-2.6.2/proj4.min.js"></script>
+<script src="libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+<link href="libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-binding-2.2.2/leaflet.js"></script>
+<script src="libs/leaflet-providers-2.0.0/leaflet-providers_2.0.0.js"></script>
+<script src="libs/leaflet-providers-plugin-2.2.2/leaflet-providers-plugin.js"></script>
+<script src="libs/clipboard-0.0.1/setClipboardText.js"></script>
+<link href="libs/mapviewCSS-0.0.1/mapview-popup.css" rel="stylesheet" />
+<link href="libs/mapviewCSS-0.0.1/mapview.css" rel="stylesheet" />
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<link href="libs/bsTable-3.3.7/bootstrapTable.min.css" rel="stylesheet" />
+<script src="libs/bsTable-3.3.7/bootstrapTable.js"></script>
+<script type="text/javascript">
+
+// toggle visibility of R source blocks in R Markdown output
+function toggle_R() {
+  var x = document.getElementsByClassName('r');
+  if (x.length == 0) return;
+  function toggle_vis(o) {
+    var d = o.style.display;
+    o.style.display = (d == 'block' || d == '') ? 'none':'block';
+  }
+
+  for (i = 0; i < x.length; i++) {
+    var y = x[i];
+    if (y.tagName.toLowerCase() === 'pre') toggle_vis(y);
+  }
+
+    var elem = document.getElementById("myButton1");
+    if (elem.value === "Hide Code") elem.value = "Show Code";
+    else elem.value = "Hide Code";
+}
+
+document.write('<input onclick="toggle_R();" type="button" value="Hide Code" id="myButton1" style="position: absolute; top: 10%; right: 2%; z-index: 200"></input>')
+
+</script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#objective"><i class="fa fa-check"></i><b>1.1</b> Objective</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#data_desc"><i class="fa fa-check"></i><b>1.2</b> Data</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="data-preparation.html"><a href="data-preparation.html"><i class="fa fa-check"></i><b>2</b> Data Preparation</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="data-preparation.html"><a href="data-preparation.html#study-sites"><i class="fa fa-check"></i><b>2.1</b> Study Sites</a></li>
+<li class="chapter" data-level="2.2" data-path="data-preparation.html"><a href="data-preparation.html#point-cloud-data"><i class="fa fa-check"></i><b>2.2</b> Point Cloud Data</a></li>
+<li class="chapter" data-level="2.3" data-path="data-preparation.html"><a href="data-preparation.html#itd-window-functions"><i class="fa fa-check"></i><b>2.3</b> ITD window functions</a></li>
+<li class="chapter" data-level="2.4" data-path="data-preparation.html"><a href="data-preparation.html#other-plotting-functions"><i class="fa fa-check"></i><b>2.4</b> Other plotting functions</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="sycan-marsh-or.html"><a href="sycan-marsh-or.html"><i class="fa fa-check"></i><b>3</b> Sycan Marsh (OR)</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="sycan-marsh-or.html"><a href="sycan-marsh-or.html#als-processing"><i class="fa fa-check"></i><b>3.1</b> ALS Processing</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="sycan-marsh-or.html"><a href="sycan-marsh-or.html#itd-tuning"><i class="fa fa-check"></i><b>3.1.1</b> ITD tuning</a></li>
+<li class="chapter" data-level="3.1.2" data-path="sycan-marsh-or.html"><a href="sycan-marsh-or.html#cloud2trees-point-cloud-processing"><i class="fa fa-check"></i><b>3.1.2</b> <code>cloud2trees</code> point cloud processing</a></li>
+<li class="chapter" data-level="3.1.3" data-path="sycan-marsh-or.html"><a href="sycan-marsh-or.html#cloud2trees-results"><i class="fa fa-check"></i><b>3.1.3</b> <code>cloud2trees</code> Results</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="sycan-marsh-or.html"><a href="sycan-marsh-or.html#uas-lidar-processing"><i class="fa fa-check"></i><b>3.2</b> UAS lidar Processing</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="sycan-marsh-or.html"><a href="sycan-marsh-or.html#itd-tuning-1"><i class="fa fa-check"></i><b>3.2.1</b> ITD tuning</a></li>
+<li class="chapter" data-level="3.2.2" data-path="sycan-marsh-or.html"><a href="sycan-marsh-or.html#cloud2trees-point-cloud-processing-1"><i class="fa fa-check"></i><b>3.2.2</b> <code>cloud2trees</code> point cloud processing</a></li>
+<li class="chapter" data-level="3.2.3" data-path="sycan-marsh-or.html"><a href="sycan-marsh-or.html#cloud2trees-results-1"><i class="fa fa-check"></i><b>3.2.3</b> <code>cloud2trees</code> Results</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="fort-stewart-ga.html"><a href="fort-stewart-ga.html"><i class="fa fa-check"></i><b>4</b> Fort Stewart (GA)</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="fort-stewart-ga.html"><a href="fort-stewart-ga.html#als-processing-1"><i class="fa fa-check"></i><b>4.1</b> ALS Processing</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="fort-stewart-ga.html"><a href="fort-stewart-ga.html#itd-tuning-2"><i class="fa fa-check"></i><b>4.1.1</b> ITD tuning</a></li>
+<li class="chapter" data-level="4.1.2" data-path="fort-stewart-ga.html"><a href="fort-stewart-ga.html#cloud2trees-point-cloud-processing-2"><i class="fa fa-check"></i><b>4.1.2</b> <code>cloud2trees</code> point cloud processing</a></li>
+<li class="chapter" data-level="4.1.3" data-path="fort-stewart-ga.html"><a href="fort-stewart-ga.html#cloud2trees-results-2"><i class="fa fa-check"></i><b>4.1.3</b> <code>cloud2trees</code> Results</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="salt-cabin-co.html"><a href="salt-cabin-co.html"><i class="fa fa-check"></i><b>5</b> Salt Cabin (CO)</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="salt-cabin-co.html"><a href="salt-cabin-co.html#als-processing-2"><i class="fa fa-check"></i><b>5.1</b> ALS Processing</a>
+<ul>
+<li class="chapter" data-level="5.1.1" data-path="salt-cabin-co.html"><a href="salt-cabin-co.html#itd-tuning-3"><i class="fa fa-check"></i><b>5.1.1</b> ITD tuning</a></li>
+<li class="chapter" data-level="5.1.2" data-path="salt-cabin-co.html"><a href="salt-cabin-co.html#cloud2trees-point-cloud-processing-3"><i class="fa fa-check"></i><b>5.1.2</b> <code>cloud2trees</code> point cloud processing</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="salt-cabin-co.html"><a href="salt-cabin-co.html#uas-sfm-processing"><i class="fa fa-check"></i><b>5.2</b> UAS sfm Processing</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="salt-cabin-co.html"><a href="salt-cabin-co.html#itd-tuning-4"><i class="fa fa-check"></i><b>5.2.1</b> ITD tuning</a></li>
+<li class="chapter" data-level="5.2.2" data-path="salt-cabin-co.html"><a href="salt-cabin-co.html#cloud2trees-point-cloud-processing-4"><i class="fa fa-check"></i><b>5.2.2</b> <code>cloud2trees</code> point cloud processing</a></li>
+</ul></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">DoD cloud2trees Demonstration: Forest Fuel Quantification for Wildfire Modeling using QUIC-Fire</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="fort-stewart-ga" class="section level1 hasAnchor" number="4">
+<h1><span class="header-section-number">Section 4</span> Fort Stewart (GA)<a href="fort-stewart-ga.html#fort-stewart-ga" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>process the point cloud data for the Fort Stewart (GA) study site</p>
+<p>let’s check out the data we have and the area</p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="fort-stewart-ga.html#cb45-1" tabindex="-1"></a><span class="co"># just get the data we care about</span></span>
+<span id="cb45-2"><a href="fort-stewart-ga.html#cb45-2" tabindex="-1"></a>aoi_study_site <span class="ot">&lt;-</span> <span class="st">&quot;FortStewart&quot;</span></span>
+<span id="cb45-3"><a href="fort-stewart-ga.html#cb45-3" tabindex="-1"></a>aoi_sf <span class="ot">&lt;-</span> study_sites_sf <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(study_site <span class="sc">==</span> aoi_study_site)</span>
+<span id="cb45-4"><a href="fort-stewart-ga.html#cb45-4" tabindex="-1"></a>aoi_las_ctg <span class="ot">&lt;-</span> study_sites_las_ctg <span class="sc">%&gt;%</span> </span>
+<span id="cb45-5"><a href="fort-stewart-ga.html#cb45-5" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">keep_at</span>(</span>
+<span id="cb45-6"><a href="fort-stewart-ga.html#cb45-6" tabindex="-1"></a>    <span class="fu">names</span>(study_sites_las_ctg)[</span>
+<span id="cb45-7"><a href="fort-stewart-ga.html#cb45-7" tabindex="-1"></a>      stringr<span class="sc">::</span><span class="fu">str_detect</span>(<span class="fu">names</span>(study_sites_las_ctg), aoi_study_site)</span>
+<span id="cb45-8"><a href="fort-stewart-ga.html#cb45-8" tabindex="-1"></a>    ]</span>
+<span id="cb45-9"><a href="fort-stewart-ga.html#cb45-9" tabindex="-1"></a>  )</span>
+<span id="cb45-10"><a href="fort-stewart-ga.html#cb45-10" tabindex="-1"></a><span class="co"># option to put satellite imagery as base layer of mapview maps</span></span>
+<span id="cb45-11"><a href="fort-stewart-ga.html#cb45-11" tabindex="-1"></a>mapview<span class="sc">::</span><span class="fu">mapviewOptions</span>(</span>
+<span id="cb45-12"><a href="fort-stewart-ga.html#cb45-12" tabindex="-1"></a>  <span class="at">homebutton =</span> <span class="cn">FALSE</span></span>
+<span id="cb45-13"><a href="fort-stewart-ga.html#cb45-13" tabindex="-1"></a>  , <span class="at">basemaps =</span> <span class="fu">c</span>(<span class="st">&quot;Esri.WorldImagery&quot;</span>,<span class="st">&quot;OpenStreetMap&quot;</span>)</span>
+<span id="cb45-14"><a href="fort-stewart-ga.html#cb45-14" tabindex="-1"></a>)</span>
+<span id="cb45-15"><a href="fort-stewart-ga.html#cb45-15" tabindex="-1"></a><span class="co"># map it</span></span>
+<span id="cb45-16"><a href="fort-stewart-ga.html#cb45-16" tabindex="-1"></a><span class="co"># add the study bounds</span></span>
+<span id="cb45-17"><a href="fort-stewart-ga.html#cb45-17" tabindex="-1"></a>mapview<span class="sc">::</span><span class="fu">mapview</span>(</span>
+<span id="cb45-18"><a href="fort-stewart-ga.html#cb45-18" tabindex="-1"></a>  aoi_las_ctg[[<span class="dv">1</span>]]<span class="sc">$</span>geometry</span>
+<span id="cb45-19"><a href="fort-stewart-ga.html#cb45-19" tabindex="-1"></a>  , <span class="at">color =</span> <span class="st">&quot;black&quot;</span></span>
+<span id="cb45-20"><a href="fort-stewart-ga.html#cb45-20" tabindex="-1"></a>  , <span class="at">lwd =</span> <span class="dv">2</span></span>
+<span id="cb45-21"><a href="fort-stewart-ga.html#cb45-21" tabindex="-1"></a>  , <span class="at">alpha.regions =</span> <span class="dv">0</span></span>
+<span id="cb45-22"><a href="fort-stewart-ga.html#cb45-22" tabindex="-1"></a>  , <span class="at">layer.name =</span> <span class="fu">names</span>(aoi_las_ctg[<span class="dv">1</span>])</span>
+<span id="cb45-23"><a href="fort-stewart-ga.html#cb45-23" tabindex="-1"></a>  , <span class="at">legend =</span> F</span>
+<span id="cb45-24"><a href="fort-stewart-ga.html#cb45-24" tabindex="-1"></a>  , <span class="at">popup =</span> F</span>
+<span id="cb45-25"><a href="fort-stewart-ga.html#cb45-25" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb45-26"><a href="fort-stewart-ga.html#cb45-26" tabindex="-1"></a>mapview<span class="sc">::</span><span class="fu">mapview</span>(</span>
+<span id="cb45-27"><a href="fort-stewart-ga.html#cb45-27" tabindex="-1"></a>  aoi_sf</span>
+<span id="cb45-28"><a href="fort-stewart-ga.html#cb45-28" tabindex="-1"></a>  , <span class="at">zcol =</span> <span class="st">&quot;study_site_lab&quot;</span></span>
+<span id="cb45-29"><a href="fort-stewart-ga.html#cb45-29" tabindex="-1"></a>  , <span class="at">color =</span> <span class="st">&quot;navy&quot;</span></span>
+<span id="cb45-30"><a href="fort-stewart-ga.html#cb45-30" tabindex="-1"></a>  , <span class="at">lwd =</span> <span class="dv">2</span></span>
+<span id="cb45-31"><a href="fort-stewart-ga.html#cb45-31" tabindex="-1"></a>  , <span class="at">alpha.regions =</span> <span class="dv">0</span></span>
+<span id="cb45-32"><a href="fort-stewart-ga.html#cb45-32" tabindex="-1"></a>  , <span class="at">legend =</span> T</span>
+<span id="cb45-33"><a href="fort-stewart-ga.html#cb45-33" tabindex="-1"></a>  , <span class="at">popup =</span> F</span>
+<span id="cb45-34"><a href="fort-stewart-ga.html#cb45-34" tabindex="-1"></a>)</span></code></pre></div>
+<div class="leaflet html-widget html-fill-item" id="htmlwidget-b0f91206230d16d2a5eb" style="width:1008px;height:672px;"></div>
+<script type="application/json" data-for="htmlwidget-b0f91206230d16d2a5eb">{"x":{"options":{"minZoom":1,"maxZoom":52,"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}},"preferCanvas":false,"bounceAtZoomLimits":false,"maxBounds":[[[-90,-370]],[[90,370]]]},"calls":[{"method":"addProviderTiles","args":["Esri.WorldImagery","Esri.WorldImagery","Esri.WorldImagery",{"errorTileUrl":"","noWrap":false,"detectRetina":false,"pane":"tilePane"}]},{"method":"addProviderTiles","args":["OpenStreetMap","OpenStreetMap","OpenStreetMap",{"errorTileUrl":"","noWrap":false,"detectRetina":false,"pane":"tilePane"}]},{"method":"createMapPane","args":["polygon",420]},{"method":"addPolygons","args":[[[[{"lng":[-81.73416328642402,-81.73257220727767,-81.72205302256096,-81.72364523928803,-81.73416328642402],"lat":[32.03368640391385,32.04255996394166,32.04121718715297,32.03234375474603,32.03368640391385]}]],[[{"lng":[-81.73257219136497,-81.73098075993845,-81.72046043738955,-81.72205300663686,-81.73257219136497],"lat":[32.04256005267736,32.05143345157519,32.0500905471101,32.04121727588736,32.04256005267736]}]],[[{"lng":[-81.72523701436319,-81.72364515002883,-81.7131274553083,-81.71472045686731,-81.72523701436319],"lat":[32.0234700588211,32.03234365257849,32.03100001813811,32.02212655203237,32.0234700588211]}]],[[{"lng":[-81.72364513410827,-81.72205291736981,-81.71153408517331,-81.71312743937635,-81.72364513410827],"lat":[32.03234374131448,32.04121717372016,32.0398734115726,32.03100010687289,32.03234374131448]}]],[[{"lng":[-81.72205290144572,-81.72046033218703,-81.70994036227455,-81.71153406923784,-81.72205290144572],"lat":[32.04121726245456,32.05009053367601,32.04874664376689,32.0398735003057,32.04121726245456]}]],[[{"lng":[-81.71472035170245,-81.71312735013205,-81.70261000805554,-81.70420414673443,-81.71472035170245],"lat":[32.02212653859228,32.03100000469674,32.02965538502437,32.02078204665661,32.02212653859228]}]],[[{"lng":[-81.71312733420012,-81.7115339799857,-81.70101550054942,-81.70260999211222,-81.71312733420012],"lat":[32.03100009343146,32.03987339812993,32.03852865066526,32.02965547375783,32.03100009343146]}]],[[{"lng":[-81.70420404157308,-81.70260990288283,-81.69209291369022,-81.69368818937274,-81.70420404157308],"lat":[32.02078203320663,32.02965537157309,32.02830976671049,32.01943655616572,32.02078203320663]}]],[[{"lng":[-81.70260988693953,-81.70101539536533,-81.69049726892926,-81.69209289773553,-81.70260988693953],"lat":[32.02965546030655,32.03852863721272,32.03718290447279,32.02830985544267,32.02965546030655]}]]],null,"FortStewart_als",{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}},"pane":"polygon","stroke":true,"color":"black","weight":2,"opacity":0.9,"fill":true,"fillColor":"#6666ff","fillOpacity":0,"smoothFactor":1,"noClip":false},null,{"maxWidth":800,"minWidth":50,"autoPan":true,"keepInView":false,"closeButton":true,"closeOnClick":true,"className":""},["1","2","3","4","5","6","7","8","9"],{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},{"stroke":true,"weight":3,"opacity":0.9,"fillOpacity":0,"bringToFront":false,"sendToBack":false}]},{"method":"addScaleBar","args":[{"maxWidth":100,"metric":true,"imperial":true,"updateWhenIdle":true,"position":"bottomleft"}]},{"method":"addPolygons","args":[[[[{"lng":[-81.72176654298957,-81.72157133313586,-81.72115445222452,-81.72055441776334,-81.72023580330679,-81.72003136076692,-81.71932932877183,-81.71899090755073,-81.71883379544769,-81.71828100122198,-81.71792704067347,-81.71766737555845,-81.7170362245312,-81.71684432315074,-81.71675063066236,-81.71669603269456,-81.71643546569001,-81.71621608222266,-81.71601757167073,-81.71589402183648,-81.71583192977674,-81.71583075367457,-81.715867154077,-81.71596761913499,-81.71608860447013,-81.71622274056419,-81.71631994688597,-81.71634626154379,-81.71635208788361,-81.71633756927955,-81.71629593092653,-81.71618600339531,-81.7160072832424,-81.71576685944646,-81.7155986442843,-81.71546781462341,-81.71521989729699,-81.71498546400451,-81.71476099668577,-81.71464377284326,-81.71455417756171,-81.71450492570931,-81.71447638487106,-81.71449550342477,-81.71455203864647,-81.71461204100011,-81.71465861374544,-81.71467134031926,-81.71467027148411,-81.71463481551876,-81.71457190727332,-81.71446443824429,-81.71436754484741,-81.71420119746865,-81.71400077835484,-81.71388671211452,-81.71380402041586,-81.71368032519278,-81.71346805482791,-81.71320760408796,-81.71291336183602,-81.71263948365338,-81.71223184663107,-81.71200587176344,-81.71180653041607,-81.71141547985275,-81.71117560779183,-81.71092516379716,-81.71075352194786,-81.71041013549551,-81.7100460412257,-81.70972695805636,-81.70945232754546,-81.70914317661672,-81.70867263499876,-81.7084943299983,-81.70829531624105,-81.70804836886106,-81.70782244389935,-81.7076243691394,-81.70743315621978,-81.70726953284714,-81.7070584447288,-81.70687452835587,-81.70659519519891,-81.70633651862349,-81.70609858716162,-81.7057718743828,-81.7054183177368,-81.7051123467604,-81.70470101156003,-81.70448331729935,-81.70423127668437,-81.70400623525732,-81.70377426443902,-81.70348065218887,-81.70318023179412,-81.70290691470329,-81.70270201699347,-81.70253409907383,-81.70241056211584,-81.70226661424152,-81.70203293824964,-81.70184747323353,-81.7015589578758,-81.70139737392485,-81.70130808529591,-81.70117005486968,-81.70105226374849,-81.70096940584816,-81.70085265087407,-81.70073594773196,-81.70055102093339,-81.70032847597093,-81.7001636856908,-81.69993774692671,-81.69975265079226,-81.69956737860969,-81.69943741863231,-81.69930062927804,-81.69917106381294,-81.69895272322489,-81.69873450265791,-81.69845459206128,-81.69828081910694,-81.69811030414203,-81.69787837886206,-81.69769429585517,-81.69751007612668,-81.69733238966624,-81.69718898342109,-81.6970519909562,-81.69685990005826,-81.69668162343267,-81.69651666991737,-81.69638296069398,-81.69630041946021,-81.69619701969424,-81.69612080742216,-81.69603806216044,-81.69597622681719,-81.69588673717556,-81.69576304310763,-81.69564665678676,-81.69546866757298,-81.69520227080487,-81.6949462694121,-81.69462532223592,-81.694290943856,-81.69408607596075,-81.69389465708184,-81.69371700121543,-81.69353217533856,-81.69333292446206,-81.69321270540179,-81.69313666903956,-81.69306714062893,-81.69294848275112,-81.69280895246649,-81.69271857754006,-81.69269229079026,-81.6927977681684,-81.69330059889616,-81.69450637665921,-81.69491628581888,-81.69547500381614,-81.69603363560323,-81.69696035157648,-81.69752826333756,-81.69827314415375,-81.69887374542751,-81.6994697812401,-81.69997256732663,-81.70030943587388,-81.7004134280883,-81.70138608156834,-81.70205813588396,-81.70278675719646,-81.70340301150192,-81.70411777043913,-81.70460350735915,-81.70522965544713,-81.70607122899104,-81.70701016725661,-81.70769275623539,-81.70844020903486,-81.70865513133505,-81.70894421563345,-81.70913085457384,-81.70980615849717,-81.71025331841312,-81.71105419592233,-81.71226992205668,-81.71274508565358,-81.7133409640055,-81.7138905129891,-81.71429146322997,-81.71478510346311,-81.71523652372106,-81.71558058570638,-81.71608248923992,-81.71664043839652,-81.71704901974105,-81.71739224799445,-81.7177393365815,-81.71782479351369,-81.71788105861816,-81.71816339688343,-81.71845956047777,-81.71878088282287,-81.71903833094221,-81.71925034201271,-81.71940510097005,-81.71961243352612,-81.71982613186891,-81.72003380639453,-81.72021531374958,-81.72035810791729,-81.72058488463615,-81.7208183949372,-81.72112309278599,-81.72135627710971,-81.72146017080365,-81.72158315971448,-81.72167371822221,-81.72177542561109,-81.72190261692633,-81.72206786862981,-81.72243552932957,-81.72287989763291,-81.72352683521302,-81.72429426279442,-81.7247130722572,-81.72515720921577,-81.72561434231851,-81.72617369950008,-81.72706972205657,-81.72755287554227,-81.72784493183147,-81.72820090243532,-81.72845505265649,-81.72937645242851,-81.72973232742886,-81.73015161086947,-81.7302280146021,-81.73034000339817,-81.73020374602167,-81.72983386851421,-81.72942108824668,-81.72867391601255,-81.72831208827661,-81.72806827851522,-81.72771799903364,-81.72736041981553,-81.72690197940776,-81.72645780650258,-81.7261138501368,-81.72560246876135,-81.72512464078234,-81.72477453007124,-81.72446368208684,-81.72396155410222,-81.72347325692235,-81.72325260841578,-81.72295504755823,-81.72274230751358,-81.72243913807947,-81.72217527292852,-81.72184263393214,-81.72176654298957],"lat":[32.04625978675614,32.04626991943365,32.04629258977374,32.04634336418206,32.04636096222555,32.04637565570475,32.04642023751767,32.04644471089677,32.0464591340063,32.04649835300624,32.04652516695131,32.04654693541806,32.04659786934918,32.04660797604415,32.04652054678898,32.0464802589967,32.04630130306155,32.04614015679127,32.04602399943371,32.0459277167161,32.04581755471153,32.04566645225446,32.04553769121252,32.04530482181946,32.04507183643716,32.04482749984276,32.04460141464943,32.04449526404444,32.0443508880818,32.04422918067365,32.04415273369258,32.04402028848261,32.04385214594409,32.04362345679107,32.04344397754097,32.04330488357352,32.04296346758949,32.04261069823917,32.0422623829576,32.0420848702418,32.04192749994794,32.04176539150776,32.04158512343871,32.04140458678101,32.04122609460498,32.04106788111277,32.04092778618313,32.04077660521632,32.0406390341782,32.04046331581559,32.04029000752323,32.04004703408663,32.0398445974755,32.0395207624772,32.0391565225875,32.03895869299413,32.03883736898546,32.03872078645223,32.03857763789695,32.03840995101358,32.03823794286166,32.03808837318726,32.03784708445641,32.03768596747088,32.03750214692131,32.0371795692953,32.03697567684855,32.03677409857241,32.03661944072507,32.03629659269758,32.0359490506582,32.03564410752161,32.03539529895418,32.03509029871529,32.03462832424251,32.03446693436062,32.03428085087936,32.03410180083863,32.03398803855471,32.03392373848658,32.0338909749422,32.03387384478175,32.03388178811142,32.03389409035015,32.03393624382291,32.03399632454394,32.03404275702518,32.03412125837337,32.03423824944618,32.03434595346781,32.03448130676355,32.03453438985403,32.03455383284231,32.03455508250116,32.0345157736296,32.03446552950041,32.03439051341349,32.03431083563417,32.03421950127884,32.03411668487419,32.03401813313538,32.03389037454921,32.03367064256354,32.03347996306208,32.03318610657895,32.03300206036089,32.03288076438837,32.03266050171535,32.03244689308721,32.03230075226067,32.03217960777319,32.03206522898994,32.03194446092051,32.03179458055815,32.03166693459275,32.03150579542547,32.03136247341537,32.03123945041225,32.03116574015697,32.03110785500631,32.03108601577028,32.03105338891389,32.03103654859822,32.03100200476214,32.03099845104941,32.03098811305632,32.0309533037623,32.03094303987905,32.03091473352986,32.03087511414043,32.03081726308085,32.03073231217363,32.03058225821319,32.03042085121263,32.03027064761946,32.03013831518092,32.03003276607812,32.02988222404706,32.02973829879127,32.02960568619073,32.02952483227385,32.0294193210178,32.02929820977862,32.02922442109132,32.02914420404829,32.02905770533925,32.02898919205718,32.0289097571686,32.02884843795967,32.02880219666574,32.02874009385626,32.02865987250309,32.02855037029422,32.02837103019102,32.02822734369754,32.0281059693045,32.02792591965461,32.0275499211581,32.02712667375759,32.02685877828531,32.02679577147644,32.02678391844015,32.0267157647114,32.02656707866185,32.02650844887501,32.02643546954815,32.02635121138593,32.02623560857459,32.02615354821634,32.02606148955088,32.02597022170618,32.02588799768713,32.02581530708089,32.02581344728727,32.02582414983305,32.02600596984592,32.02612855185084,32.02629141345657,32.02643008509479,32.02664037863836,32.02680457805455,32.02702437904559,32.02732868165641,32.02764145730251,32.02788348499696,32.02812514663135,32.02818709607347,32.02821028932456,32.02820924578624,32.02814908354401,32.02811500474198,32.02803157882191,32.02793003089402,32.02787999846355,32.02782026381333,32.02776078718613,32.02774274186093,32.02768583163055,32.02760434858506,32.02750542685095,32.02731990909268,32.02714986021682,32.02696486599292,32.026717089931,32.02641290694804,32.02633799618242,32.0264662335529,32.02710966960205,32.02787030559696,32.02867365010231,32.02934880005154,32.0298415225754,32.03029171757964,32.03098970406038,32.03173952732791,32.03248036286879,32.0331333874209,32.03366033123806,32.03443037676966,32.03525676754757,32.03633986416043,32.03712340360193,32.03749945783939,32.03790472298634,32.038183872354,32.03832312579461,32.03846223405358,32.03860112543126,32.03888997260788,32.03925280825842,32.03974304201004,32.04031828776611,32.04066998599364,32.04100123969592,32.04142714249817,32.04197199213473,32.04285772339296,32.04334887507368,32.04361558629664,32.04396988866801,32.04421426257333,32.04512238457323,32.04546315086508,32.04586895627347,32.04594519832704,32.04600093712632,32.04601525416287,32.04603768227845,32.04607614366919,32.04614584581913,32.04618175537342,32.04619894331513,32.04623027414071,32.04625939052553,32.04630036105188,32.04634575888073,32.04638155976307,32.0464250841722,32.04648420210815,32.04649522563431,32.04649023632545,32.04644799765551,32.04639665663191,32.04637085134534,32.04632969680085,32.04629933480701,32.04626046637939,32.04625294834485,32.04625484280576,32.04625978675614]}]]],null,"aoi_sf - study_site_lab",{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}},"pane":"polygon","stroke":true,"color":"#000080","weight":2,"opacity":0.9,"fill":true,"fillColor":"#6666FF","fillOpacity":0,"smoothFactor":1,"noClip":false},null,{"maxWidth":800,"minWidth":50,"autoPan":true,"keepInView":false,"closeButton":true,"closeOnClick":true,"className":""},"Fort Stewart (GA)",{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},{"stroke":true,"weight":3,"opacity":0.9,"fillOpacity":0,"bringToFront":false,"sendToBack":false}]},{"method":"addLayersControl","args":[["Esri.WorldImagery","OpenStreetMap"],["FortStewart_als","aoi_sf - study_site_lab"],{"collapsed":true,"autoZIndex":true,"position":"topleft"}]},{"method":"addLegend","args":[{"colors":["#6666FF"],"labels":["Fort Stewart (GA)"],"na_color":null,"na_label":"NA","opacity":1,"position":"topright","type":"factor","title":"","extra":null,"layerId":null,"className":"info legend","group":"aoi_sf - study_site_lab"}]},{"method":"addHomeButton","args":[-81.73416328642402,32.01943655616572,-81.69049726892926,32.05143345157519,true,null,"Zoom to full extent","<strong>Zoom full<\/strong>","bottomleft"]}],"limits":{"lat":[32.01943655616572,32.05143345157519],"lng":[-81.73416328642402,-81.69049726892926]},"fitBounds":[32.01943655616572,-81.73416328642402,32.05143345157519,-81.69049726892926,[]]},"evals":[],"jsHooks":{"render":[{"code":"function(el, x, data) {\n  return (\n      function(el, x, data) {\n      // get the leaflet map\n      var map = this; //HTMLWidgets.find('#' + el.id);\n      // we need a new div element because we have to handle\n      // the mouseover output separately\n      // debugger;\n      function addElement () {\n      // generate new div Element\n      var newDiv = $(document.createElement('div'));\n      // append at end of leaflet htmlwidget container\n      $(el).append(newDiv);\n      //provide ID and style\n      newDiv.addClass('lnlt');\n      newDiv.css({\"position\":\"relative\",\"bottomleft\":\"0px\",\"background-color\":\"rgba(255, 255, 255, 0.7)\",\"box-shadow\":\"0 0 2px #bbb\",\"background-clip\":\"padding-box\",\"margin\":\"0\",\"padding-left\":\"5px\",\"padding-right\":\"5px\",\"color\":\"#333\",\"font-size\":\"9px\",\"font-family\":\"\\\"Helvetica Neue\\\", Arial, Helvetica, sans-serif\",\"text-align\":\"left\",\"z-index\":\"700\"});\n      return newDiv;\n      }\n\n\n      // check for already existing lnlt class to not duplicate\n      var lnlt = $(el).find('.lnlt');\n\n      if(!lnlt.length) {\n      lnlt = addElement();\n\n      // grab the special div we generated in the beginning\n      // and put the mousmove output there\n\n      map.on('mousemove', function (e) {\n      if (e.originalEvent.ctrlKey) {\n      if (document.querySelector('.lnlt') === null) lnlt = addElement();\n      lnlt.text(\n                           ' lon: ' + (e.latlng.lng).toFixed(5) +\n                           ' | lat: ' + (e.latlng.lat).toFixed(5) +\n                           ' | zoom: ' + map.getZoom() +\n                           ' | x: ' + L.CRS.EPSG3857.project(e.latlng).x.toFixed(0) +\n                           ' | y: ' + L.CRS.EPSG3857.project(e.latlng).y.toFixed(0) +\n                           ' | epsg: 3857 ' +\n                           ' | proj4: +proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs ');\n      } else {\n      if (document.querySelector('.lnlt') === null) lnlt = addElement();\n      lnlt.text(\n                      ' lon: ' + (e.latlng.lng).toFixed(5) +\n                      ' | lat: ' + (e.latlng.lat).toFixed(5) +\n                      ' | zoom: ' + map.getZoom() + ' ');\n      }\n      });\n\n      // remove the lnlt div when mouse leaves map\n      map.on('mouseout', function (e) {\n      var strip = document.querySelector('.lnlt');\n      if( strip !==null) strip.remove();\n      });\n\n      };\n\n      //$(el).keypress(67, function(e) {\n      map.on('preclick', function(e) {\n      if (e.originalEvent.ctrlKey) {\n      if (document.querySelector('.lnlt') === null) lnlt = addElement();\n      lnlt.text(\n                      ' lon: ' + (e.latlng.lng).toFixed(5) +\n                      ' | lat: ' + (e.latlng.lat).toFixed(5) +\n                      ' | zoom: ' + map.getZoom() + ' ');\n      var txt = document.querySelector('.lnlt').textContent;\n      console.log(txt);\n      //txt.innerText.focus();\n      //txt.select();\n      setClipboardText('\"' + txt + '\"');\n      }\n      });\n\n      }\n      ).call(this.getMap(), el, x, data);\n}","data":null},{"code":"function(el, x, data) {\n  return (function(el,x,data){\n           var map = this;\n\n           map.on('keypress', function(e) {\n               console.log(e.originalEvent.code);\n               var key = e.originalEvent.code;\n               if (key === 'KeyE') {\n                   var bb = this.getBounds();\n                   var txt = JSON.stringify(bb);\n                   console.log(txt);\n\n                   setClipboardText('\\'' + txt + '\\'');\n               }\n           })\n        }).call(this.getMap(), el, x, data);\n}","data":null}]}}</script>
+<p>point cloud data summary</p>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="fort-stewart-ga.html#cb46-1" tabindex="-1"></a>aoi_las_ctg</span></code></pre></div>
+<pre><code>## $FortStewart_als
+## class       : LAScatalog (v1.4 format 6)
+## extent      : 1336000, 1340000, 1095000, 1098000 (xmin, xmax, ymin, ymax)
+## coord. ref. : NAD83(2011) / Conus Albers + NAVD88 height - Geoid12B (Meters) 
+## area        : 9 km²
+## points      : 43.07 million points
+## type        : airborne
+## density     : 4.8 points/m²
+## density     : 3.1 pulses/m²
+## num. files  : 9 
+## 
+## $FortStewart_uas_lidar
+## class       : LAScatalog (v1.4 format 6)
+## extent      : 418991.2, 433163, 3537929, 3550245 (xmin, xmax, ymin, ymax)
+## coord. ref. : NA 
+## area        : 1102.2 kunits²
+## points      : 2.08 billion points
+## type        : airborne
+## density     : 1.9 points/units²
+## density     : 1.1 pulses/units²
+## num. files  : 11</code></pre>
+<div id="als-processing-1" class="section level2 hasAnchor" number="4.1">
+<h2><span class="header-section-number">4.1</span> ALS Processing<a href="fort-stewart-ga.html#als-processing-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="itd-tuning-2" class="section level3 hasAnchor" number="4.1.1">
+<h3><span class="header-section-number">4.1.1</span> ITD tuning<a href="fort-stewart-ga.html#itd-tuning-2" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>put las files in a list</p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="fort-stewart-ga.html#cb48-1" tabindex="-1"></a><span class="co"># list of all las files</span></span>
+<span id="cb48-2"><a href="fort-stewart-ga.html#cb48-2" tabindex="-1"></a>las_flist_temp <span class="ot">&lt;-</span> aoi_las_ctg[[<span class="st">&quot;FortStewart_als&quot;</span>]] <span class="sc">%&gt;%</span> </span>
+<span id="cb48-3"><a href="fort-stewart-ga.html#cb48-3" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">pluck</span>(<span class="st">&quot;data&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb48-4"><a href="fort-stewart-ga.html#cb48-4" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">pull</span>(filename)</span></code></pre></div>
+<p>run tuning</p>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="fort-stewart-ga.html#cb49-1" tabindex="-1"></a><span class="co"># if there is an error with tuning...is it because there are no trees for a given ws_fn?</span></span>
+<span id="cb49-2"><a href="fort-stewart-ga.html#cb49-2" tabindex="-1"></a>    <span class="co"># Caused by error in `dplyr::group_by()`:</span></span>
+<span id="cb49-3"><a href="fort-stewart-ga.html#cb49-3" tabindex="-1"></a>    <span class="co"># ! Must group by variables found in `.data`.</span></span>
+<span id="cb49-4"><a href="fort-stewart-ga.html#cb49-4" tabindex="-1"></a>    <span class="co"># Column `ws_fn` is not found.</span></span>
+<span id="cb49-5"><a href="fort-stewart-ga.html#cb49-5" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">file.exists</span>(<span class="st">&quot;../data/itd_tuning_FortStewart_als.jpg&quot;</span>)){</span>
+<span id="cb49-6"><a href="fort-stewart-ga.html#cb49-6" tabindex="-1"></a>  <span class="co"># tuning</span></span>
+<span id="cb49-7"><a href="fort-stewart-ga.html#cb49-7" tabindex="-1"></a>  itd_tuning_ans <span class="ot">&lt;-</span> cloud2trees<span class="sc">::</span><span class="fu">itd_tuning</span>(</span>
+<span id="cb49-8"><a href="fort-stewart-ga.html#cb49-8" tabindex="-1"></a>      <span class="at">input_las_dir =</span> las_flist_temp</span>
+<span id="cb49-9"><a href="fort-stewart-ga.html#cb49-9" tabindex="-1"></a>      , <span class="at">n_samples =</span> <span class="dv">3</span></span>
+<span id="cb49-10"><a href="fort-stewart-ga.html#cb49-10" tabindex="-1"></a>      , <span class="at">ws_fn_list =</span> my_ws_functions</span>
+<span id="cb49-11"><a href="fort-stewart-ga.html#cb49-11" tabindex="-1"></a>      , <span class="at">chm_res_m =</span> <span class="fl">0.3</span></span>
+<span id="cb49-12"><a href="fort-stewart-ga.html#cb49-12" tabindex="-1"></a>    )</span>
+<span id="cb49-13"><a href="fort-stewart-ga.html#cb49-13" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">ggsave</span>(</span>
+<span id="cb49-14"><a href="fort-stewart-ga.html#cb49-14" tabindex="-1"></a>    <span class="st">&quot;../data/itd_tuning_FortStewart_als.jpg&quot;</span></span>
+<span id="cb49-15"><a href="fort-stewart-ga.html#cb49-15" tabindex="-1"></a>    , <span class="at">plot =</span> itd_tuning_ans<span class="sc">$</span>plot_samples</span>
+<span id="cb49-16"><a href="fort-stewart-ga.html#cb49-16" tabindex="-1"></a>    , <span class="at">dpi =</span> <span class="st">&quot;print&quot;</span></span>
+<span id="cb49-17"><a href="fort-stewart-ga.html#cb49-17" tabindex="-1"></a>    , <span class="at">height =</span> <span class="dv">7</span>, <span class="at">width =</span> <span class="dv">10</span></span>
+<span id="cb49-18"><a href="fort-stewart-ga.html#cb49-18" tabindex="-1"></a>  )</span>
+<span id="cb49-19"><a href="fort-stewart-ga.html#cb49-19" tabindex="-1"></a>}</span></code></pre></div>
+<p><img src="https://i.ibb.co/RG1LdCq9/itd-tuning-Fort-Stewart-als.jpg" width="100%" height="100%" style="display: block; margin: auto;" /></p>
+<p>pick the best function for use in ITD</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="fort-stewart-ga.html#cb50-1" tabindex="-1"></a><span class="co"># pick the best function for use in ITD</span></span>
+<span id="cb50-2"><a href="fort-stewart-ga.html#cb50-2" tabindex="-1"></a>best_ws_fn_temp <span class="ot">&lt;-</span> my_ws_functions<span class="sc">$</span>exp_fn</span></code></pre></div>
+</div>
+<div id="cloud2trees-point-cloud-processing-2" class="section level3 hasAnchor" number="4.1.2">
+<h3><span class="header-section-number">4.1.2</span> <code>cloud2trees</code> point cloud processing<a href="fort-stewart-ga.html#cloud2trees-point-cloud-processing-2" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="fort-stewart-ga.html#cb51-1" tabindex="-1"></a>dir_temp <span class="ot">&lt;-</span> <span class="fu">file.path</span>(aoi_sf<span class="sc">$</span>fdir, <span class="st">&quot;als_processing&quot;</span>)</span>
+<span id="cb51-2"><a href="fort-stewart-ga.html#cb51-2" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">dir.exists</span>(dir_temp)){</span>
+<span id="cb51-3"><a href="fort-stewart-ga.html#cb51-3" tabindex="-1"></a>  <span class="fu">dir.create</span>(dir_temp)</span>
+<span id="cb51-4"><a href="fort-stewart-ga.html#cb51-4" tabindex="-1"></a><span class="co"># c2t</span></span>
+<span id="cb51-5"><a href="fort-stewart-ga.html#cb51-5" tabindex="-1"></a>  cloud2trees_ans <span class="ot">&lt;-</span> cloud2trees<span class="sc">::</span><span class="fu">cloud2trees</span>(</span>
+<span id="cb51-6"><a href="fort-stewart-ga.html#cb51-6" tabindex="-1"></a>    <span class="at">input_las_dir =</span> las_flist_temp</span>
+<span id="cb51-7"><a href="fort-stewart-ga.html#cb51-7" tabindex="-1"></a>    , <span class="at">output_dir =</span> dir_temp</span>
+<span id="cb51-8"><a href="fort-stewart-ga.html#cb51-8" tabindex="-1"></a>    , <span class="at">ws =</span> best_ws_fn_temp</span>
+<span id="cb51-9"><a href="fort-stewart-ga.html#cb51-9" tabindex="-1"></a>    , <span class="at">dtm_res_m =</span> <span class="dv">1</span></span>
+<span id="cb51-10"><a href="fort-stewart-ga.html#cb51-10" tabindex="-1"></a>    , <span class="at">chm_res_m =</span> <span class="fl">0.3</span></span>
+<span id="cb51-11"><a href="fort-stewart-ga.html#cb51-11" tabindex="-1"></a>    , <span class="at">estimate_tree_dbh =</span> T</span>
+<span id="cb51-12"><a href="fort-stewart-ga.html#cb51-12" tabindex="-1"></a>    , <span class="at">estimate_tree_type =</span> T</span>
+<span id="cb51-13"><a href="fort-stewart-ga.html#cb51-13" tabindex="-1"></a>    <span class="co"># hmd</span></span>
+<span id="cb51-14"><a href="fort-stewart-ga.html#cb51-14" tabindex="-1"></a>    , <span class="at">estimate_tree_hmd =</span> T</span>
+<span id="cb51-15"><a href="fort-stewart-ga.html#cb51-15" tabindex="-1"></a>    , <span class="at">hmd_tree_sample_prop =</span> <span class="fl">0.5</span></span>
+<span id="cb51-16"><a href="fort-stewart-ga.html#cb51-16" tabindex="-1"></a>    , <span class="at">hmd_estimate_missing_hmd =</span> T</span>
+<span id="cb51-17"><a href="fort-stewart-ga.html#cb51-17" tabindex="-1"></a>    <span class="co"># biomass</span></span>
+<span id="cb51-18"><a href="fort-stewart-ga.html#cb51-18" tabindex="-1"></a>    , <span class="at">estimate_biomass_method =</span> <span class="fu">c</span>(<span class="st">&quot;landfire&quot;</span>,<span class="st">&quot;cruz&quot;</span>)</span>
+<span id="cb51-19"><a href="fort-stewart-ga.html#cb51-19" tabindex="-1"></a>    <span class="co"># cbh</span></span>
+<span id="cb51-20"><a href="fort-stewart-ga.html#cb51-20" tabindex="-1"></a>    , <span class="at">estimate_tree_cbh =</span> T</span>
+<span id="cb51-21"><a href="fort-stewart-ga.html#cb51-21" tabindex="-1"></a>    , <span class="at">cbh_tree_sample_prop =</span> <span class="fl">0.5</span></span>
+<span id="cb51-22"><a href="fort-stewart-ga.html#cb51-22" tabindex="-1"></a>    , <span class="at">cbh_estimate_missing_cbh =</span> T</span>
+<span id="cb51-23"><a href="fort-stewart-ga.html#cb51-23" tabindex="-1"></a>  )</span>
+<span id="cb51-24"><a href="fort-stewart-ga.html#cb51-24" tabindex="-1"></a>}<span class="cf">else</span>{</span>
+<span id="cb51-25"><a href="fort-stewart-ga.html#cb51-25" tabindex="-1"></a>  cloud2trees_ans <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb51-26"><a href="fort-stewart-ga.html#cb51-26" tabindex="-1"></a>    <span class="st">&quot;dtm_rast&quot;</span> <span class="ot">=</span> terra<span class="sc">::</span><span class="fu">rast</span>( <span class="fu">file.path</span>(dir_temp, <span class="st">&quot;point_cloud_processing_delivery&quot;</span>, <span class="st">&quot;dtm_1m.tif&quot;</span>) )</span>
+<span id="cb51-27"><a href="fort-stewart-ga.html#cb51-27" tabindex="-1"></a>    , <span class="st">&quot;chm_rast&quot;</span> <span class="ot">=</span> terra<span class="sc">::</span><span class="fu">rast</span>( <span class="fu">file.path</span>(dir_temp, <span class="st">&quot;point_cloud_processing_delivery&quot;</span>, <span class="st">&quot;chm_0.3m.tif&quot;</span>) )</span>
+<span id="cb51-28"><a href="fort-stewart-ga.html#cb51-28" tabindex="-1"></a>    , <span class="st">&quot;crowns_sf&quot;</span> <span class="ot">=</span> <span class="fu">list.files</span>(</span>
+<span id="cb51-29"><a href="fort-stewart-ga.html#cb51-29" tabindex="-1"></a>        <span class="fu">file.path</span>(dir_temp, <span class="st">&quot;point_cloud_processing_delivery&quot;</span>)</span>
+<span id="cb51-30"><a href="fort-stewart-ga.html#cb51-30" tabindex="-1"></a>        , <span class="at">pattern =</span> <span class="st">&quot;final_detected_crowns.*</span><span class="sc">\\</span><span class="st">.gpkg$&quot;</span></span>
+<span id="cb51-31"><a href="fort-stewart-ga.html#cb51-31" tabindex="-1"></a>        , <span class="at">full.names =</span> T</span>
+<span id="cb51-32"><a href="fort-stewart-ga.html#cb51-32" tabindex="-1"></a>      ) <span class="sc">%&gt;%</span> </span>
+<span id="cb51-33"><a href="fort-stewart-ga.html#cb51-33" tabindex="-1"></a>      <span class="fu">normalizePath</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb51-34"><a href="fort-stewart-ga.html#cb51-34" tabindex="-1"></a>      purrr<span class="sc">::</span><span class="fu">map</span>(\(x)</span>
+<span id="cb51-35"><a href="fort-stewart-ga.html#cb51-35" tabindex="-1"></a>        sf<span class="sc">::</span><span class="fu">st_read</span>(</span>
+<span id="cb51-36"><a href="fort-stewart-ga.html#cb51-36" tabindex="-1"></a>          <span class="at">dsn =</span> x</span>
+<span id="cb51-37"><a href="fort-stewart-ga.html#cb51-37" tabindex="-1"></a>          , <span class="at">quiet =</span> T</span>
+<span id="cb51-38"><a href="fort-stewart-ga.html#cb51-38" tabindex="-1"></a>        )</span>
+<span id="cb51-39"><a href="fort-stewart-ga.html#cb51-39" tabindex="-1"></a>      ) <span class="sc">%&gt;%</span> </span>
+<span id="cb51-40"><a href="fort-stewart-ga.html#cb51-40" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">bind_rows</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb51-41"><a href="fort-stewart-ga.html#cb51-41" tabindex="-1"></a>      <span class="do">## !!!!!!!!!!!!!!!!!!!!!!!! cruz_tree_kg_per_m3 empty here</span></span>
+<span id="cb51-42"><a href="fort-stewart-ga.html#cb51-42" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">cruz_tree_kg_per_m3 =</span> <span class="fu">as.numeric</span>(<span class="cn">NA</span>))</span>
+<span id="cb51-43"><a href="fort-stewart-ga.html#cb51-43" tabindex="-1"></a>    , <span class="st">&quot;foresttype_rast&quot;</span> <span class="ot">=</span> terra<span class="sc">::</span><span class="fu">rast</span>( <span class="fu">file.path</span>(dir_temp, <span class="st">&quot;point_cloud_processing_delivery&quot;</span>, <span class="st">&quot;fia_foresttype_raster.tif&quot;</span>) ) <span class="sc">%&gt;%</span> </span>
+<span id="cb51-44"><a href="fort-stewart-ga.html#cb51-44" tabindex="-1"></a>        terra<span class="sc">::</span><span class="fu">subst</span>(<span class="at">from =</span> foresttype_lookup<span class="sc">$</span>forest_type_group_code, <span class="at">to =</span> foresttype_lookup<span class="sc">$</span>forest_type_group)</span>
+<span id="cb51-45"><a href="fort-stewart-ga.html#cb51-45" tabindex="-1"></a>  )</span>
+<span id="cb51-46"><a href="fort-stewart-ga.html#cb51-46" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+<div id="cloud2trees-results-2" class="section level3 hasAnchor" number="4.1.3">
+<h3><span class="header-section-number">4.1.3</span> <code>cloud2trees</code> Results<a href="fort-stewart-ga.html#cloud2trees-results-2" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="fia-forest-type-group-2" class="section level4 hasAnchor" number="4.1.3.1">
+<h4><span class="header-section-number">4.1.3.1</span> FIA Forest Type Group<a href="fort-stewart-ga.html#fia-forest-type-group-2" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="fort-stewart-ga.html#cb52-1" tabindex="-1"></a><span class="co"># load raster</span></span>
+<span id="cb52-2"><a href="fort-stewart-ga.html#cb52-2" tabindex="-1"></a><span class="fu">plt_rast_poly_fn</span>(</span>
+<span id="cb52-3"><a href="fort-stewart-ga.html#cb52-3" tabindex="-1"></a>  <span class="at">rast =</span> cloud2trees_ans<span class="sc">$</span>foresttype_rast</span>
+<span id="cb52-4"><a href="fort-stewart-ga.html#cb52-4" tabindex="-1"></a>  , <span class="at">poly =</span> aoi_sf</span>
+<span id="cb52-5"><a href="fort-stewart-ga.html#cb52-5" tabindex="-1"></a>  , <span class="at">title =</span> <span class="st">&quot;FIA forest type group&quot;</span></span>
+<span id="cb52-6"><a href="fort-stewart-ga.html#cb52-6" tabindex="-1"></a>  , <span class="at">crop =</span> T</span>
+<span id="cb52-7"><a href="fort-stewart-ga.html#cb52-7" tabindex="-1"></a>  , <span class="at">buff =</span> <span class="dv">22</span></span>
+<span id="cb52-8"><a href="fort-stewart-ga.html#cb52-8" tabindex="-1"></a>  , <span class="at">col =</span> <span class="st">&quot;navy&quot;</span></span>
+<span id="cb52-9"><a href="fort-stewart-ga.html#cb52-9" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb52-10"><a href="fort-stewart-ga.html#cb52-10" tabindex="-1"></a>  harrypotter<span class="sc">::</span><span class="fu">scale_fill_hp_d</span>(</span>
+<span id="cb52-11"><a href="fort-stewart-ga.html#cb52-11" tabindex="-1"></a>    <span class="at">option =</span> <span class="st">&quot;lunalovegood&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.8</span></span>
+<span id="cb52-12"><a href="fort-stewart-ga.html#cb52-12" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb52-13"><a href="fort-stewart-ga.html#cb52-13" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste0</span>(aoi_sf<span class="sc">$</span>study_site_lab, <span class="st">&quot; - ALS&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb52-14"><a href="fort-stewart-ga.html#cb52-14" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">theme</span>(</span>
+<span id="cb52-15"><a href="fort-stewart-ga.html#cb52-15" tabindex="-1"></a>    <span class="at">legend.text =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">7</span>, <span class="at">angle =</span> <span class="dv">0</span>)</span>
+<span id="cb52-16"><a href="fort-stewart-ga.html#cb52-16" tabindex="-1"></a>  )</span></code></pre></div>
+<p><img src="dod_cloud2trees_demo_files/figure-html/unnamed-chunk-55-1.png" width="1008" /></p>
+<p>distribution by forest type</p>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="fort-stewart-ga.html#cb53-1" tabindex="-1"></a><span class="fu">foresttype_sum_fn</span>(<span class="at">crowns =</span> cloud2trees_ans<span class="sc">$</span>crowns_sf, <span class="at">aoi =</span> aoi_sf, <span class="at">unit =</span> aoi_sf<span class="sc">$</span>study_site_lab[<span class="dv">1</span>])</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-56">Table 4.1: </span>Count of trees by FIA Forest Type Group
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+.
+</th>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+# trees
+</th>
+<th style="text-align:left;">
+% trees
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;vertical-align: top !important;" rowspan="4">
+Fort Stewart (GA)
+</td>
+<td style="text-align:left;">
+Loblolly / shortleaf pine group
+</td>
+<td style="text-align:left;">
+95,880
+</td>
+<td style="text-align:left;">
+62.7%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Longleaf / slash pine group
+</td>
+<td style="text-align:left;">
+30,686
+</td>
+<td style="text-align:left;">
+20.1%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Oak / gum / cypress group
+</td>
+<td style="text-align:left;">
+26,376
+</td>
+<td style="text-align:left;">
+17.2%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Oak / pine group
+</td>
+<td style="text-align:left;">
+43
+</td>
+<td style="text-align:left;">
+0.0%
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="dtm-2" class="section level4 hasAnchor" number="4.1.3.2">
+<h4><span class="header-section-number">4.1.3.2</span> DTM<a href="fort-stewart-ga.html#dtm-2" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p><strong>this is a large area so we’re going to make the raster more coarse</strong></p>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="fort-stewart-ga.html#cb54-1" tabindex="-1"></a><span class="fu">plt_rast_poly_fn</span>(</span>
+<span id="cb54-2"><a href="fort-stewart-ga.html#cb54-2" tabindex="-1"></a>  <span class="at">rast =</span> cloud2trees_ans<span class="sc">$</span>dtm_rast <span class="sc">%&gt;%</span> terra<span class="sc">::</span><span class="fu">aggregate</span>(<span class="at">fact =</span> <span class="dv">2</span>, <span class="at">cores =</span> lasR<span class="sc">::</span><span class="fu">half_cores</span>())</span>
+<span id="cb54-3"><a href="fort-stewart-ga.html#cb54-3" tabindex="-1"></a>  , <span class="at">poly =</span> aoi_sf</span>
+<span id="cb54-4"><a href="fort-stewart-ga.html#cb54-4" tabindex="-1"></a>  , <span class="at">title =</span> <span class="st">&quot;DTM (m)&quot;</span></span>
+<span id="cb54-5"><a href="fort-stewart-ga.html#cb54-5" tabindex="-1"></a>  , <span class="at">crop =</span> T</span>
+<span id="cb54-6"><a href="fort-stewart-ga.html#cb54-6" tabindex="-1"></a>  , <span class="at">buff =</span> <span class="dv">22</span></span>
+<span id="cb54-7"><a href="fort-stewart-ga.html#cb54-7" tabindex="-1"></a>  , <span class="at">col =</span> <span class="st">&quot;navy&quot;</span></span>
+<span id="cb54-8"><a href="fort-stewart-ga.html#cb54-8" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb54-9"><a href="fort-stewart-ga.html#cb54-9" tabindex="-1"></a>  harrypotter<span class="sc">::</span><span class="fu">scale_fill_hp</span>(</span>
+<span id="cb54-10"><a href="fort-stewart-ga.html#cb54-10" tabindex="-1"></a>    <span class="at">option =</span> <span class="st">&quot;mischief&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.9</span>, <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">comma_format</span>(<span class="at">accuracy=</span><span class="dv">1</span>), <span class="at">breaks =</span> scales<span class="sc">::</span><span class="fu">breaks_extended</span>(<span class="at">n=</span><span class="dv">6</span>)</span>
+<span id="cb54-11"><a href="fort-stewart-ga.html#cb54-11" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb54-12"><a href="fort-stewart-ga.html#cb54-12" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste0</span>(aoi_sf<span class="sc">$</span>study_site_lab, <span class="st">&quot; - ALS&quot;</span>))</span></code></pre></div>
+<pre><code>## |---------|---------|---------|---------|=========================================                                          </code></pre>
+<p><img src="dod_cloud2trees_demo_files/figure-html/unnamed-chunk-57-1.png" width="1008" /></p>
+<p><strong>this was already height-normalized or is it lowland??</strong></p>
+</div>
+<div id="chm-2" class="section level4 hasAnchor" number="4.1.3.3">
+<h4><span class="header-section-number">4.1.3.3</span> CHM<a href="fort-stewart-ga.html#chm-2" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>plot the CHM and we’ll also add the extracted trees in gray</p>
+<p><strong>this is a large area so we’re going to make the raster more coarse and sample from the tree list</strong></p>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="fort-stewart-ga.html#cb56-1" tabindex="-1"></a>crowns_temp <span class="ot">&lt;-</span> cloud2trees_ans<span class="sc">$</span>crowns_sf <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">slice_sample</span>(<span class="at">prop =</span> <span class="fl">0.1</span>)</span>
+<span id="cb56-2"><a href="fort-stewart-ga.html#cb56-2" tabindex="-1"></a></span>
+<span id="cb56-3"><a href="fort-stewart-ga.html#cb56-3" tabindex="-1"></a><span class="fu">plt_rast_poly_fn</span>(</span>
+<span id="cb56-4"><a href="fort-stewart-ga.html#cb56-4" tabindex="-1"></a>  <span class="at">rast =</span> cloud2trees_ans<span class="sc">$</span>chm_rast <span class="sc">%&gt;%</span> terra<span class="sc">::</span><span class="fu">aggregate</span>(<span class="at">fact =</span> <span class="dv">2</span>, <span class="at">cores =</span> lasR<span class="sc">::</span><span class="fu">half_cores</span>())</span>
+<span id="cb56-5"><a href="fort-stewart-ga.html#cb56-5" tabindex="-1"></a>  , <span class="at">poly =</span> aoi_sf</span>
+<span id="cb56-6"><a href="fort-stewart-ga.html#cb56-6" tabindex="-1"></a>  , <span class="at">title =</span> <span class="st">&quot;CHM (m)&quot;</span></span>
+<span id="cb56-7"><a href="fort-stewart-ga.html#cb56-7" tabindex="-1"></a>  , <span class="at">crop =</span> T</span>
+<span id="cb56-8"><a href="fort-stewart-ga.html#cb56-8" tabindex="-1"></a>  , <span class="at">buff =</span> <span class="dv">22</span></span>
+<span id="cb56-9"><a href="fort-stewart-ga.html#cb56-9" tabindex="-1"></a>  , <span class="at">col =</span> <span class="st">&quot;navy&quot;</span></span>
+<span id="cb56-10"><a href="fort-stewart-ga.html#cb56-10" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb56-11"><a href="fort-stewart-ga.html#cb56-11" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">scale_fill_viridis_c</span>(</span>
+<span id="cb56-12"><a href="fort-stewart-ga.html#cb56-12" tabindex="-1"></a>    <span class="at">option =</span> <span class="st">&quot;plasma&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.9</span>, <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">comma_format</span>(<span class="at">accuracy=</span><span class="dv">1</span>), <span class="at">breaks =</span> scales<span class="sc">::</span><span class="fu">breaks_extended</span>(<span class="at">n=</span><span class="dv">6</span>)</span>
+<span id="cb56-13"><a href="fort-stewart-ga.html#cb56-13" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb56-14"><a href="fort-stewart-ga.html#cb56-14" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">geom_sf</span>(</span>
+<span id="cb56-15"><a href="fort-stewart-ga.html#cb56-15" tabindex="-1"></a>    <span class="at">data =</span> crowns_temp <span class="sc">%&gt;%</span></span>
+<span id="cb56-16"><a href="fort-stewart-ga.html#cb56-16" tabindex="-1"></a>      sf<span class="sc">::</span><span class="fu">st_intersection</span>(</span>
+<span id="cb56-17"><a href="fort-stewart-ga.html#cb56-17" tabindex="-1"></a>        aoi_sf <span class="sc">%&gt;%</span> sf<span class="sc">::</span><span class="fu">st_transform</span>(sf<span class="sc">::</span><span class="fu">st_crs</span>(cloud2trees_ans<span class="sc">$</span>crowns_sf))</span>
+<span id="cb56-18"><a href="fort-stewart-ga.html#cb56-18" tabindex="-1"></a>      )</span>
+<span id="cb56-19"><a href="fort-stewart-ga.html#cb56-19" tabindex="-1"></a>    , <span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">color =</span> <span class="st">&quot;gray33&quot;</span>, <span class="at">lwd =</span> <span class="fl">0.1</span></span>
+<span id="cb56-20"><a href="fort-stewart-ga.html#cb56-20" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb56-21"><a href="fort-stewart-ga.html#cb56-21" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste0</span>(aoi_sf<span class="sc">$</span>study_site_lab, <span class="st">&quot; - ALS&quot;</span>))</span></code></pre></div>
+<pre><code>## |---------|---------|---------|---------|=========================================                                          </code></pre>
+<p><img src="dod_cloud2trees_demo_files/figure-html/unnamed-chunk-58-1.png" width="1008" /></p>
+</div>
+<div id="imagery-2" class="section level4 hasAnchor" number="4.1.3.4">
+<h4><span class="header-section-number">4.1.3.4</span> Imagery<a href="fort-stewart-ga.html#imagery-2" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>let’s check the tree extraction results (gray) on satellite imagery with a collection date that may not coincide with the point cloud collection date</p>
+<p><strong>this is a large area so we’re going to zoom way in on the image and sample from the tree list</strong></p>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="fort-stewart-ga.html#cb58-1" tabindex="-1"></a>plt_aoi_basemap <span class="ot">&lt;-</span> <span class="fu">my_ggmap_basemap</span>(</span>
+<span id="cb58-2"><a href="fort-stewart-ga.html#cb58-2" tabindex="-1"></a>  <span class="at">sf_data =</span> aoi_sf <span class="sc">%&gt;%</span> sf<span class="sc">::</span><span class="fu">st_centroid</span>() <span class="sc">%&gt;%</span> sf<span class="sc">::</span><span class="fu">st_buffer</span>(<span class="dv">100</span>, <span class="at">endCapStyle =</span> <span class="st">&quot;SQUARE&quot;</span>)</span>
+<span id="cb58-3"><a href="fort-stewart-ga.html#cb58-3" tabindex="-1"></a>  , <span class="at">zoom_level =</span> <span class="dv">17</span></span>
+<span id="cb58-4"><a href="fort-stewart-ga.html#cb58-4" tabindex="-1"></a>  , <span class="at">buffer_box =</span> <span class="dv">22</span></span>
+<span id="cb58-5"><a href="fort-stewart-ga.html#cb58-5" tabindex="-1"></a>  , <span class="at">my_maptype =</span> <span class="st">&quot;satellite&quot;</span></span>
+<span id="cb58-6"><a href="fort-stewart-ga.html#cb58-6" tabindex="-1"></a>  , <span class="at">add_sf_data =</span> F</span>
+<span id="cb58-7"><a href="fort-stewart-ga.html#cb58-7" tabindex="-1"></a>)</span>
+<span id="cb58-8"><a href="fort-stewart-ga.html#cb58-8" tabindex="-1"></a><span class="co"># add crowns</span></span>
+<span id="cb58-9"><a href="fort-stewart-ga.html#cb58-9" tabindex="-1"></a>plt_aoi_basemap <span class="sc">+</span></span>
+<span id="cb58-10"><a href="fort-stewart-ga.html#cb58-10" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">geom_sf</span>(</span>
+<span id="cb58-11"><a href="fort-stewart-ga.html#cb58-11" tabindex="-1"></a>    <span class="at">data =</span> cloud2trees_ans<span class="sc">$</span>crowns_sf <span class="sc">%&gt;%</span> </span>
+<span id="cb58-12"><a href="fort-stewart-ga.html#cb58-12" tabindex="-1"></a>      <span class="co"># dplyr::slice_sample(prop = 0.1) %&gt;% </span></span>
+<span id="cb58-13"><a href="fort-stewart-ga.html#cb58-13" tabindex="-1"></a>      sf<span class="sc">::</span><span class="fu">st_intersection</span>(</span>
+<span id="cb58-14"><a href="fort-stewart-ga.html#cb58-14" tabindex="-1"></a>        aoi_sf <span class="sc">%&gt;%</span> sf<span class="sc">::</span><span class="fu">st_centroid</span>() <span class="sc">%&gt;%</span> sf<span class="sc">::</span><span class="fu">st_buffer</span>(<span class="dv">100</span>, <span class="at">endCapStyle =</span> <span class="st">&quot;SQUARE&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb58-15"><a href="fort-stewart-ga.html#cb58-15" tabindex="-1"></a>          sf<span class="sc">::</span><span class="fu">st_transform</span>(sf<span class="sc">::</span><span class="fu">st_crs</span>(cloud2trees_ans<span class="sc">$</span>crowns_sf))</span>
+<span id="cb58-16"><a href="fort-stewart-ga.html#cb58-16" tabindex="-1"></a>      ) <span class="sc">%&gt;%</span> </span>
+<span id="cb58-17"><a href="fort-stewart-ga.html#cb58-17" tabindex="-1"></a>      sf<span class="sc">::</span><span class="fu">st_transform</span>(<span class="dv">4326</span>)</span>
+<span id="cb58-18"><a href="fort-stewart-ga.html#cb58-18" tabindex="-1"></a>    , <span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">color =</span> <span class="st">&quot;gray77&quot;</span>, <span class="at">lwd =</span> <span class="fl">0.1</span></span>
+<span id="cb58-19"><a href="fort-stewart-ga.html#cb58-19" tabindex="-1"></a>    , <span class="at">inherit.aes =</span> F</span>
+<span id="cb58-20"><a href="fort-stewart-ga.html#cb58-20" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb58-21"><a href="fort-stewart-ga.html#cb58-21" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste0</span>(aoi_sf<span class="sc">$</span>study_site_lab, <span class="st">&quot; - ALS&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb58-22"><a href="fort-stewart-ga.html#cb58-22" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">theme</span>(</span>
+<span id="cb58-23"><a href="fort-stewart-ga.html#cb58-23" tabindex="-1"></a>    <span class="at">plot.title =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>, <span class="at">hjust =</span> <span class="dv">0</span>, <span class="at">margin =</span> ggplot2<span class="sc">::</span><span class="fu">margin</span>(<span class="dv">0</span>,<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">0</span>))</span>
+<span id="cb58-24"><a href="fort-stewart-ga.html#cb58-24" tabindex="-1"></a>  )</span></code></pre></div>
+<p><img src="dod_cloud2trees_demo_files/figure-html/unnamed-chunk-59-1.png" width="1008" /></p>
+</div>
+<div id="tree-attributes-spatial-2" class="section level4 hasAnchor" number="4.1.3.5">
+<h4><span class="header-section-number">4.1.3.5</span> Tree Attributes Spatial<a href="fort-stewart-ga.html#tree-attributes-spatial-2" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p><strong>this is a large area so we’re going to sample from the tree list</strong></p>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="fort-stewart-ga.html#cb59-1" tabindex="-1"></a>crowns_temp <span class="ot">&lt;-</span> cloud2trees_ans<span class="sc">$</span>crowns_sf <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">slice_sample</span>(<span class="at">prop =</span> <span class="fl">0.2</span>)</span>
+<span id="cb59-2"><a href="fort-stewart-ga.html#cb59-2" tabindex="-1"></a></span>
+<span id="cb59-3"><a href="fort-stewart-ga.html#cb59-3" tabindex="-1"></a>plt_df_temp <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">tibble</span>(</span>
+<span id="cb59-4"><a href="fort-stewart-ga.html#cb59-4" tabindex="-1"></a>  <span class="at">fill_var =</span> <span class="fu">c</span>(<span class="st">&quot;tree_height_m&quot;</span>, <span class="st">&quot;dbh_cm&quot;</span>, <span class="st">&quot;tree_cbh_m&quot;</span>, <span class="st">&quot;max_crown_diam_height_m&quot;</span>, <span class="st">&quot;landfire_crown_biomass_kg&quot;</span>)</span>
+<span id="cb59-5"><a href="fort-stewart-ga.html#cb59-5" tabindex="-1"></a>  , <span class="at">palette =</span> <span class="fu">c</span>(<span class="st">&quot;Blues&quot;</span>, <span class="st">&quot;Oranges&quot;</span>, <span class="st">&quot;Greens&quot;</span>, <span class="st">&quot;Purples&quot;</span>, <span class="st">&quot;Reds&quot;</span>)</span>
+<span id="cb59-6"><a href="fort-stewart-ga.html#cb59-6" tabindex="-1"></a>  , <span class="at">title =</span> <span class="fu">c</span>(<span class="st">&quot;Height (m)&quot;</span>, <span class="st">&quot;DBH (cm)&quot;</span>, <span class="st">&quot;CBH (m)&quot;</span>, <span class="st">&quot;HMD (m)&quot;</span>, <span class="st">&quot;Crown</span><span class="sc">\n</span><span class="st">biomass (kg)&quot;</span>)</span>
+<span id="cb59-7"><a href="fort-stewart-ga.html#cb59-7" tabindex="-1"></a>)</span>
+<span id="cb59-8"><a href="fort-stewart-ga.html#cb59-8" tabindex="-1"></a></span>
+<span id="cb59-9"><a href="fort-stewart-ga.html#cb59-9" tabindex="-1"></a>plts_temp <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(plt_df_temp) <span class="sc">%&gt;%</span> </span>
+<span id="cb59-10"><a href="fort-stewart-ga.html#cb59-10" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">map</span>(</span>
+<span id="cb59-11"><a href="fort-stewart-ga.html#cb59-11" tabindex="-1"></a>    \(x)</span>
+<span id="cb59-12"><a href="fort-stewart-ga.html#cb59-12" tabindex="-1"></a>    <span class="fu">plt_crown_attr_fn</span>(</span>
+<span id="cb59-13"><a href="fort-stewart-ga.html#cb59-13" tabindex="-1"></a>      <span class="at">crowns =</span> crowns_temp</span>
+<span id="cb59-14"><a href="fort-stewart-ga.html#cb59-14" tabindex="-1"></a>      , <span class="at">aoi =</span> aoi_sf</span>
+<span id="cb59-15"><a href="fort-stewart-ga.html#cb59-15" tabindex="-1"></a>      , <span class="at">lwd =</span> <span class="fl">0.6</span></span>
+<span id="cb59-16"><a href="fort-stewart-ga.html#cb59-16" tabindex="-1"></a>      , <span class="at">fill_var =</span> plt_df_temp<span class="sc">$</span>fill_var[x]</span>
+<span id="cb59-17"><a href="fort-stewart-ga.html#cb59-17" tabindex="-1"></a>      , <span class="at">palette =</span> plt_df_temp<span class="sc">$</span>palette[x]</span>
+<span id="cb59-18"><a href="fort-stewart-ga.html#cb59-18" tabindex="-1"></a>      , <span class="at">title =</span> plt_df_temp<span class="sc">$</span>title[x]</span>
+<span id="cb59-19"><a href="fort-stewart-ga.html#cb59-19" tabindex="-1"></a>    )  </span>
+<span id="cb59-20"><a href="fort-stewart-ga.html#cb59-20" tabindex="-1"></a>  )</span>
+<span id="cb59-21"><a href="fort-stewart-ga.html#cb59-21" tabindex="-1"></a><span class="co"># combine with patchwork</span></span>
+<span id="cb59-22"><a href="fort-stewart-ga.html#cb59-22" tabindex="-1"></a>patchwork<span class="sc">::</span><span class="fu">wrap_plots</span>(plts_temp, <span class="at">ncol =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb59-23"><a href="fort-stewart-ga.html#cb59-23" tabindex="-1"></a>  patchwork<span class="sc">::</span><span class="fu">plot_annotation</span>(</span>
+<span id="cb59-24"><a href="fort-stewart-ga.html#cb59-24" tabindex="-1"></a>    <span class="at">title =</span> <span class="fu">paste0</span>(aoi_sf<span class="sc">$</span>study_site_lab, <span class="st">&quot; - ALS&quot;</span>)</span>
+<span id="cb59-25"><a href="fort-stewart-ga.html#cb59-25" tabindex="-1"></a>    <span class="co"># , subtitle = &quot;huh&quot;</span></span>
+<span id="cb59-26"><a href="fort-stewart-ga.html#cb59-26" tabindex="-1"></a>    <span class="co"># , caption = &quot;hey&quot;</span></span>
+<span id="cb59-27"><a href="fort-stewart-ga.html#cb59-27" tabindex="-1"></a>    , <span class="at">theme =</span> ggplot2<span class="sc">::</span><span class="fu">theme</span>(</span>
+<span id="cb59-28"><a href="fort-stewart-ga.html#cb59-28" tabindex="-1"></a>      <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">margin =</span> ggplot2<span class="sc">::</span><span class="fu">margin</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">3</span>,<span class="dv">0</span>))</span>
+<span id="cb59-29"><a href="fort-stewart-ga.html#cb59-29" tabindex="-1"></a>    )</span>
+<span id="cb59-30"><a href="fort-stewart-ga.html#cb59-30" tabindex="-1"></a>  )</span></code></pre></div>
+<p><img src="dod_cloud2trees_demo_files/figure-html/unnamed-chunk-60-1.png" width="1008" /></p>
+</div>
+<div id="tree-attributes-summary-stats-2" class="section level4 hasAnchor" number="4.1.3.6">
+<h4><span class="header-section-number">4.1.3.6</span> Tree Attributes Summary Stats<a href="fort-stewart-ga.html#tree-attributes-summary-stats-2" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="fort-stewart-ga.html#cb60-1" tabindex="-1"></a><span class="fu">stats_sum_fn</span>(<span class="at">crowns =</span> cloud2trees_ans<span class="sc">$</span>crowns_sf, <span class="at">aoi =</span> aoi_sf, <span class="at">unit =</span> aoi_sf<span class="sc">$</span>study_site_lab[<span class="dv">1</span>])</span></code></pre></div>
+<table class="table" style="font-size: 13px; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+<span id="tab:unnamed-chunk-61">Table 4.2: </span>Summary statistics for selected metrics
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Unit Name
+</th>
+<th style="text-align:left;">
+Metric
+</th>
+<th style="text-align:left;">
+Mean
+</th>
+<th style="text-align:left;">
+Median
+</th>
+<th style="text-align:left;">
+Std Dev
+</th>
+<th style="text-align:left;">
+Range
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;vertical-align: top !important;" rowspan="6">
+Fort Stewart (GA)<br>(152,985 trees)
+</td>
+<td style="text-align:left;">
+Height (m)
+</td>
+<td style="text-align:left;">
+17.5
+</td>
+<td style="text-align:left;">
+18.7
+</td>
+<td style="text-align:left;">
+6.2
+</td>
+<td style="text-align:left;">
+2.0—38.4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+DBH (cm)
+</td>
+<td style="text-align:left;">
+22.1
+</td>
+<td style="text-align:left;">
+23.0
+</td>
+<td style="text-align:left;">
+8.9
+</td>
+<td style="text-align:left;">
+3.4—67.6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Crown Base Ht. (m)
+</td>
+<td style="text-align:left;">
+11.4
+</td>
+<td style="text-align:left;">
+12.4
+</td>
+<td style="text-align:left;">
+3.6
+</td>
+<td style="text-align:left;">
+1.5—25.5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+HMD (m)
+</td>
+<td style="text-align:left;">
+9.8
+</td>
+<td style="text-align:left;">
+10.6
+</td>
+<td style="text-align:left;">
+3.6
+</td>
+<td style="text-align:left;">
+0.1—27.1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Cruz CBD<br>kg m<sup>-3</sup>
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA—NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+LANDFIRE CBD<br>kg m<sup>-3</sup>
+</td>
+<td style="text-align:left;">
+0.235
+</td>
+<td style="text-align:left;">
+0.251
+</td>
+<td style="text-align:left;">
+0.119
+</td>
+<td style="text-align:left;">
+0.005—1.278
+</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="sycan-marsh-or.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="salt-cabin-co.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+  "sharing": {
+    "github": false,
+    "facebook": true,
+    "twitter": true,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": null,
+    "text": null
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": null,
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "subsection"
+  }
+});
+});
+</script>
+
+</body>
+
+</html>
