@@ -304,7 +304,7 @@ patchwork::wrap_plots(plts_temp, ncol = 2) +
 #### Tree Attributes Summary Stats
 
 ```{r}
-stats_sum_fn(crowns = cloud2trees_ans$crowns_sf, aoi = aoi_sf, unit = aoi_sf$study_site_lab[1])
+stats_sum_fn(crowns = cloud2trees_ans$crowns_sf, aoi = aoi_sf, unit = paste0(aoi_sf$study_site_lab, " - ALS"))
 ```
 
 ```{r, warning=FALSE, message=FALSE, echo=FALSE, include=FALSE}
@@ -552,7 +552,7 @@ patchwork::wrap_plots(plts_temp, ncol = 2) +
 #### Tree Attributes Summary Stats
 
 ```{r}
-stats_sum_fn(crowns = cloud2trees_ans$crowns_sf, aoi = aoi_sf, unit = aoi_sf$study_site_lab[1])
+stats_sum_fn(crowns = cloud2trees_ans$crowns_sf, aoi = aoi_sf, unit = paste0(aoi_sf$study_site_lab, " - UAS SfM"))
 ```
 
 ```{r, warning=FALSE, message=FALSE, echo=FALSE, include=FALSE}

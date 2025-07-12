@@ -180,7 +180,7 @@ plt_rast_poly_fn(
 ) +
   ggplot2::scale_fill_viridis_d(option = "turbo", alpha = 0.8) +
   # harrypotter::scale_fill_hp_d(option = "lunalovegood", alpha = 0.8) +
-  ggplot2::labs(title = paste0(aoi_sf$study_site_lab, " - ALS")) +
+  ggplot2::labs(title = paste0(aoi_sf$study_site_lab, " - ALS 2018")) +
   ggplot2::theme(
     legend.text = ggplot2::element_text(size = 7, angle = 0)
   )
@@ -208,10 +208,10 @@ plt_rast_poly_fn(
   harrypotter::scale_fill_hp(
     option = "mischief", alpha = 0.9, labels = scales::comma_format(accuracy=1), breaks = scales::breaks_extended(n=6)
   ) +
-  ggplot2::labs(title = paste0(aoi_sf$study_site_lab, " - ALS"))
+  ggplot2::labs(title = paste0(aoi_sf$study_site_lab, " - ALS 2018"))
 ```
 
-*this was already height-normalized or is it lowland??*
+this is lowland
 
 #### CHM
 
@@ -240,7 +240,7 @@ plt_rast_poly_fn(
       )
     , fill = NA, color = "gray33", lwd = 0.1
   ) +
-  ggplot2::labs(title = paste0(aoi_sf$study_site_lab, " - ALS"))
+  ggplot2::labs(title = paste0(aoi_sf$study_site_lab, " - ALS 2018"))
 ```
 
 #### Imagery
@@ -272,7 +272,7 @@ plt_aoi_basemap +
     , fill = NA, color = "gray77", lwd = 0.1
     , inherit.aes = F
   ) +
-  ggplot2::labs(title = paste0(aoi_sf$study_site_lab, " - ALS")) +
+  ggplot2::labs(title = paste0(aoi_sf$study_site_lab, " - ALS 2018")) +
   ggplot2::theme(
     plot.title = ggplot2::element_text(size = 12, hjust = 0, margin = ggplot2::margin(0,3,3,0))
   )
@@ -282,7 +282,7 @@ plt_aoi_basemap +
 
 *this is a large area so we're going to sample from the tree list*
 
-```{r, fig.height=8}
+```{r, fig.height=9}
 crowns_temp <- cloud2trees_ans$crowns_sf %>% dplyr::slice_sample(prop = 0.2)
 
 plt_df_temp <- dplyr::tibble(
@@ -306,7 +306,7 @@ plts_temp <- 1:nrow(plt_df_temp) %>%
 # combine with patchwork
 patchwork::wrap_plots(plts_temp, ncol = 2) +
   patchwork::plot_annotation(
-    title = paste0(aoi_sf$study_site_lab, " - ALS")
+    title = paste0(aoi_sf$study_site_lab, " - ALS 2018")
     # , subtitle = "huh"
     # , caption = "hey"
     , theme = ggplot2::theme(
@@ -323,7 +323,7 @@ stats_sum_fn(
     ## !!!!!!!!!!!!!!!!!!!!!!!! cruz_tree_kg_per_m3 empty here
     dplyr::mutate(cruz_tree_kg_per_m3 = as.numeric(NA))
   , aoi = aoi_sf
-  , unit = aoi_sf$study_site_lab[1]
+  , unit = paste0(aoi_sf$study_site_lab, " - ALS 2018")
 )
 ```
 
@@ -384,7 +384,7 @@ best_ws_fn_temp <- my_ws_functions$exp_fn
 
 ### `cloud2trees` point cloud processing
 
-```{r fortstewart-als, results=F}
+```{r fortstewart-als25, results=F}
 dir_temp <- file.path(aoi_sf$fdir, "als_2025_processing")
 if(!dir.exists(dir_temp)){
   dir.create(dir_temp)
@@ -437,5 +437,174 @@ if(!dir.exists(dir_temp)){
 ```{r, warning=FALSE, message=FALSE, echo=FALSE, include=FALSE}
 remove(list = ls()[grep("_temp",ls())])
 remove(itd_tuning_ans)
+gc()
+```
+
+### `cloud2trees` Results
+
+#### FIA Forest Type Group
+
+```{r}
+# load raster
+plt_rast_poly_fn(
+  rast = cloud2trees_ans$foresttype_rast
+  , poly = aoi_sf
+  , title = "FIA forest type group"
+  , crop = T
+  , buff = 22
+  , col = "navy"
+) +
+  ggplot2::scale_fill_viridis_d(option = "turbo", alpha = 0.8) +
+  # harrypotter::scale_fill_hp_d(option = "lunalovegood", alpha = 0.8) +
+  ggplot2::labs(title = paste0(aoi_sf$study_site_lab, " - ALS 2025")) +
+  ggplot2::theme(
+    legend.text = ggplot2::element_text(size = 7, angle = 0)
+  )
+```
+
+distribution by forest type
+
+```{r}
+foresttype_sum_fn(crowns = cloud2trees_ans$crowns_sf, aoi = aoi_sf, unit = aoi_sf$study_site_lab[1])
+```
+
+#### DTM
+
+*this is a large area so we're going to make the raster more coarse*
+
+```{r, results='hide', fig.show=T}
+plt_rast_poly_fn(
+  rast = cloud2trees_ans$dtm_rast %>% terra::aggregate(fact = 2, cores = lasR::half_cores())
+  , poly = aoi_sf
+  , title = "DTM (m)"
+  , crop = T
+  , buff = 22
+  , col = "navy"
+) +
+  harrypotter::scale_fill_hp(
+    option = "mischief", alpha = 0.9, labels = scales::comma_format(accuracy=1), breaks = scales::breaks_extended(n=6)
+  ) +
+  ggplot2::labs(title = paste0(aoi_sf$study_site_lab, " - ALS 2025"))
+```
+
+this is lowland
+
+#### CHM
+
+plot the CHM and we'll also add the extracted trees in gray
+
+*this is a large area so we're going to make the raster more coarse and sample from the tree list*
+
+```{r, results='hide', fig.show=T}
+crowns_temp <- cloud2trees_ans$crowns_sf %>% dplyr::slice_sample(prop = 0.2)
+
+plt_rast_poly_fn(
+  rast = cloud2trees_ans$chm_rast %>% terra::aggregate(fact = 2, cores = lasR::half_cores())
+  , poly = aoi_sf
+  , title = "CHM (m)"
+  , crop = T
+  , buff = 22
+  , col = "navy"
+) +
+  ggplot2::scale_fill_viridis_c(
+    option = "plasma", alpha = 0.9, labels = scales::comma_format(accuracy=1), breaks = scales::breaks_extended(n=6)
+  ) +
+  ggplot2::geom_sf(
+    data = crowns_temp %>%
+      sf::st_intersection(
+        aoi_sf %>% sf::st_transform(sf::st_crs(cloud2trees_ans$crowns_sf))
+      )
+    , fill = NA, color = "gray33", lwd = 0.1
+  ) +
+  ggplot2::labs(title = paste0(aoi_sf$study_site_lab, " - ALS 2025"))
+```
+
+#### Imagery
+
+let's check the tree extraction results (gray) on satellite imagery with a collection date that may not coincide with the point cloud collection date
+
+*this is a large area so we're going to zoom way in on the image and sample from the tree list*
+
+```{r}
+plt_aoi_basemap <- my_ggmap_basemap(
+  sf_data = aoi_sf %>% sf::st_centroid() %>% sf::st_buffer(100, endCapStyle = "SQUARE")
+  , zoom_level = 17
+  , buffer_box = 22
+  , my_maptype = "satellite"
+  , add_sf_data = F
+)
+# add crowns
+plt_aoi_basemap +
+  ggplot2::geom_sf(
+    data = 
+      crowns_temp %>% 
+      # cloud2trees_ans$crowns_sf %>% 
+      sf::st_intersection(
+        aoi_sf %>% 
+          # sf::st_centroid() %>% sf::st_buffer(100, endCapStyle = "SQUARE") %>% 
+          sf::st_transform(sf::st_crs(cloud2trees_ans$crowns_sf))
+      ) %>% 
+      sf::st_transform(4326)
+    , fill = NA, color = "gray77", lwd = 0.1
+    , inherit.aes = F
+  ) +
+  ggplot2::labs(title = paste0(aoi_sf$study_site_lab, " - ALS 2025")) +
+  ggplot2::theme(
+    plot.title = ggplot2::element_text(size = 12, hjust = 0, margin = ggplot2::margin(0,3,3,0))
+  )
+```
+
+#### Tree Attributes Spatial
+
+*this is a large area so we're going to sample from the tree list*
+
+```{r, fig.height=9}
+crowns_temp <- cloud2trees_ans$crowns_sf %>% dplyr::slice_sample(prop = 0.4)
+
+plt_df_temp <- dplyr::tibble(
+  fill_var = c("tree_height_m", "dbh_cm", "tree_cbh_m", "max_crown_diam_height_m", "landfire_crown_biomass_kg")
+  , palette = c("Blues", "Oranges", "Greens", "Purples", "Reds")
+  , title = c("Height (m)", "DBH (cm)", "CBH (m)", "HMD (m)", "Crown\nbiomass (kg)")
+)
+
+plts_temp <- 1:nrow(plt_df_temp) %>% 
+  purrr::map(
+    \(x)
+    plt_crown_attr_fn(
+      crowns = crowns_temp
+      , aoi = aoi_sf
+      , lwd = 0.6
+      , fill_var = plt_df_temp$fill_var[x]
+      , palette = plt_df_temp$palette[x]
+      , title = plt_df_temp$title[x]
+    )  
+  )
+# combine with patchwork
+patchwork::wrap_plots(plts_temp, ncol = 2) +
+  patchwork::plot_annotation(
+    title = paste0(aoi_sf$study_site_lab, " - ALS 2025")
+    # , subtitle = "huh"
+    # , caption = "hey"
+    , theme = ggplot2::theme(
+      plot.title = element_text(hjust = 0.5, margin = ggplot2::margin(0,0,3,0))
+    )
+  )
+```
+
+#### Tree Attributes Summary Stats
+
+```{r}
+stats_sum_fn(
+  crowns = cloud2trees_ans$crowns_sf %>% 
+    ## !!!!!!!!!!!!!!!!!!!!!!!! cruz_tree_kg_per_m3 empty here
+    dplyr::mutate(cruz_tree_kg_per_m3 = as.numeric(NA))
+  , aoi = aoi_sf
+  , unit = paste0(aoi_sf$study_site_lab, " - ALS 2025")
+)
+```
+
+```{r, warning=FALSE, message=FALSE, echo=FALSE, include=FALSE}
+remove(list = ls()[grep("_temp",ls())])
+remove(cloud2trees_ans)
 gc()
 ```

@@ -277,7 +277,7 @@ plt_aoi_basemap +
 
 *this is a large area so we're going to sample from the tree list*
 
-```{r, fig.height=8}
+```{r, fig.height=9}
 crowns_temp <- cloud2trees_ans$crowns_sf %>% dplyr::slice_sample(prop = 0.5)
 
 plt_df_temp <- dplyr::tibble(
@@ -318,7 +318,7 @@ stats_sum_fn(
     ## !!!!!!!!!!!!!!!!!!!!!!!! cruz_tree_kg_per_m3 empty here
     dplyr::mutate(cruz_tree_kg_per_m3 = as.numeric(NA))
   , aoi = aoi_sf
-  , unit = aoi_sf$study_site_lab[1]
+  , unit = paste0(aoi_sf$study_site_lab, " - ALS")
 )
 ```
 
