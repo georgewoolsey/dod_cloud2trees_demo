@@ -320,7 +320,7 @@ gc()
 put las files in a list
 ```{r}
 # list of all las files
-las_flist_temp <- aoi_las_ctg[["SaltCabin_uas_sfm"]] %>% 
+las_flist_temp <- aoi_las_ctg[["SaltCabin_uas_sfm_2024"]] %>% 
   purrr::pluck("data") %>% 
   dplyr::pull(filename)
 ```
@@ -364,7 +364,7 @@ best_ws_fn_temp <- my_ws_functions$log_les_ccv_fn
 ### `cloud2trees` point cloud processing
 
 ```{r saltcabin-uas, results=F}
-dir_temp <- file.path(aoi_sf$fdir, "uas_sfm_processing")
+dir_temp <- file.path(aoi_sf$fdir, "uas_sfm_2024_processing")
 if(!dir.exists(dir_temp)){
   dir.create(dir_temp)
 # c2t

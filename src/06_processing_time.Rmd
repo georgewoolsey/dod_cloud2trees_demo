@@ -1,4 +1,6 @@
-# Processing Time Analysis
+# Point Cloud Processing Results
+
+## Processing Time
 
 let's look into the processing time comparison across data sets
 
@@ -6,9 +8,8 @@ the `cloud2trees::cloud2trees()` program automatically tracks processing time fo
 
 ```{r}
 dir_temp <- "../data"
-
-# what vector data?
-# df_temp <-
+# what processing data?
+df_temp <-
   list.files(
     dir_temp
     , pattern = "processed_tracking_data.csv"
@@ -17,9 +18,229 @@ dir_temp <- "../data"
   dplyr::tibble() %>% 
   setNames("fpath") %>% 
   dplyr::mutate(
-    study_site = stringr::word(fpath, sep = "/")
+    data_desc = stringr::word(fpath, 2, sep = "/") %>% 
+      stringr::str_remove_all("_processing") %>% 
+      stringr::str_replace_all("_"," ") %>% 
+      stringr::str_squish() %>% 
+      toupper()
+    , data_type = data_desc %>% 
+      stringr::str_remove_all("[0-9]") %>% 
+      stringr::str_squish()
+    , study_site = stringr::word(fpath, sep = "/")
     , fpath = file.path(dir_temp, fpath)
     , fdir = dirname(fpath)
-  ) 
+  )
+# read in processing data
+df_temp <- 1:nrow(df_temp) %>% 
+  purrr::map(\(x)
+    readr::read_csv(
+      df_temp$fpath[x]
+      , show_col_types = F
+      , progress = F
+    ) %>%
+    dplyr::mutate(
+      study_site = df_temp$study_site[x]
+      , data_desc = df_temp$data_desc[x]
+    )
+  ) %>% 
+  dplyr::bind_rows() %>% 
+  dplyr::inner_join(df_temp, by = dplyr::join_by(study_site,data_desc))
+# add in study bounds
+study_sites_processing_sf <- 
+  study_sites_sf %>% 
+  dplyr::select(study_site, study_site_lab) %>% 
+  dplyr::inner_join(
+    df_temp
+    , by = "study_site"
+    , relationship = "one-to-many"
+  )
+```
+
+```{r, warning=FALSE, message=FALSE, echo=FALSE, include=FALSE}
+remove(list = ls()[grep("_temp",ls())])
+gc()
+```
+
+let's relativize and proportionalize the tracking data
+
+```{r}
+# aggregate the total processing time
+study_sites_processing_sf <- 
+  study_sites_processing_sf %>% 
+  dplyr::mutate(
+    timer_total_time_mins = timer_cloud2raster_mins + timer_raster2trees_mins +
+      timer_trees_dbh_mins + timer_trees_cbh_mins + timer_trees_type_mins +
+      timer_trees_hmd_mins + timer_trees_biomass_mins + timer_write_data_mins
+    , timer_tree_extraction_mins = timer_cloud2raster_mins + timer_raster2trees_mins
+    , las_area_ha = (las_area_m2/10000)
+    , points_m2 = number_of_points/las_area_m2
+    # relative
+    , dplyr::across(
+      .cols = tidyselect::starts_with("timer_") & tidyselect::ends_with("_mins")
+      , .fns = ~ (.x*60)/las_area_ha # sec/ha
+      # , .fns = ~ .x/las_area_ha # min/ha
+      , .names = "{.col}_secperha"
+      # , .names = "{.col}_minperha"
+    )
+    # proportion
+    , dplyr::across(
+       .cols = c(timer_tree_extraction_mins,
+        timer_trees_dbh_mins, timer_trees_cbh_mins, timer_trees_type_mins,
+        timer_trees_hmd_mins, timer_trees_biomass_mins, timer_write_data_mins)
+       , .fns = ~ .x/timer_total_time_mins
+       , .names = "{.col}_pct"
+    )
+  )
+study_sites_processing_sf %>% dplyr::glimpse()
+```
+
+that's a lot of tracking data, let's look at the main timing parameters
+
+```{r}
+# format data for plotting/tabling
+table_temp <-
+  study_sites_processing_sf %>% 
+  sf::st_drop_geometry() %>% 
+  dplyr::select(
+    study_site, study_site_lab, data_desc, data_type, number_of_points, las_area_ha, points_m2
+    , c(timer_tree_extraction_mins,
+      timer_trees_dbh_mins, timer_trees_cbh_mins, timer_trees_type_mins,
+      timer_trees_hmd_mins, timer_trees_biomass_mins, timer_write_data_mins
+      , timer_total_time_mins
+      , c(tidyselect::ends_with("_pct") & tidyselect::starts_with("timer_"))
+      , c(tidyselect::ends_with("_secperha") & tidyselect::starts_with("timer_"))
+    )
+  ) %>% 
+  tidyr::pivot_longer(
+    cols = -c(study_site, study_site_lab, data_desc, data_type, number_of_points, las_area_ha, points_m2)
+  ) %>% 
+  dplyr::mutate(
+    units = stringr::word(name, -1, sep = "_")
+    , section = name %>% 
+      stringr::str_remove_all("timer_") %>% 
+      stringr::str_remove_all("_mins") %>% 
+      stringr::str_remove_all("_pct") %>% 
+      stringr::str_remove_all("_secperha")
+  ) %>% 
+  dplyr::select(-name) %>% 
+  # dplyr::count(units)
+  tidyr::pivot_wider(names_from = units, values_from = value) %>% 
+  dplyr::mutate(
+    mins_lab = scales::comma(mins,accuracy = 0.1)
+    , perha_lab = scales::comma(secperha,accuracy = 0.01)
+    , pct_lab = scales::percent(pct,accuracy = 0.1)
+    # site lab
+    , big_lab = stringr::str_c(
+      data_desc
+      , paste0("area: ", scales::comma(las_area_ha, accuracy = 1, suffix = " ha"))
+      , paste0("points: ", scales::comma(number_of_points, accuracy = 0.1, scale = 1/1000000, suffix = "M"))
+      , paste0("points m<sup>-2</sup>: ", scales::comma(points_m2, accuracy = 0.1))
+      , sep = "<br>"
+    )
+    , big_lab_ggplot = stringr::str_c(
+      data_desc
+      , paste0("area: ", scales::comma(las_area_ha, accuracy = 1, suffix = " ha"))
+      , paste0("points: ", scales::comma(number_of_points, accuracy = 0.1, scale = 1/1000000, suffix = "M"))
+      , paste0("points/m2: ", scales::comma(points_m2, accuracy = 0.1))
+      , sep = "\n"
+    )
+  ) %>%  
+  # dplyr::count(section)
+  dplyr::filter(!is.na(mins)) %>% 
+  # section lab after filter so factor doesn't have rand levels
+  dplyr::mutate(
+    section = section %>% 
+      stringr::str_replace_all("_", " ") %>% 
+      stringr::str_remove_all("time") %>% 
+      stringr::str_replace_all("dbh", "DBH") %>% 
+      stringr::str_replace_all("cbh", "CBH") %>% 
+      stringr::str_replace_all("hmd", "HMD") %>% 
+      stringr::str_squish() %>% 
+      forcats::fct_inorder()
+  )
+  
+# table it
+table_temp %>% 
+  dplyr::select(study_site_lab,big_lab,section,mins_lab, perha_lab, pct_lab) %>% 
+  kableExtra::kbl(
+    caption = "Point cloud processing section run time"
+    , col.names = c(
+      "Site", "Data"
+      , "Processing section"
+      , "time (minutes)"
+      , "seconds per ha"
+      , "% of total time"
+      )
+    , escape = F
+  ) %>% 
+  kableExtra::kable_styling() %>% 
+  kableExtra::collapse_rows(columns = 1:2, valign = "top")
+
+```
+
+that's a lot of numbers to digest, let's plot the data
+
+### Point Cloud Processing Time versus Point Density
+
+```{r}
+# per ha time based on point density
+ggplot2::ggplot(
+  data = table_temp %>% dplyr::filter(section == "total")
+  , mapping = ggplot2::aes(y = secperha, x = points_m2, color = data_type)
+) +
+  ggplot2::geom_point(size = 4, alpha = 0.9) +
+  ggplot2::scale_color_viridis_d(option = "magma", begin = 0.1, end = 0.5) +
+  ggplot2::labs(
+    x = latex2exp::TeX("points $m^{-2}$")
+    , y = latex2exp::TeX("total seconds $ha^{-1}$")
+    , color = ""
+    , subtitle = "Point Cloud Processing Time versus Point Density"
+  ) +
+  ggplot2::theme_light() +
+  ggplot2::theme(legend.position = "top")
+```
+
+### Point Cloud Processing Time by Section
+
+```{r}
+table_temp %>% 
+  dplyr::filter(section != "total") %>% 
+  dplyr::mutate(section = forcats::fct_rev(section)) %>% 
+ggplot2::ggplot(
+  mapping = ggplot2::aes(y = big_lab_ggplot, x = pct, fill = section, group = section)
+) +
+  ggplot2::geom_col(
+    width = 0.7, alpha=0.8
+  ) +
+  ggplot2::geom_text(
+    mapping = ggplot2::aes(
+        label = scales::percent(ifelse(pct>=0.06,pct,NA), accuracy = 1)
+        , fontface = "bold"
+      )
+    , position = ggplot2::position_stack(vjust = 0.5)
+    , color = "black", size = 4
+  ) +
+  ggplot2::facet_wrap(facets = dplyr::vars(study_site_lab), scales = "free_y") + 
+  ggplot2::scale_fill_viridis_d(option = "turbo", begin = 0.1, end = 0.9) +
+  ggplot2::scale_x_continuous(labels = scales::percent_format()) +
+  labs(
+    fill = "", y = ""
+    , x = "% Point Cloud Total Processing Time"
+    , subtitle = "Point Cloud Processing Time by Section"
+  ) +
+  theme_light() +
+  theme(
+    legend.position = "top"
+    , legend.direction  = "horizontal"
+    , legend.title = element_text(size=7)
+    , axis.title.x = element_text(size=10, face = "bold")
+    , axis.title.y = element_text(size = 8)
+    , axis.text.x = element_blank()
+    , axis.text.y = element_text(color = "black",size=10, face = "bold")
+    , axis.ticks.x = element_blank()
+  ) +
+  guides(
+    fill = guide_legend(nrow = 3, byrow = T, reverse = T, override.aes = list(alpha = 0.9))
+  )
 ```
 

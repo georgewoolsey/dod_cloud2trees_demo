@@ -85,6 +85,20 @@ las_ctg@data %>%
   purrr::map(unlink)
 las_ctg <- lidR::readLAScatalog("../data/FortStewart/Ft_Stewart_ALS_2025/LAZ/")
 mapview::mapview(las_ctg@data) + mapview::mapview(aoi)
+
+# i used this to keep only las tile files that overlapped with the aoi
+# for new jersey data I got from xxxx
+# in the folder "newjersey/New_Jersey_UAS_LiDAR_2024/pointcloud"
+library(tidyverse)
+library(lidR)
+setwd("c:/data/usfs/dod_cloud2trees_demo/src")
+las_ctg <- lidR::readLAScatalog("../data/newjersey/New_Jersey_UAS_LiDAR_2024/")
+las_ctg
+las_ctg@data %>% dplyr::glimpse()
+las_ctg@data %>% sf::st_crs()
+aoi <- sf::st_read("c:/data/usfs/dod_cloud2trees_demo/data/newjersey/CB_BurnBlock.shp") %>% 
+  sf::st_transform(sf::st_crs(las_ctg@data))
+mapview::mapview(las_ctg@data) + mapview::mapview(aoi)
 ```
 
 ## Study Sites
@@ -221,7 +235,10 @@ las_df_temp <-
   ) %>% 
   dplyr::mutate(
     name = stringr::str_remove_all(name, "_dir")
-    , als_nm = stringr::str_extract(value,"als_(\\d{4})")
+    # !!!!!! the folders must be named with this pattern for date extraction to work !!!!!!!!!!!!!!!
+    # !!!!!! could manually make a lookup table.... but ohwell !!!!!!!!!!!!!!!
+    , als_nm = value %>% 
+      stringr::str_extract("(uas_lidar|uas_sfm|als)_(\\d{4})")
     , nm = stringr::str_c(
       study_site
       , dplyr::coalesce(als_nm, name)
@@ -435,7 +452,7 @@ my_ggmap_basemap(
 
 make a function specific to this data and task to grab the basemap with `my_ggmap_basemap()` and overlay the point cloud data and the study area bounds
 
-```{r, eval = T}
+```{r, eval = F}
 plt_fn_temp <- function(
   record_study_sites_las_ctg
   , my_study_sites_las_ctg = study_sites_las_ctg
@@ -512,7 +529,7 @@ patchwork::wrap_plots(plts_temp, ncol = 2)
 # 
 ```
 
-```{r, include=FALSE, eval=T}
+```{r, include=FALSE, eval=F}
 ggplot2::ggsave(
   "../data/ptcld_aoi_extents.jpg"
   , dpi = "print"

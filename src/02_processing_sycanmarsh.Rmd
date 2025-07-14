@@ -322,7 +322,7 @@ gc()
 put las files in a list
 ```{r}
 # list of all las files
-las_flist_temp <- aoi_las_ctg[["SycanMarsh_uas_lidar"]] %>% 
+las_flist_temp <- aoi_las_ctg[["SycanMarsh_uas_lidar_2023"]] %>% 
   purrr::pluck("data") %>% 
   dplyr::pull(filename)
 ```
@@ -366,7 +366,7 @@ best_ws_fn_temp <- my_ws_functions$lin_fn
 ### `cloud2trees` point cloud processing
 
 ```{r sycanmarsh-uas, results=F}
-dir_temp <- file.path(aoi_sf$fdir, "uas_lidar_processing")
+dir_temp <- file.path(aoi_sf$fdir, "uas_lidar_2023_processing")
 if(!dir.exists(dir_temp)){
   dir.create(dir_temp)
 # c2t
