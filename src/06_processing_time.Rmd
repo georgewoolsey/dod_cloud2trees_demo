@@ -200,7 +200,7 @@ ggplot2::ggplot(
   ggplot2::theme(legend.position = "top")
 ```
 
-### Point Cloud Processing Time by Section
+### Point Cloud Processing Time by Section (%)
 
 ```{r}
 table_temp %>% 
@@ -241,6 +241,258 @@ ggplot2::ggplot(
   ) +
   guides(
     fill = guide_legend(nrow = 3, byrow = T, reverse = T, override.aes = list(alpha = 0.9))
+  )
+```
+
+### Point Cloud Processing Time by Section (total)
+
+```{r}
+ table_temp %>% 
+   dplyr::filter(section != "total") %>% 
+   dplyr::mutate(section = forcats::fct_rev(section)) %>% 
+ ggplot2::ggplot(
+   mapping = ggplot2::aes(y = big_lab_ggplot, x = secperha, fill = section, group = section)
+ ) +
+  geom_text(
+    data = table_temp %>% dplyr::filter(section == "total")
+    , mapping = ggplot2::aes(
+      y = big_lab_ggplot
+      , x = secperha
+      , label = scales::comma(secperha,accuracy=0.1,suffix = "\ntotal")
+      , fontface = "bold"
+    )
+    , color = "black", size = 2.3
+    , hjust = -0.1
+  ) +
+   ggplot2::geom_col(
+     width = 0.7, alpha=0.8
+   ) +
+   ggplot2::geom_text(
+     mapping = ggplot2::aes(
+         label = scales::comma(ifelse(secperha>=7.5,secperha,NA), accuracy = 0.1)
+         , fontface = "bold"
+       )
+     , position = ggplot2::position_stack(vjust = 0.5)
+     , color = "black", size = 3
+   ) +
+   ggplot2::facet_wrap(facets = dplyr::vars(study_site_lab), scales = "free_y") + 
+   ggplot2::scale_fill_viridis_d(option = "turbo", begin = 0.1, end = 0.9) +
+   ggplot2::scale_x_continuous(labels = scales::comma_format(), expand = ggplot2::expansion(mult = c(0,0.1))) +
+   labs(
+     fill = "", y = ""
+     , x = latex2exp::TeX("seconds $ha^{-1}$")
+     , subtitle = "Point Cloud Processing Time by Section"
+   ) +
+   theme_light() +
+   theme(
+     legend.position = "top"
+     , legend.direction  = "horizontal"
+     , legend.title = element_text(size=7)
+     , axis.title.x = element_text(size=10, face = "bold")
+     , axis.title.y = element_text(size = 8)
+     , axis.text.x = element_blank()
+     , axis.text.y = element_text(color = "black",size=10, face = "bold")
+     , axis.ticks.x = element_blank()
+   ) +
+   guides(
+     fill = guide_legend(nrow = 3, byrow = T, reverse = T, override.aes = list(alpha = 0.9))
+   )
+
+```
+
+```{r, warning=FALSE, message=FALSE, echo=FALSE, include=FALSE}
+remove(list = ls()[grep("_temp",ls())])
+gc()
+```
+
+## Silvicultural Metrics
+
+let's make a function to read the tree list data, keep only trees in an AOI, and aggregate to get common silvicultural metrics
+
+```{r}
+# function to clip a tree list to an aoi
+clip_tree_list_aoi <- function(
+  # point_cloud_processing_delivery
+  trees
+  , aoi
+  , bbox_aoi = F
+  , buffer = 0 # in the coordinates of trees
+  , reproject_epsg = NULL
+) {
+
+  if(!inherits(trees,"sf")){stop("trees must be sf class object")}
+  if(!inherits(aoi,"sf")){stop("aoi must be sf class object")}
+  if(is.na(sf::st_crs(trees))){stop("trees does not have a CRS")}
+  if(is.na(sf::st_crs(aoi))){stop("aoi does not have a CRS")}
+  # check epsg buff
+  if(is.character(reproject_epsg)){
+    reproject_epsg <- readr::parse_number(reproject_epsg) 
+  }
+  if(is.character(buffer)){
+    buffer <- readr::parse_number(buffer) 
+  }
+  # check for polygons
+  if(
+    sf::st_is(trees, c("POLYGON","MULTIPOLYGON")) %>% 
+    any()
+  ){
+    # check for xy
+    if(
+      (names(trees) %>% stringr::str_detect("tree_x") %>% any()) &&
+      (names(trees) %>% stringr::str_detect("tree_y") %>% any())
+    ){
+      tree_pts <- trees %>% 
+        sf::st_drop_geometry() %>% 
+        sf::st_as_sf(coords = c("tree_x", "tree_y"), crs = sf::st_crs(trees))
+    }else{
+      tree_pts <- trees %>% 
+        sf::st_centroid()
+    }
+  }else if(
+    sf::st_is(trees, c("POINT")) %>% 
+    all()
+  ){
+    tree_pts <- trees
+  }else{
+    stop("trees must contain POINT or POLYGON type geometries only")
+  }
+  
+  # bounds
+  if(
+    !all( sf::st_is(aoi, c("POLYGON","MULTIPOLYGON")) )
+  ){
+    stop("aoi must contain POLYGON type geometry only")
+  }
+  if(nrow(aoi)!=1){
+    stop("aoi must only have a single record geometry")
+  }
+  
+  # reproj
+  if(!is.null(reproject_epsg) && is.numeric(reproject_epsg)){
+    tree_pts <- tree_pts %>% sf::st_transform(crs = reproject_epsg)
+  }
+  
+  # bbox
+  if(bbox_aoi){
+    aoi <- sf::st_bbox(aoi) %>% 
+      sf::st_as_sfc() %>% 
+      sf::st_transform(sf::st_crs(tree_pts))
+  }else{
+    aoi <- aoi %>% sf::st_transform(sf::st_crs(tree_pts))
+  }
+  
+  # buff
+  if(buffer>0){
+    aoi <- sf::st_buffer(aoi, buffer)
+  }
+  
+  # intersect based on points but filter original tree list
+  trees <- trees %>% 
+    dplyr::slice(
+      sf::st_intersects(tree_pts, aoi, sparse = F) %>% which()
+    )
+  
+  if(nrow(trees)==0){
+    warning("no trees found within aoi bounds")
+    return(NULL)
+  }else{
+    return(trees)
+  }
+
+}
+
+# clip_tree_list_aoi(
+#   trees = sf::st_read("c:/data/usfs/dod_cloud2trees_demo/data/SycanMarsh/als_2021_processing/point_cloud_processing_delivery/final_detected_crowns.gpkg")
+#   , aoi = sf::st_read("c:/data/usfs/dod_cloud2trees_demo/data/SycanMarsh/Sycan_2A.shp")
+# ) %>% 
+# dplyr::glimpse()
+```
+
+let's clip the tree list to the study bounds for each result for using with LANL TREES and Quic-Fire
+
+```{r}
+# dir
+dir_temp <- file.path("../data", "cloud2trees_processed_tree_lists")
+if(!dir.exists(dir_temp)){
+  dir.create(dir_temp)
+}
+# every data
+ans_temp <- 
+  1:nrow(study_sites_processing_sf) %>%
+  # c(6) %>% 
+  purrr::map(\(x)
+    clip_tree_list_aoi(
+      trees = list.files(
+          study_sites_processing_sf$fdir[x]
+          , pattern = "final_detected_tree_tops.*\\.gpkg$"
+          , full.names = T
+        ) %>% 
+        normalizePath() %>% 
+        purrr::map(\(ff)
+          sf::st_read(
+            dsn = ff
+            , quiet = T
+          )
+        ) %>% 
+        dplyr::bind_rows()
+      , aoi = study_sites_processing_sf %>% dplyr::slice(x)
+      , bbox_aoi = T
+      , buffer = 50
+    ) %>% 
+    sf::st_write(
+      dsn = file.path(
+        dir_temp
+        , paste0(
+          study_sites_processing_sf$study_site[x]
+          , "_"
+          , stringr::str_replace_all(study_sites_processing_sf$data_desc[x], " ", "_")
+          , "_treetops.gpkg"
+        )
+      )
+      , quiet = T
+      , append = F
+    )
+  )
+
+ # sf::st_read("../data/cloud2trees_processed_tree_lists/SycanMarsh_ALS_2021_treetops.gpkg") %>% 
+ #  ggplot() + geom_sf() + geom_sf(data = study_sites_processing_sf %>% dplyr::slice(6) %>% sf::st_transform(6339), fill = NA, color = "navy")
+```
+
+
+```{r, include=FALSE, eval=FALSE}
+### stand-level summaries
+silv_metrics <-
+  treetops_sf %>%
+    sf::st_drop_geometry() %>% 
+    # dplyr::filter(dbh_cm >= ostory_dbh_cm) %>% 
+    dplyr::ungroup() %>%
+    dplyr::group_by(unit_id, unit_name, stand_area_ha) %>%
+    dplyr::summarise(
+      n_trees = dplyr::n_distinct(treeID)
+      , mean_dbh_cm = mean(dbh_cm, na.rm = T)
+      , mean_tree_height_m = mean(tree_height_m, na.rm = T)
+      , loreys_height_m = sum(basal_area_m2*tree_height_m, na.rm = T) / sum(basal_area_m2, na.rm = T)
+      , basal_area_m2 = sum(basal_area_m2, na.rm = T)
+      , sum_dbh_cm_sq = sum(dbh_cm^2, na.rm = T)
+      , landfire_crown_biomass_kg = sum(landfire_crown_biomass_kg, na.rm = T)
+      , cruz_crown_biomass_kg = sum(cruz_crown_biomass_kg, na.rm = T)
+    ) %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(
+      trees_per_ha = (n_trees/stand_area_ha)
+      , basal_area_m2_per_ha = (basal_area_m2/stand_area_ha)
+      , qmd_cm = sqrt(sum_dbh_cm_sq/n_trees)
+      , landfire_cfl_kg_m2 = landfire_crown_biomass_kg/(stand_area_ha*10000)
+      , cruz_cfl_kg_m2 = cruz_crown_biomass_kg/(stand_area_ha*10000)
+    ) %>%
+    dplyr::select(-c(sum_dbh_cm_sq,landfire_crown_biomass_kg,cruz_crown_biomass_kg))
+
+### export tabular
+write.csv(
+    silv_metrics
+    , file.path(outdir, "stand_silv_metrics.csv")
+    , row.names = F
+    , append = F
   )
 ```
 
