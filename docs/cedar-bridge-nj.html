@@ -20,7 +20,7 @@
   <meta name="twitter:description" content="Using the bookdown package to write a book of data exploration. The output format for this example is bookdown::gitbook." />
   
 
-<meta name="author" content="George Woolsey" />
+<meta name="author" content="George Woolsey, Wade Tinkham, Chad Hoffman, and Sophie Bonner" />
 
 
 
@@ -30,7 +30,7 @@
   
   
 <link rel="prev" href="salt-cabin-co.html"/>
-<link rel="next" href="processing-time-analysis.html"/>
+<link rel="next" href="point-cloud-processing-results.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -242,8 +242,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.1.2" data-path="cedar-bridge-nj.html"><a href="cedar-bridge-nj.html#cloud2trees-point-cloud-processing-6"><i class="fa fa-check"></i><b>6.1.2</b> <code>cloud2trees</code> point cloud processing</a></li>
 <li class="chapter" data-level="6.1.3" data-path="cedar-bridge-nj.html"><a href="cedar-bridge-nj.html#cloud2trees-results-6"><i class="fa fa-check"></i><b>6.1.3</b> <code>cloud2trees</code> Results</a></li>
 </ul></li>
+<li class="chapter" data-level="6.2" data-path="cedar-bridge-nj.html"><a href="cedar-bridge-nj.html#uas-lidar-processing-1"><i class="fa fa-check"></i><b>6.2</b> UAS lidar Processing</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="cedar-bridge-nj.html"><a href="cedar-bridge-nj.html#itd-tuning-7"><i class="fa fa-check"></i><b>6.2.1</b> ITD tuning</a></li>
+<li class="chapter" data-level="6.2.2" data-path="cedar-bridge-nj.html"><a href="cedar-bridge-nj.html#cloud2trees-point-cloud-processing-7"><i class="fa fa-check"></i><b>6.2.2</b> <code>cloud2trees</code> point cloud processing</a></li>
+<li class="chapter" data-level="6.2.3" data-path="cedar-bridge-nj.html"><a href="cedar-bridge-nj.html#cloud2trees-results-7"><i class="fa fa-check"></i><b>6.2.3</b> <code>cloud2trees</code> Results</a></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="processing-time-analysis.html"><a href="processing-time-analysis.html"><i class="fa fa-check"></i><b>7</b> Processing Time Analysis</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="point-cloud-processing-results.html"><a href="point-cloud-processing-results.html"><i class="fa fa-check"></i><b>7</b> Point Cloud Processing Results</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="point-cloud-processing-results.html"><a href="point-cloud-processing-results.html#processing-time"><i class="fa fa-check"></i><b>7.1</b> Processing Time</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="point-cloud-processing-results.html"><a href="point-cloud-processing-results.html#point-cloud-processing-time-versus-point-density"><i class="fa fa-check"></i><b>7.1.1</b> Point Cloud Processing Time versus Point Density</a></li>
+<li class="chapter" data-level="7.1.2" data-path="point-cloud-processing-results.html"><a href="point-cloud-processing-results.html#point-cloud-processing-time-by-section"><i class="fa fa-check"></i><b>7.1.2</b> Point Cloud Processing Time by Section (%)</a></li>
+<li class="chapter" data-level="7.1.3" data-path="point-cloud-processing-results.html"><a href="point-cloud-processing-results.html#point-cloud-processing-time-by-section-total"><i class="fa fa-check"></i><b>7.1.3</b> Point Cloud Processing Time by Section (total)</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="point-cloud-processing-results.html"><a href="point-cloud-processing-results.html#silvicultural-metrics"><i class="fa fa-check"></i><b>7.2</b> Silvicultural Metrics</a></li>
+</ul></li>
 </ul>
 
       </nav>
@@ -291,34 +306,53 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb95-24"><a href="cedar-bridge-nj.html#cb95-24" tabindex="-1"></a>  , <span class="at">popup =</span> F</span>
 <span id="cb95-25"><a href="cedar-bridge-nj.html#cb95-25" tabindex="-1"></a>) <span class="sc">+</span></span>
 <span id="cb95-26"><a href="cedar-bridge-nj.html#cb95-26" tabindex="-1"></a>mapview<span class="sc">::</span><span class="fu">mapview</span>(</span>
-<span id="cb95-27"><a href="cedar-bridge-nj.html#cb95-27" tabindex="-1"></a>  aoi_sf</span>
-<span id="cb95-28"><a href="cedar-bridge-nj.html#cb95-28" tabindex="-1"></a>  , <span class="at">zcol =</span> <span class="st">&quot;study_site_lab&quot;</span></span>
-<span id="cb95-29"><a href="cedar-bridge-nj.html#cb95-29" tabindex="-1"></a>  , <span class="at">color =</span> <span class="st">&quot;navy&quot;</span></span>
-<span id="cb95-30"><a href="cedar-bridge-nj.html#cb95-30" tabindex="-1"></a>  , <span class="at">lwd =</span> <span class="dv">2</span></span>
-<span id="cb95-31"><a href="cedar-bridge-nj.html#cb95-31" tabindex="-1"></a>  , <span class="at">alpha.regions =</span> <span class="dv">0</span></span>
-<span id="cb95-32"><a href="cedar-bridge-nj.html#cb95-32" tabindex="-1"></a>  , <span class="at">legend =</span> T</span>
+<span id="cb95-27"><a href="cedar-bridge-nj.html#cb95-27" tabindex="-1"></a>  aoi_las_ctg[[<span class="dv">2</span>]]<span class="sc">$</span>geometry</span>
+<span id="cb95-28"><a href="cedar-bridge-nj.html#cb95-28" tabindex="-1"></a>  , <span class="at">color =</span> <span class="st">&quot;gray&quot;</span></span>
+<span id="cb95-29"><a href="cedar-bridge-nj.html#cb95-29" tabindex="-1"></a>  , <span class="at">lwd =</span> <span class="dv">2</span></span>
+<span id="cb95-30"><a href="cedar-bridge-nj.html#cb95-30" tabindex="-1"></a>  , <span class="at">alpha.regions =</span> <span class="dv">0</span></span>
+<span id="cb95-31"><a href="cedar-bridge-nj.html#cb95-31" tabindex="-1"></a>  , <span class="at">layer.name =</span> <span class="fu">names</span>(aoi_las_ctg[<span class="dv">2</span>])</span>
+<span id="cb95-32"><a href="cedar-bridge-nj.html#cb95-32" tabindex="-1"></a>  , <span class="at">legend =</span> F</span>
 <span id="cb95-33"><a href="cedar-bridge-nj.html#cb95-33" tabindex="-1"></a>  , <span class="at">popup =</span> F</span>
-<span id="cb95-34"><a href="cedar-bridge-nj.html#cb95-34" tabindex="-1"></a>)</span></code></pre></div>
-<div class="leaflet html-widget html-fill-item" id="htmlwidget-0a3009338f895c3b4647" style="width:1008px;height:672px;"></div>
-<script type="application/json" data-for="htmlwidget-0a3009338f895c3b4647">{"x":{"options":{"minZoom":1,"maxZoom":52,"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}},"preferCanvas":false,"bounceAtZoomLimits":false,"maxBounds":[[[-90,-370]],[[90,370]]]},"calls":[{"method":"addProviderTiles","args":["Esri.WorldImagery","Esri.WorldImagery","Esri.WorldImagery",{"errorTileUrl":"","noWrap":false,"detectRetina":false,"pane":"tilePane"}]},{"method":"addProviderTiles","args":["OpenStreetMap","OpenStreetMap","OpenStreetMap",{"errorTileUrl":"","noWrap":false,"detectRetina":false,"pane":"tilePane"}]},{"method":"createMapPane","args":["polygon",420]},{"method":"addPolygons","args":[[[[{"lng":[-74.38234397042602,-74.38221718473348,-74.36685447310593,-74.3669844111342,-74.38234397042602],"lat":[39.83640748541616,39.85055576853924,39.850472935704,39.83632469388066,39.83640748541616]}]],[[{"lng":[-74.38234350690121,-74.38221672030791,-74.366854476321,-74.36698441517409,-74.38234350690121],"lat":[39.83640703201026,39.85055540522831,39.85047257488414,39.83632424296486,39.83640703201026]}]],[[{"lng":[-74.38234374253518,-74.38221695033752,-74.36685377113272,-74.36698371592259,-74.38234374253518],"lat":[39.83640685280157,39.85055585668645,39.85047302126807,39.83632405868632,39.83640685280157]}]]],null,"NewJersey_als",{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}},"pane":"polygon","stroke":true,"color":"black","weight":2,"opacity":0.9,"fill":true,"fillColor":"#6666ff","fillOpacity":0,"smoothFactor":1,"noClip":false},null,{"maxWidth":800,"minWidth":50,"autoPan":true,"keepInView":false,"closeButton":true,"closeOnClick":true,"className":""},["1","2","3"],{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},{"stroke":true,"weight":3,"opacity":0.9,"fillOpacity":0,"bringToFront":false,"sendToBack":false}]},{"method":"addScaleBar","args":[{"maxWidth":100,"metric":true,"imperial":true,"updateWhenIdle":true,"position":"bottomleft"}]},{"method":"addPolygons","args":[[[[{"lng":[-74.38075479584413,-74.38056118632859,-74.38110908320625,-74.38138220604999,-74.38193084564368,-74.38213421285715,-74.382017660957,-74.38177073293629,-74.37986204926348,-74.37918483922699,-74.37832272644911,-74.37746094517206,-74.37690733604022,-74.37629166974182,-74.37555264548193,-74.3752442084335,-74.37475094420057,-74.37456629259508,-74.37315027756495,-74.37167279348493,-74.36708227056621,-74.3804372248172,-74.38075479584413],"lat":[39.83690029083665,39.83688329747353,39.84034242683737,39.84256302013058,39.8456378576152,39.84775206165457,39.8479056046834,39.84833232879539,39.84870990172417,39.84880408166367,39.84904038960044,39.84908692411781,39.8488965706651,39.84899079899542,39.84922721752648,39.84960642002019,39.85008030547243,39.85008010596371,39.85026833265805,39.8504090333778,39.83702528842414,39.83647051873639,39.83690029083665]}]]],null,"aoi_sf - study_site_lab",{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}},"pane":"polygon","stroke":true,"color":"#000080","weight":2,"opacity":0.9,"fill":true,"fillColor":"#6666FF","fillOpacity":0,"smoothFactor":1,"noClip":false},null,{"maxWidth":800,"minWidth":50,"autoPan":true,"keepInView":false,"closeButton":true,"closeOnClick":true,"className":""},"Cedar Bridge (NJ)",{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},{"stroke":true,"weight":3,"opacity":0.9,"fillOpacity":0,"bringToFront":false,"sendToBack":false}]},{"method":"addLayersControl","args":[["Esri.WorldImagery","OpenStreetMap"],["NewJersey_als","aoi_sf - study_site_lab"],{"collapsed":true,"autoZIndex":true,"position":"topleft"}]},{"method":"addLegend","args":[{"colors":["#6666FF"],"labels":["Cedar Bridge (NJ)"],"na_color":null,"na_label":"NA","opacity":1,"position":"topright","type":"factor","title":"","extra":null,"layerId":null,"className":"info legend","group":"aoi_sf - study_site_lab"}]},{"method":"addHomeButton","args":[-74.38234397042602,39.83632405868632,-74.36685377113272,39.85055585668645,true,null,"Zoom to full extent","<strong>Zoom full<\/strong>","bottomleft"]}],"limits":{"lat":[39.83632405868632,39.85055585668645],"lng":[-74.38234397042602,-74.36685377113272]},"fitBounds":[39.83632405868632,-74.38234397042602,39.85055585668645,-74.36685377113272,[]]},"evals":[],"jsHooks":{"render":[{"code":"function(el, x, data) {\n  return (\n      function(el, x, data) {\n      // get the leaflet map\n      var map = this; //HTMLWidgets.find('#' + el.id);\n      // we need a new div element because we have to handle\n      // the mouseover output separately\n      // debugger;\n      function addElement () {\n      // generate new div Element\n      var newDiv = $(document.createElement('div'));\n      // append at end of leaflet htmlwidget container\n      $(el).append(newDiv);\n      //provide ID and style\n      newDiv.addClass('lnlt');\n      newDiv.css({\"position\":\"relative\",\"bottomleft\":\"0px\",\"background-color\":\"rgba(255, 255, 255, 0.7)\",\"box-shadow\":\"0 0 2px #bbb\",\"background-clip\":\"padding-box\",\"margin\":\"0\",\"padding-left\":\"5px\",\"padding-right\":\"5px\",\"color\":\"#333\",\"font-size\":\"9px\",\"font-family\":\"\\\"Helvetica Neue\\\", Arial, Helvetica, sans-serif\",\"text-align\":\"left\",\"z-index\":\"700\"});\n      return newDiv;\n      }\n\n\n      // check for already existing lnlt class to not duplicate\n      var lnlt = $(el).find('.lnlt');\n\n      if(!lnlt.length) {\n      lnlt = addElement();\n\n      // grab the special div we generated in the beginning\n      // and put the mousmove output there\n\n      map.on('mousemove', function (e) {\n      if (e.originalEvent.ctrlKey) {\n      if (document.querySelector('.lnlt') === null) lnlt = addElement();\n      lnlt.text(\n                           ' lon: ' + (e.latlng.lng).toFixed(5) +\n                           ' | lat: ' + (e.latlng.lat).toFixed(5) +\n                           ' | zoom: ' + map.getZoom() +\n                           ' | x: ' + L.CRS.EPSG3857.project(e.latlng).x.toFixed(0) +\n                           ' | y: ' + L.CRS.EPSG3857.project(e.latlng).y.toFixed(0) +\n                           ' | epsg: 3857 ' +\n                           ' | proj4: +proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs ');\n      } else {\n      if (document.querySelector('.lnlt') === null) lnlt = addElement();\n      lnlt.text(\n                      ' lon: ' + (e.latlng.lng).toFixed(5) +\n                      ' | lat: ' + (e.latlng.lat).toFixed(5) +\n                      ' | zoom: ' + map.getZoom() + ' ');\n      }\n      });\n\n      // remove the lnlt div when mouse leaves map\n      map.on('mouseout', function (e) {\n      var strip = document.querySelector('.lnlt');\n      if( strip !==null) strip.remove();\n      });\n\n      };\n\n      //$(el).keypress(67, function(e) {\n      map.on('preclick', function(e) {\n      if (e.originalEvent.ctrlKey) {\n      if (document.querySelector('.lnlt') === null) lnlt = addElement();\n      lnlt.text(\n                      ' lon: ' + (e.latlng.lng).toFixed(5) +\n                      ' | lat: ' + (e.latlng.lat).toFixed(5) +\n                      ' | zoom: ' + map.getZoom() + ' ');\n      var txt = document.querySelector('.lnlt').textContent;\n      console.log(txt);\n      //txt.innerText.focus();\n      //txt.select();\n      setClipboardText('\"' + txt + '\"');\n      }\n      });\n\n      }\n      ).call(this.getMap(), el, x, data);\n}","data":null},{"code":"function(el, x, data) {\n  return (function(el,x,data){\n           var map = this;\n\n           map.on('keypress', function(e) {\n               console.log(e.originalEvent.code);\n               var key = e.originalEvent.code;\n               if (key === 'KeyE') {\n                   var bb = this.getBounds();\n                   var txt = JSON.stringify(bb);\n                   console.log(txt);\n\n                   setClipboardText('\\'' + txt + '\\'');\n               }\n           })\n        }).call(this.getMap(), el, x, data);\n}","data":null}]}}</script>
+<span id="cb95-34"><a href="cedar-bridge-nj.html#cb95-34" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb95-35"><a href="cedar-bridge-nj.html#cb95-35" tabindex="-1"></a>mapview<span class="sc">::</span><span class="fu">mapview</span>(</span>
+<span id="cb95-36"><a href="cedar-bridge-nj.html#cb95-36" tabindex="-1"></a>  aoi_sf</span>
+<span id="cb95-37"><a href="cedar-bridge-nj.html#cb95-37" tabindex="-1"></a>  , <span class="at">zcol =</span> <span class="st">&quot;study_site_lab&quot;</span></span>
+<span id="cb95-38"><a href="cedar-bridge-nj.html#cb95-38" tabindex="-1"></a>  , <span class="at">color =</span> <span class="st">&quot;navy&quot;</span></span>
+<span id="cb95-39"><a href="cedar-bridge-nj.html#cb95-39" tabindex="-1"></a>  , <span class="at">lwd =</span> <span class="dv">2</span></span>
+<span id="cb95-40"><a href="cedar-bridge-nj.html#cb95-40" tabindex="-1"></a>  , <span class="at">alpha.regions =</span> <span class="dv">0</span></span>
+<span id="cb95-41"><a href="cedar-bridge-nj.html#cb95-41" tabindex="-1"></a>  , <span class="at">legend =</span> T</span>
+<span id="cb95-42"><a href="cedar-bridge-nj.html#cb95-42" tabindex="-1"></a>  , <span class="at">popup =</span> F</span>
+<span id="cb95-43"><a href="cedar-bridge-nj.html#cb95-43" tabindex="-1"></a>)</span></code></pre></div>
+<div class="leaflet html-widget html-fill-item" id="htmlwidget-72884606b4e301abd9db" style="width:1008px;height:672px;"></div>
+<script type="application/json" data-for="htmlwidget-72884606b4e301abd9db">{"x":{"options":{"minZoom":1,"maxZoom":52,"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}},"preferCanvas":false,"bounceAtZoomLimits":false,"maxBounds":[[[-90,-370]],[[90,370]]]},"calls":[{"method":"addProviderTiles","args":["Esri.WorldImagery","Esri.WorldImagery","Esri.WorldImagery",{"errorTileUrl":"","noWrap":false,"detectRetina":false,"pane":"tilePane"}]},{"method":"addProviderTiles","args":["OpenStreetMap","OpenStreetMap","OpenStreetMap",{"errorTileUrl":"","noWrap":false,"detectRetina":false,"pane":"tilePane"}]},{"method":"createMapPane","args":["polygon",420]},{"method":"addPolygons","args":[[[[{"lng":[-74.38234397042602,-74.38221718473348,-74.36685447310593,-74.3669844111342,-74.38234397042602],"lat":[39.83640748541616,39.85055576853924,39.850472935704,39.83632469388066,39.83640748541616]}]],[[{"lng":[-74.38234350690121,-74.38221672030791,-74.366854476321,-74.36698441517409,-74.38234350690121],"lat":[39.83640703201026,39.85055540522831,39.85047257488414,39.83632424296486,39.83640703201026]}]],[[{"lng":[-74.38234374253518,-74.38221695033752,-74.36685377113272,-74.36698371592259,-74.38234374253518],"lat":[39.83640685280157,39.85055585668645,39.85047302126807,39.83632405868632,39.83640685280157]}]]],null,"NewJersey_als_2012",{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}},"pane":"polygon","stroke":true,"color":"black","weight":2,"opacity":0.9,"fill":true,"fillColor":"#6666ff","fillOpacity":0,"smoothFactor":1,"noClip":false},null,{"maxWidth":800,"minWidth":50,"autoPan":true,"keepInView":false,"closeButton":true,"closeOnClick":true,"className":""},["1","2","3"],{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},{"stroke":true,"weight":3,"opacity":0.9,"fillOpacity":0,"bringToFront":false,"sendToBack":false}]},{"method":"addScaleBar","args":[{"maxWidth":100,"metric":true,"imperial":true,"updateWhenIdle":true,"position":"bottomleft"}]},{"method":"addPolygons","args":[[[[{"lng":[-74.3802252844025,-74.38008711707869,-74.36897056638553,-74.36911121098954,-74.3802252844025],"lat":[39.83522380671067,39.85058965730555,39.85052971828051,39.835163900142,39.83522380671067]}]],[[{"lng":[-74.37628496436085,-74.37614059596339,-74.36575930605099,-74.36590607641178,-74.37628496436085],"lat":[39.83554416639977,39.851497794759,39.85144149953992,39.83548790282958,39.83554416639977]}]],[[{"lng":[-74.38281587378178,-74.38268370181535,-74.37314555916049,-74.37327977299017,-74.38281587378178],"lat":[39.8349514154691,39.84971258106489,39.84966143130658,39.83490029231827,39.8349514154691]}]],[[{"lng":[-74.38542825681952,-74.38530019023486,-74.37731386984467,-74.37744360003941,-74.38542825681952],"lat":[39.83473512843504,39.84909885401783,39.84905625987731,39.83469255585513,39.83473512843504]}]]],null,"NewJersey_uas_lidar_2024",{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}},"pane":"polygon","stroke":true,"color":"gray","weight":2,"opacity":0.9,"fill":true,"fillColor":"#6666ff","fillOpacity":0,"smoothFactor":1,"noClip":false},null,{"maxWidth":800,"minWidth":50,"autoPan":true,"keepInView":false,"closeButton":true,"closeOnClick":true,"className":""},["1","2","3","4"],{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},{"stroke":true,"weight":3,"opacity":0.9,"fillOpacity":0,"bringToFront":false,"sendToBack":false}]},{"method":"addPolygons","args":[[[[{"lng":[-74.38075479584413,-74.38056118632859,-74.38110908320625,-74.38138220604999,-74.38193084564368,-74.38213421285715,-74.382017660957,-74.38177073293629,-74.37986204926348,-74.37918483922699,-74.37832272644911,-74.37746094517206,-74.37690733604022,-74.37629166974182,-74.37555264548193,-74.3752442084335,-74.37475094420057,-74.37456629259508,-74.37315027756495,-74.37167279348493,-74.36708227056621,-74.3804372248172,-74.38075479584413],"lat":[39.83690029083665,39.83688329747353,39.84034242683737,39.84256302013058,39.8456378576152,39.84775206165457,39.8479056046834,39.84833232879539,39.84870990172417,39.84880408166367,39.84904038960044,39.84908692411781,39.8488965706651,39.84899079899542,39.84922721752648,39.84960642002019,39.85008030547243,39.85008010596371,39.85026833265805,39.8504090333778,39.83702528842414,39.83647051873639,39.83690029083665]}]]],null,"aoi_sf - study_site_lab",{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}},"pane":"polygon","stroke":true,"color":"#000080","weight":2,"opacity":0.9,"fill":true,"fillColor":"#6666FF","fillOpacity":0,"smoothFactor":1,"noClip":false},null,{"maxWidth":800,"minWidth":50,"autoPan":true,"keepInView":false,"closeButton":true,"closeOnClick":true,"className":""},"Cedar Bridge (NJ)",{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},{"stroke":true,"weight":3,"opacity":0.9,"fillOpacity":0,"bringToFront":false,"sendToBack":false}]},{"method":"addLayersControl","args":[["Esri.WorldImagery","OpenStreetMap"],["NewJersey_als_2012","NewJersey_uas_lidar_2024","aoi_sf - study_site_lab"],{"collapsed":true,"autoZIndex":true,"position":"topleft"}]},{"method":"addLegend","args":[{"colors":["#6666FF"],"labels":["Cedar Bridge (NJ)"],"na_color":null,"na_label":"NA","opacity":1,"position":"topright","type":"factor","title":"","extra":null,"layerId":null,"className":"info legend","group":"aoi_sf - study_site_lab"}]},{"method":"addHomeButton","args":[-74.38542825681952,39.83469255585513,-74.36575930605099,39.851497794759,true,null,"Zoom to full extent","<strong>Zoom full<\/strong>","bottomleft"]}],"limits":{"lat":[39.83632405868632,39.85055585668645],"lng":[-74.38234397042602,-74.36685377113272]},"fitBounds":[39.83469255585513,-74.38542825681952,39.851497794759,-74.36575930605099,[]]},"evals":[],"jsHooks":{"render":[{"code":"function(el, x, data) {\n  return (\n      function(el, x, data) {\n      // get the leaflet map\n      var map = this; //HTMLWidgets.find('#' + el.id);\n      // we need a new div element because we have to handle\n      // the mouseover output separately\n      // debugger;\n      function addElement () {\n      // generate new div Element\n      var newDiv = $(document.createElement('div'));\n      // append at end of leaflet htmlwidget container\n      $(el).append(newDiv);\n      //provide ID and style\n      newDiv.addClass('lnlt');\n      newDiv.css({\"position\":\"relative\",\"bottomleft\":\"0px\",\"background-color\":\"rgba(255, 255, 255, 0.7)\",\"box-shadow\":\"0 0 2px #bbb\",\"background-clip\":\"padding-box\",\"margin\":\"0\",\"padding-left\":\"5px\",\"padding-right\":\"5px\",\"color\":\"#333\",\"font-size\":\"9px\",\"font-family\":\"\\\"Helvetica Neue\\\", Arial, Helvetica, sans-serif\",\"text-align\":\"left\",\"z-index\":\"700\"});\n      return newDiv;\n      }\n\n\n      // check for already existing lnlt class to not duplicate\n      var lnlt = $(el).find('.lnlt');\n\n      if(!lnlt.length) {\n      lnlt = addElement();\n\n      // grab the special div we generated in the beginning\n      // and put the mousmove output there\n\n      map.on('mousemove', function (e) {\n      if (e.originalEvent.ctrlKey) {\n      if (document.querySelector('.lnlt') === null) lnlt = addElement();\n      lnlt.text(\n                           ' lon: ' + (e.latlng.lng).toFixed(5) +\n                           ' | lat: ' + (e.latlng.lat).toFixed(5) +\n                           ' | zoom: ' + map.getZoom() +\n                           ' | x: ' + L.CRS.EPSG3857.project(e.latlng).x.toFixed(0) +\n                           ' | y: ' + L.CRS.EPSG3857.project(e.latlng).y.toFixed(0) +\n                           ' | epsg: 3857 ' +\n                           ' | proj4: +proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs ');\n      } else {\n      if (document.querySelector('.lnlt') === null) lnlt = addElement();\n      lnlt.text(\n                      ' lon: ' + (e.latlng.lng).toFixed(5) +\n                      ' | lat: ' + (e.latlng.lat).toFixed(5) +\n                      ' | zoom: ' + map.getZoom() + ' ');\n      }\n      });\n\n      // remove the lnlt div when mouse leaves map\n      map.on('mouseout', function (e) {\n      var strip = document.querySelector('.lnlt');\n      if( strip !==null) strip.remove();\n      });\n\n      };\n\n      //$(el).keypress(67, function(e) {\n      map.on('preclick', function(e) {\n      if (e.originalEvent.ctrlKey) {\n      if (document.querySelector('.lnlt') === null) lnlt = addElement();\n      lnlt.text(\n                      ' lon: ' + (e.latlng.lng).toFixed(5) +\n                      ' | lat: ' + (e.latlng.lat).toFixed(5) +\n                      ' | zoom: ' + map.getZoom() + ' ');\n      var txt = document.querySelector('.lnlt').textContent;\n      console.log(txt);\n      //txt.innerText.focus();\n      //txt.select();\n      setClipboardText('\"' + txt + '\"');\n      }\n      });\n\n      }\n      ).call(this.getMap(), el, x, data);\n}","data":null},{"code":"function(el, x, data) {\n  return (function(el,x,data){\n           var map = this;\n\n           map.on('keypress', function(e) {\n               console.log(e.originalEvent.code);\n               var key = e.originalEvent.code;\n               if (key === 'KeyE') {\n                   var bb = this.getBounds();\n                   var txt = JSON.stringify(bb);\n                   console.log(txt);\n\n                   setClipboardText('\\'' + txt + '\\'');\n               }\n           })\n        }).call(this.getMap(), el, x, data);\n}","data":null}]}}</script>
 <p>point cloud data summary</p>
 <div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="cedar-bridge-nj.html#cb96-1" tabindex="-1"></a>aoi_las_ctg</span></code></pre></div>
-<pre><code>## $NewJersey_als
+<pre><code>## $NewJersey_als_2012
 ## class       : LAScatalog (v1.2 format 1)
 ## extent      : 552848.7, 554163.1, 4409783, 4411353 (xmin, xmax, ymin, ymax)
-## coord. ref. : NA 
-## area        : 6.19 kunits²
+## coord. ref. : WGS 84 / UTM zone 18N 
+## area        : 6.19 km²
 ## points      : 80.3 million points
 ## type        : airborne
-## density     : 13 points/units²
-## num. files  : 3</code></pre>
+## density     : 13 points/m²
+## num. files  : 3 
+## 
+## $NewJersey_uas_lidar_2024
+## class       : LAScatalog (v1.2 format 3)
+## extent      : 552586.1, 554255.9, 4409595, 4411461 (xmin, xmax, ymin, ymax)
+## coord. ref. : NAD83 / UTM zone 18N 
+## area        : 5.62 km²
+## points      : 758.27 million points
+## type        : airborne
+## density     : 134.9 points/m²
+## num. files  : 4</code></pre>
 <div id="als-processing-2" class="section level2 hasAnchor" number="6.1">
 <h2><span class="header-section-number">6.1</span> ALS Processing<a href="cedar-bridge-nj.html#als-processing-2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div id="itd-tuning-6" class="section level3 hasAnchor" number="6.1.1">
 <h3><span class="header-section-number">6.1.1</span> ITD tuning<a href="cedar-bridge-nj.html#itd-tuning-6" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>put las files in a list</p>
 <div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="cedar-bridge-nj.html#cb98-1" tabindex="-1"></a><span class="co"># list of all las files</span></span>
-<span id="cb98-2"><a href="cedar-bridge-nj.html#cb98-2" tabindex="-1"></a>las_flist_temp <span class="ot">&lt;-</span> aoi_las_ctg[[<span class="st">&quot;NewJersey_als&quot;</span>]] <span class="sc">%&gt;%</span> </span>
+<span id="cb98-2"><a href="cedar-bridge-nj.html#cb98-2" tabindex="-1"></a>las_flist_temp <span class="ot">&lt;-</span> aoi_las_ctg[[<span class="st">&quot;NewJersey_als_2012&quot;</span>]] <span class="sc">%&gt;%</span> </span>
 <span id="cb98-3"><a href="cedar-bridge-nj.html#cb98-3" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">pluck</span>(<span class="st">&quot;data&quot;</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb98-4"><a href="cedar-bridge-nj.html#cb98-4" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">pull</span>(filename)</span></code></pre></div>
 <p>run tuning</p>
@@ -343,11 +377,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><img src="https://i.ibb.co/DHrJBKSn/itd-tuning-New-Jersey-als.jpg" width="100%" height="100%" style="display: block; margin: auto;" /></p>
 <p>pick the best function for use in ITD</p>
 <div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="cedar-bridge-nj.html#cb100-1" tabindex="-1"></a><span class="co"># pick the best function for use in ITD</span></span>
-<span id="cb100-2"><a href="cedar-bridge-nj.html#cb100-2" tabindex="-1"></a>best_ws_fn_temp <span class="ot">&lt;-</span> my_ws_functions<span class="sc">$</span>log_fn</span></code></pre></div>
+<span id="cb100-2"><a href="cedar-bridge-nj.html#cb100-2" tabindex="-1"></a>best_ws_fn_temp <span class="ot">&lt;-</span> my_ws_functions<span class="sc">$</span>log_les_ccv_fn</span></code></pre></div>
 </div>
 <div id="cloud2trees-point-cloud-processing-6" class="section level3 hasAnchor" number="6.1.2">
 <h3><span class="header-section-number">6.1.2</span> <code>cloud2trees</code> point cloud processing<a href="cedar-bridge-nj.html#cloud2trees-point-cloud-processing-6" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="cedar-bridge-nj.html#cb101-1" tabindex="-1"></a>dir_temp <span class="ot">&lt;-</span> <span class="fu">file.path</span>(aoi_sf<span class="sc">$</span>fdir, <span class="st">&quot;als_processing&quot;</span>)</span>
+<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="cedar-bridge-nj.html#cb101-1" tabindex="-1"></a>dir_temp <span class="ot">&lt;-</span> <span class="fu">file.path</span>(aoi_sf<span class="sc">$</span>fdir, <span class="st">&quot;als_2012_processing&quot;</span>)</span>
 <span id="cb101-2"><a href="cedar-bridge-nj.html#cb101-2" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">dir.exists</span>(dir_temp)){</span>
 <span id="cb101-3"><a href="cedar-bridge-nj.html#cb101-3" tabindex="-1"></a>  <span class="fu">dir.create</span>(dir_temp)</span>
 <span id="cb101-4"><a href="cedar-bridge-nj.html#cb101-4" tabindex="-1"></a><span class="co"># c2t</span></span>
@@ -418,12 +452,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb102-13"><a href="cedar-bridge-nj.html#cb102-13" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">theme</span>(</span>
 <span id="cb102-14"><a href="cedar-bridge-nj.html#cb102-14" tabindex="-1"></a>    <span class="at">legend.text =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">7</span>, <span class="at">angle =</span> <span class="dv">0</span>)</span>
 <span id="cb102-15"><a href="cedar-bridge-nj.html#cb102-15" tabindex="-1"></a>  )</span></code></pre></div>
-<p><img src="dod_cloud2trees_demo_files/figure-html/unnamed-chunk-112-1.png" width="1008" /></p>
+<p><img src="dod_cloud2trees_demo_files/figure-html/unnamed-chunk-113-1.png" width="1008" /></p>
 <p>distribution by forest type</p>
 <div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="cedar-bridge-nj.html#cb103-1" tabindex="-1"></a><span class="fu">foresttype_sum_fn</span>(<span class="at">crowns =</span> cloud2trees_ans<span class="sc">$</span>crowns_sf, <span class="at">aoi =</span> aoi_sf, <span class="at">unit =</span> aoi_sf<span class="sc">$</span>study_site_lab[<span class="dv">1</span>])</span></code></pre></div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:unnamed-chunk-113">Table 6.1: </span>Count of trees by FIA Forest Type Group
+<span id="tab:unnamed-chunk-114">Table 6.1: </span>Count of trees by FIA Forest Type Group
 </caption>
 <thead>
 <tr>
@@ -449,10 +483,10 @@ Cedar Bridge (NJ)
 Loblolly / shortleaf pine group
 </td>
 <td style="text-align:left;">
-101,982
+110,466
 </td>
 <td style="text-align:left;">
-99.3%
+99.1%
 </td>
 </tr>
 <tr>
@@ -460,10 +494,10 @@ Loblolly / shortleaf pine group
 Oak / hickory group
 </td>
 <td style="text-align:left;">
-389
+545
 </td>
 <td style="text-align:left;">
-0.4%
+0.5%
 </td>
 </tr>
 <tr>
@@ -471,10 +505,10 @@ Oak / hickory group
 Oak / pine group
 </td>
 <td style="text-align:left;">
-344
+438
 </td>
 <td style="text-align:left;">
-0.3%
+0.4%
 </td>
 </tr>
 </tbody>
@@ -494,7 +528,7 @@ Oak / pine group
 <span id="cb104-10"><a href="cedar-bridge-nj.html#cb104-10" tabindex="-1"></a>    <span class="at">option =</span> <span class="st">&quot;mischief&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.9</span>, <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">comma_format</span>(<span class="at">accuracy=</span><span class="dv">1</span>), <span class="at">breaks =</span> scales<span class="sc">::</span><span class="fu">breaks_extended</span>(<span class="at">n=</span><span class="dv">6</span>)</span>
 <span id="cb104-11"><a href="cedar-bridge-nj.html#cb104-11" tabindex="-1"></a>  ) <span class="sc">+</span></span>
 <span id="cb104-12"><a href="cedar-bridge-nj.html#cb104-12" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste0</span>(aoi_sf<span class="sc">$</span>study_site_lab, <span class="st">&quot; - ALS&quot;</span>))</span></code></pre></div>
-<p><img src="dod_cloud2trees_demo_files/figure-html/unnamed-chunk-114-1.png" width="1008" /></p>
+<p><img src="dod_cloud2trees_demo_files/figure-html/unnamed-chunk-115-1.png" width="1008" /></p>
 </div>
 <div id="chm-6" class="section level4 hasAnchor" number="6.1.3.3">
 <h4><span class="header-section-number">6.1.3.3</span> CHM<a href="cedar-bridge-nj.html#chm-6" class="anchor-section" aria-label="Anchor link to header"></a></h4>
@@ -524,7 +558,7 @@ Oak / pine group
 <span id="cb105-22"><a href="cedar-bridge-nj.html#cb105-22" tabindex="-1"></a>    , <span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">color =</span> <span class="st">&quot;gray33&quot;</span>, <span class="at">lwd =</span> <span class="fl">0.5</span></span>
 <span id="cb105-23"><a href="cedar-bridge-nj.html#cb105-23" tabindex="-1"></a>  ) <span class="sc">+</span></span>
 <span id="cb105-24"><a href="cedar-bridge-nj.html#cb105-24" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste0</span>(aoi_sf<span class="sc">$</span>study_site_lab, <span class="st">&quot; - ALS&quot;</span>))</span></code></pre></div>
-<p><img src="dod_cloud2trees_demo_files/figure-html/unnamed-chunk-115-1.png" width="1008" /></p>
+<p><img src="dod_cloud2trees_demo_files/figure-html/unnamed-chunk-116-1.png" width="1008" /></p>
 </div>
 <div id="imagery-6" class="section level4 hasAnchor" number="6.1.3.4">
 <h4><span class="header-section-number">6.1.3.4</span> Imagery<a href="cedar-bridge-nj.html#imagery-6" class="anchor-section" aria-label="Anchor link to header"></a></h4>
@@ -559,7 +593,7 @@ Oak / pine group
 <span id="cb106-27"><a href="cedar-bridge-nj.html#cb106-27" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">theme</span>(</span>
 <span id="cb106-28"><a href="cedar-bridge-nj.html#cb106-28" tabindex="-1"></a>    <span class="at">plot.title =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>, <span class="at">hjust =</span> <span class="dv">0</span>, <span class="at">margin =</span> ggplot2<span class="sc">::</span><span class="fu">margin</span>(<span class="dv">0</span>,<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">0</span>))</span>
 <span id="cb106-29"><a href="cedar-bridge-nj.html#cb106-29" tabindex="-1"></a>  )</span></code></pre></div>
-<p><img src="dod_cloud2trees_demo_files/figure-html/unnamed-chunk-116-1.png" width="1008" /></p>
+<p><img src="dod_cloud2trees_demo_files/figure-html/unnamed-chunk-117-1.png" width="1008" /></p>
 </div>
 <div id="tree-attributes-spatial-6" class="section level4 hasAnchor" number="6.1.3.5">
 <h4><span class="header-section-number">6.1.3.5</span> Tree Attributes Spatial<a href="cedar-bridge-nj.html#tree-attributes-spatial-6" class="anchor-section" aria-label="Anchor link to header"></a></h4>
@@ -594,7 +628,7 @@ Oak / pine group
 <span id="cb107-28"><a href="cedar-bridge-nj.html#cb107-28" tabindex="-1"></a>      <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">margin =</span> ggplot2<span class="sc">::</span><span class="fu">margin</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">3</span>,<span class="dv">0</span>))</span>
 <span id="cb107-29"><a href="cedar-bridge-nj.html#cb107-29" tabindex="-1"></a>    )</span>
 <span id="cb107-30"><a href="cedar-bridge-nj.html#cb107-30" tabindex="-1"></a>  )</span></code></pre></div>
-<p><img src="dod_cloud2trees_demo_files/figure-html/unnamed-chunk-117-1.png" width="1008" /></p>
+<p><img src="dod_cloud2trees_demo_files/figure-html/unnamed-chunk-118-1.png" width="1008" /></p>
 </div>
 <div id="tree-attributes-summary-stats-6" class="section level4 hasAnchor" number="6.1.3.6">
 <h4><span class="header-section-number">6.1.3.6</span> Tree Attributes Summary Stats<a href="cedar-bridge-nj.html#tree-attributes-summary-stats-6" class="anchor-section" aria-label="Anchor link to header"></a></h4>
@@ -607,7 +641,7 @@ Oak / pine group
 <span id="cb108-7"><a href="cedar-bridge-nj.html#cb108-7" tabindex="-1"></a>)</span></code></pre></div>
 <table class="table" style="font-size: 13px; margin-left: auto; margin-right: auto;">
 <caption style="font-size: initial !important;">
-<span id="tab:unnamed-chunk-118">Table 6.2: </span>Summary statistics for selected metrics
+<span id="tab:unnamed-chunk-119">Table 6.2: </span>Summary statistics for selected metrics
 </caption>
 <thead>
 <tr>
@@ -634,19 +668,19 @@ Range
 <tbody>
 <tr>
 <td style="text-align:left;vertical-align: top !important;" rowspan="6">
-Cedar Bridge (NJ) - ALS<br>(102,715 trees)
+Cedar Bridge (NJ) - ALS<br>(111,449 trees)
 </td>
 <td style="text-align:left;">
 Height (m)
 </td>
 <td style="text-align:left;">
-7.7
+8.9
 </td>
 <td style="text-align:left;">
-7.9
+9.1
 </td>
 <td style="text-align:left;">
-4.1
+3.6
 </td>
 <td style="text-align:left;">
 2.0—33.2
@@ -657,16 +691,16 @@ Height (m)
 DBH (cm)
 </td>
 <td style="text-align:left;">
-13.3
+15.5
 </td>
 <td style="text-align:left;">
-12.8
+15.2
 </td>
 <td style="text-align:left;">
-7.9
+7.2
 </td>
 <td style="text-align:left;">
-3.7—81.7
+3.7—82.0
 </td>
 </tr>
 <tr>
@@ -674,16 +708,16 @@ DBH (cm)
 Crown Base Ht. (m)
 </td>
 <td style="text-align:left;">
-3.4
+3.8
 </td>
 <td style="text-align:left;">
-3.5
+3.8
 </td>
 <td style="text-align:left;">
-1.0
+0.9
 </td>
 <td style="text-align:left;">
-1.5—11.5
+1.5—13.5
 </td>
 </tr>
 <tr>
@@ -691,16 +725,16 @@ Crown Base Ht. (m)
 HMD (m)
 </td>
 <td style="text-align:left;">
-3.6
+4.3
 </td>
 <td style="text-align:left;">
-3.8
+4.5
 </td>
 <td style="text-align:left;">
 1.3
 </td>
 <td style="text-align:left;">
-0.0—14.4
+0.0—17.1
 </td>
 </tr>
 <tr>
@@ -725,16 +759,433 @@ NA—NA
 LANDFIRE CBD<br>kg m<sup>-3</sup>
 </td>
 <td style="text-align:left;">
-0.195
+0.240
 </td>
 <td style="text-align:left;">
-0.185
+0.232
 </td>
 <td style="text-align:left;">
-0.085
+0.092
 </td>
 <td style="text-align:left;">
-0.006—1.850
+0.012—1.827
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="uas-lidar-processing-1" class="section level2 hasAnchor" number="6.2">
+<h2><span class="header-section-number">6.2</span> UAS lidar Processing<a href="cedar-bridge-nj.html#uas-lidar-processing-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="itd-tuning-7" class="section level3 hasAnchor" number="6.2.1">
+<h3><span class="header-section-number">6.2.1</span> ITD tuning<a href="cedar-bridge-nj.html#itd-tuning-7" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>put las files in a list</p>
+<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="cedar-bridge-nj.html#cb109-1" tabindex="-1"></a><span class="co"># list of all las files</span></span>
+<span id="cb109-2"><a href="cedar-bridge-nj.html#cb109-2" tabindex="-1"></a>las_flist_temp <span class="ot">&lt;-</span> aoi_las_ctg[[<span class="st">&quot;NewJersey_uas_lidar_2024&quot;</span>]] <span class="sc">%&gt;%</span> </span>
+<span id="cb109-3"><a href="cedar-bridge-nj.html#cb109-3" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">pluck</span>(<span class="st">&quot;data&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb109-4"><a href="cedar-bridge-nj.html#cb109-4" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">pull</span>(filename)</span></code></pre></div>
+<p>run tuning</p>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="cedar-bridge-nj.html#cb110-1" tabindex="-1"></a><span class="co"># if there is an error with tuning...is it because there are no trees for a given ws_fn?</span></span>
+<span id="cb110-2"><a href="cedar-bridge-nj.html#cb110-2" tabindex="-1"></a>    <span class="co"># Caused by error in `dplyr::group_by()`:</span></span>
+<span id="cb110-3"><a href="cedar-bridge-nj.html#cb110-3" tabindex="-1"></a>    <span class="co"># ! Must group by variables found in `.data`.</span></span>
+<span id="cb110-4"><a href="cedar-bridge-nj.html#cb110-4" tabindex="-1"></a>    <span class="co"># Column `ws_fn` is not found.</span></span>
+<span id="cb110-5"><a href="cedar-bridge-nj.html#cb110-5" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">file.exists</span>(<span class="st">&quot;../data/itd_tuning_NewJersey_uas_lidar.jpg&quot;</span>)){</span>
+<span id="cb110-6"><a href="cedar-bridge-nj.html#cb110-6" tabindex="-1"></a>  <span class="co"># tuning</span></span>
+<span id="cb110-7"><a href="cedar-bridge-nj.html#cb110-7" tabindex="-1"></a>  itd_tuning_ans <span class="ot">&lt;-</span> cloud2trees<span class="sc">::</span><span class="fu">itd_tuning</span>(</span>
+<span id="cb110-8"><a href="cedar-bridge-nj.html#cb110-8" tabindex="-1"></a>      <span class="at">input_las_dir =</span> las_flist_temp</span>
+<span id="cb110-9"><a href="cedar-bridge-nj.html#cb110-9" tabindex="-1"></a>      , <span class="at">n_samples =</span> <span class="dv">3</span></span>
+<span id="cb110-10"><a href="cedar-bridge-nj.html#cb110-10" tabindex="-1"></a>      , <span class="at">ws_fn_list =</span> my_ws_functions</span>
+<span id="cb110-11"><a href="cedar-bridge-nj.html#cb110-11" tabindex="-1"></a>    )</span>
+<span id="cb110-12"><a href="cedar-bridge-nj.html#cb110-12" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">ggsave</span>(</span>
+<span id="cb110-13"><a href="cedar-bridge-nj.html#cb110-13" tabindex="-1"></a>    <span class="st">&quot;../data/itd_tuning_NewJersey_uas_lidar.jpg&quot;</span></span>
+<span id="cb110-14"><a href="cedar-bridge-nj.html#cb110-14" tabindex="-1"></a>    , <span class="at">plot =</span> itd_tuning_ans<span class="sc">$</span>plot_samples</span>
+<span id="cb110-15"><a href="cedar-bridge-nj.html#cb110-15" tabindex="-1"></a>    , <span class="at">dpi =</span> <span class="st">&quot;print&quot;</span></span>
+<span id="cb110-16"><a href="cedar-bridge-nj.html#cb110-16" tabindex="-1"></a>    , <span class="at">height =</span> <span class="dv">7</span>, <span class="at">width =</span> <span class="dv">10</span></span>
+<span id="cb110-17"><a href="cedar-bridge-nj.html#cb110-17" tabindex="-1"></a>  )</span>
+<span id="cb110-18"><a href="cedar-bridge-nj.html#cb110-18" tabindex="-1"></a>}</span></code></pre></div>
+<p><img src="https://i.ibb.co/HDmhxW1T/itd-tuning-New-Jersey-uas-lidar.jpg" width="100%" height="100%" style="display: block; margin: auto;" /></p>
+<p>pick the best function for use in ITD</p>
+<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="cedar-bridge-nj.html#cb111-1" tabindex="-1"></a><span class="co"># pick the best function for use in ITD</span></span>
+<span id="cb111-2"><a href="cedar-bridge-nj.html#cb111-2" tabindex="-1"></a>best_ws_fn_temp <span class="ot">&lt;-</span> my_ws_functions<span class="sc">$</span>log_les_ccv_fn</span></code></pre></div>
+</div>
+<div id="cloud2trees-point-cloud-processing-7" class="section level3 hasAnchor" number="6.2.2">
+<h3><span class="header-section-number">6.2.2</span> <code>cloud2trees</code> point cloud processing<a href="cedar-bridge-nj.html#cloud2trees-point-cloud-processing-7" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="cedar-bridge-nj.html#cb112-1" tabindex="-1"></a>dir_temp <span class="ot">&lt;-</span> <span class="fu">file.path</span>(aoi_sf<span class="sc">$</span>fdir, <span class="st">&quot;uas_lidar_2024_processing&quot;</span>)</span>
+<span id="cb112-2"><a href="cedar-bridge-nj.html#cb112-2" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">dir.exists</span>(dir_temp)){</span>
+<span id="cb112-3"><a href="cedar-bridge-nj.html#cb112-3" tabindex="-1"></a>  <span class="fu">dir.create</span>(dir_temp)</span>
+<span id="cb112-4"><a href="cedar-bridge-nj.html#cb112-4" tabindex="-1"></a><span class="co"># c2t</span></span>
+<span id="cb112-5"><a href="cedar-bridge-nj.html#cb112-5" tabindex="-1"></a>  cloud2trees_ans <span class="ot">&lt;-</span> cloud2trees<span class="sc">::</span><span class="fu">cloud2trees</span>(</span>
+<span id="cb112-6"><a href="cedar-bridge-nj.html#cb112-6" tabindex="-1"></a>    <span class="at">input_las_dir =</span> las_flist_temp</span>
+<span id="cb112-7"><a href="cedar-bridge-nj.html#cb112-7" tabindex="-1"></a>    , <span class="at">output_dir =</span> dir_temp</span>
+<span id="cb112-8"><a href="cedar-bridge-nj.html#cb112-8" tabindex="-1"></a>    , <span class="at">ws =</span> best_ws_fn_temp</span>
+<span id="cb112-9"><a href="cedar-bridge-nj.html#cb112-9" tabindex="-1"></a>    , <span class="at">dtm_res_m =</span> <span class="dv">1</span></span>
+<span id="cb112-10"><a href="cedar-bridge-nj.html#cb112-10" tabindex="-1"></a>    , <span class="at">chm_res_m =</span> <span class="fl">0.25</span></span>
+<span id="cb112-11"><a href="cedar-bridge-nj.html#cb112-11" tabindex="-1"></a>    , <span class="at">estimate_tree_dbh =</span> T</span>
+<span id="cb112-12"><a href="cedar-bridge-nj.html#cb112-12" tabindex="-1"></a>    , <span class="at">estimate_tree_type =</span> T</span>
+<span id="cb112-13"><a href="cedar-bridge-nj.html#cb112-13" tabindex="-1"></a>    <span class="co"># hmd</span></span>
+<span id="cb112-14"><a href="cedar-bridge-nj.html#cb112-14" tabindex="-1"></a>    , <span class="at">estimate_tree_hmd =</span> T</span>
+<span id="cb112-15"><a href="cedar-bridge-nj.html#cb112-15" tabindex="-1"></a>    , <span class="at">hmd_tree_sample_prop =</span> <span class="fl">0.5</span></span>
+<span id="cb112-16"><a href="cedar-bridge-nj.html#cb112-16" tabindex="-1"></a>    , <span class="at">hmd_estimate_missing_hmd =</span> T</span>
+<span id="cb112-17"><a href="cedar-bridge-nj.html#cb112-17" tabindex="-1"></a>    <span class="co"># biomass</span></span>
+<span id="cb112-18"><a href="cedar-bridge-nj.html#cb112-18" tabindex="-1"></a>    , <span class="at">estimate_biomass_method =</span> <span class="fu">c</span>(<span class="st">&quot;landfire&quot;</span>,<span class="st">&quot;cruz&quot;</span>)</span>
+<span id="cb112-19"><a href="cedar-bridge-nj.html#cb112-19" tabindex="-1"></a>    <span class="co"># cbh</span></span>
+<span id="cb112-20"><a href="cedar-bridge-nj.html#cb112-20" tabindex="-1"></a>    , <span class="at">estimate_tree_cbh =</span> T</span>
+<span id="cb112-21"><a href="cedar-bridge-nj.html#cb112-21" tabindex="-1"></a>    , <span class="at">cbh_tree_sample_prop =</span> <span class="fl">0.5</span></span>
+<span id="cb112-22"><a href="cedar-bridge-nj.html#cb112-22" tabindex="-1"></a>    , <span class="at">cbh_estimate_missing_cbh =</span> T</span>
+<span id="cb112-23"><a href="cedar-bridge-nj.html#cb112-23" tabindex="-1"></a>  )</span>
+<span id="cb112-24"><a href="cedar-bridge-nj.html#cb112-24" tabindex="-1"></a>  <span class="co"># add foresttype</span></span>
+<span id="cb112-25"><a href="cedar-bridge-nj.html#cb112-25" tabindex="-1"></a>  cloud2trees_ans<span class="sc">$</span>foresttype_rast <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">rast</span>( <span class="fu">file.path</span>(dir_temp, <span class="st">&quot;point_cloud_processing_delivery&quot;</span>, <span class="st">&quot;fia_foresttype_raster.tif&quot;</span>) ) <span class="sc">%&gt;%</span> </span>
+<span id="cb112-26"><a href="cedar-bridge-nj.html#cb112-26" tabindex="-1"></a>    terra<span class="sc">::</span><span class="fu">subst</span>(<span class="at">from =</span> foresttype_lookup<span class="sc">$</span>forest_type_group_code, <span class="at">to =</span> foresttype_lookup<span class="sc">$</span>forest_type_group)</span>
+<span id="cb112-27"><a href="cedar-bridge-nj.html#cb112-27" tabindex="-1"></a>}<span class="cf">else</span>{</span>
+<span id="cb112-28"><a href="cedar-bridge-nj.html#cb112-28" tabindex="-1"></a>  cloud2trees_ans <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb112-29"><a href="cedar-bridge-nj.html#cb112-29" tabindex="-1"></a>    <span class="st">&quot;dtm_rast&quot;</span> <span class="ot">=</span> terra<span class="sc">::</span><span class="fu">rast</span>( <span class="fu">file.path</span>(dir_temp, <span class="st">&quot;point_cloud_processing_delivery&quot;</span>, <span class="st">&quot;dtm_1m.tif&quot;</span>) )</span>
+<span id="cb112-30"><a href="cedar-bridge-nj.html#cb112-30" tabindex="-1"></a>    , <span class="st">&quot;chm_rast&quot;</span> <span class="ot">=</span> terra<span class="sc">::</span><span class="fu">rast</span>( <span class="fu">file.path</span>(dir_temp, <span class="st">&quot;point_cloud_processing_delivery&quot;</span>, <span class="st">&quot;chm_0.25m.tif&quot;</span>) )</span>
+<span id="cb112-31"><a href="cedar-bridge-nj.html#cb112-31" tabindex="-1"></a>    , <span class="st">&quot;crowns_sf&quot;</span> <span class="ot">=</span> <span class="fu">list.files</span>(</span>
+<span id="cb112-32"><a href="cedar-bridge-nj.html#cb112-32" tabindex="-1"></a>        <span class="fu">file.path</span>(dir_temp, <span class="st">&quot;point_cloud_processing_delivery&quot;</span>)</span>
+<span id="cb112-33"><a href="cedar-bridge-nj.html#cb112-33" tabindex="-1"></a>        , <span class="at">pattern =</span> <span class="st">&quot;final_detected_crowns.*</span><span class="sc">\\</span><span class="st">.gpkg$&quot;</span></span>
+<span id="cb112-34"><a href="cedar-bridge-nj.html#cb112-34" tabindex="-1"></a>        , <span class="at">full.names =</span> T</span>
+<span id="cb112-35"><a href="cedar-bridge-nj.html#cb112-35" tabindex="-1"></a>      ) <span class="sc">%&gt;%</span> </span>
+<span id="cb112-36"><a href="cedar-bridge-nj.html#cb112-36" tabindex="-1"></a>      <span class="fu">normalizePath</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb112-37"><a href="cedar-bridge-nj.html#cb112-37" tabindex="-1"></a>      purrr<span class="sc">::</span><span class="fu">map</span>(\(x)</span>
+<span id="cb112-38"><a href="cedar-bridge-nj.html#cb112-38" tabindex="-1"></a>        sf<span class="sc">::</span><span class="fu">st_read</span>(</span>
+<span id="cb112-39"><a href="cedar-bridge-nj.html#cb112-39" tabindex="-1"></a>          <span class="at">dsn =</span> x</span>
+<span id="cb112-40"><a href="cedar-bridge-nj.html#cb112-40" tabindex="-1"></a>          , <span class="at">quiet =</span> T</span>
+<span id="cb112-41"><a href="cedar-bridge-nj.html#cb112-41" tabindex="-1"></a>        )</span>
+<span id="cb112-42"><a href="cedar-bridge-nj.html#cb112-42" tabindex="-1"></a>      ) <span class="sc">%&gt;%</span> </span>
+<span id="cb112-43"><a href="cedar-bridge-nj.html#cb112-43" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">bind_rows</span>()</span>
+<span id="cb112-44"><a href="cedar-bridge-nj.html#cb112-44" tabindex="-1"></a>    , <span class="st">&quot;foresttype_rast&quot;</span> <span class="ot">=</span> terra<span class="sc">::</span><span class="fu">rast</span>( <span class="fu">file.path</span>(dir_temp, <span class="st">&quot;point_cloud_processing_delivery&quot;</span>, <span class="st">&quot;fia_foresttype_raster.tif&quot;</span>) ) <span class="sc">%&gt;%</span> </span>
+<span id="cb112-45"><a href="cedar-bridge-nj.html#cb112-45" tabindex="-1"></a>        terra<span class="sc">::</span><span class="fu">subst</span>(<span class="at">from =</span> foresttype_lookup<span class="sc">$</span>forest_type_group_code, <span class="at">to =</span> foresttype_lookup<span class="sc">$</span>forest_type_group)</span>
+<span id="cb112-46"><a href="cedar-bridge-nj.html#cb112-46" tabindex="-1"></a>  )</span>
+<span id="cb112-47"><a href="cedar-bridge-nj.html#cb112-47" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+<div id="cloud2trees-results-7" class="section level3 hasAnchor" number="6.2.3">
+<h3><span class="header-section-number">6.2.3</span> <code>cloud2trees</code> Results<a href="cedar-bridge-nj.html#cloud2trees-results-7" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="fia-forest-type-group-7" class="section level4 hasAnchor" number="6.2.3.1">
+<h4><span class="header-section-number">6.2.3.1</span> FIA Forest Type Group<a href="cedar-bridge-nj.html#fia-forest-type-group-7" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="cedar-bridge-nj.html#cb113-1" tabindex="-1"></a><span class="co"># load raster</span></span>
+<span id="cb113-2"><a href="cedar-bridge-nj.html#cb113-2" tabindex="-1"></a><span class="fu">plt_rast_poly_fn</span>(</span>
+<span id="cb113-3"><a href="cedar-bridge-nj.html#cb113-3" tabindex="-1"></a>  <span class="at">rast =</span> cloud2trees_ans<span class="sc">$</span>foresttype_rast</span>
+<span id="cb113-4"><a href="cedar-bridge-nj.html#cb113-4" tabindex="-1"></a>  , <span class="at">poly =</span> aoi_sf</span>
+<span id="cb113-5"><a href="cedar-bridge-nj.html#cb113-5" tabindex="-1"></a>  , <span class="at">title =</span> <span class="st">&quot;FIA forest type group&quot;</span></span>
+<span id="cb113-6"><a href="cedar-bridge-nj.html#cb113-6" tabindex="-1"></a>  , <span class="at">crop =</span> T</span>
+<span id="cb113-7"><a href="cedar-bridge-nj.html#cb113-7" tabindex="-1"></a>  , <span class="at">buff =</span> <span class="dv">22</span></span>
+<span id="cb113-8"><a href="cedar-bridge-nj.html#cb113-8" tabindex="-1"></a>  , <span class="at">col =</span> <span class="st">&quot;navy&quot;</span></span>
+<span id="cb113-9"><a href="cedar-bridge-nj.html#cb113-9" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb113-10"><a href="cedar-bridge-nj.html#cb113-10" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">scale_fill_viridis_d</span>(<span class="at">option =</span> <span class="st">&quot;turbo&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb113-11"><a href="cedar-bridge-nj.html#cb113-11" tabindex="-1"></a>  <span class="co"># harrypotter::scale_fill_hp_d(option = &quot;lunalovegood&quot;, alpha = 0.8) +</span></span>
+<span id="cb113-12"><a href="cedar-bridge-nj.html#cb113-12" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste0</span>(aoi_sf<span class="sc">$</span>study_site_lab, <span class="st">&quot; - UAS Lidar&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb113-13"><a href="cedar-bridge-nj.html#cb113-13" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">theme</span>(</span>
+<span id="cb113-14"><a href="cedar-bridge-nj.html#cb113-14" tabindex="-1"></a>    <span class="at">legend.text =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">7</span>, <span class="at">angle =</span> <span class="dv">0</span>)</span>
+<span id="cb113-15"><a href="cedar-bridge-nj.html#cb113-15" tabindex="-1"></a>  )</span></code></pre></div>
+<p><img src="dod_cloud2trees_demo_files/figure-html/unnamed-chunk-126-1.png" width="1008" /></p>
+<p>distribution by forest type</p>
+<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="cedar-bridge-nj.html#cb114-1" tabindex="-1"></a><span class="fu">foresttype_sum_fn</span>(<span class="at">crowns =</span> cloud2trees_ans<span class="sc">$</span>crowns_sf, <span class="at">aoi =</span> aoi_sf, <span class="at">unit =</span> aoi_sf<span class="sc">$</span>study_site_lab[<span class="dv">1</span>])</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-127">Table 6.3: </span>Count of trees by FIA Forest Type Group
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+.
+</th>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+# trees
+</th>
+<th style="text-align:left;">
+% trees
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;vertical-align: top !important;" rowspan="3">
+Cedar Bridge (NJ)
+</td>
+<td style="text-align:left;">
+Loblolly / shortleaf pine group
+</td>
+<td style="text-align:left;">
+69,541
+</td>
+<td style="text-align:left;">
+98.8%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Oak / hickory group
+</td>
+<td style="text-align:left;">
+465
+</td>
+<td style="text-align:left;">
+0.7%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Oak / pine group
+</td>
+<td style="text-align:left;">
+347
+</td>
+<td style="text-align:left;">
+0.5%
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="dtm-7" class="section level4 hasAnchor" number="6.2.3.2">
+<h4><span class="header-section-number">6.2.3.2</span> DTM<a href="cedar-bridge-nj.html#dtm-7" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="cedar-bridge-nj.html#cb115-1" tabindex="-1"></a><span class="fu">plt_rast_poly_fn</span>(</span>
+<span id="cb115-2"><a href="cedar-bridge-nj.html#cb115-2" tabindex="-1"></a>  <span class="at">rast =</span> cloud2trees_ans<span class="sc">$</span>dtm_rast</span>
+<span id="cb115-3"><a href="cedar-bridge-nj.html#cb115-3" tabindex="-1"></a>  , <span class="at">poly =</span> aoi_sf</span>
+<span id="cb115-4"><a href="cedar-bridge-nj.html#cb115-4" tabindex="-1"></a>  , <span class="at">title =</span> <span class="st">&quot;DTM (m)&quot;</span></span>
+<span id="cb115-5"><a href="cedar-bridge-nj.html#cb115-5" tabindex="-1"></a>  , <span class="at">crop =</span> T</span>
+<span id="cb115-6"><a href="cedar-bridge-nj.html#cb115-6" tabindex="-1"></a>  , <span class="at">buff =</span> <span class="dv">22</span></span>
+<span id="cb115-7"><a href="cedar-bridge-nj.html#cb115-7" tabindex="-1"></a>  , <span class="at">col =</span> <span class="st">&quot;navy&quot;</span></span>
+<span id="cb115-8"><a href="cedar-bridge-nj.html#cb115-8" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb115-9"><a href="cedar-bridge-nj.html#cb115-9" tabindex="-1"></a>  harrypotter<span class="sc">::</span><span class="fu">scale_fill_hp</span>(</span>
+<span id="cb115-10"><a href="cedar-bridge-nj.html#cb115-10" tabindex="-1"></a>    <span class="at">option =</span> <span class="st">&quot;mischief&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.9</span>, <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">comma_format</span>(<span class="at">accuracy=</span><span class="dv">1</span>), <span class="at">breaks =</span> scales<span class="sc">::</span><span class="fu">breaks_extended</span>(<span class="at">n=</span><span class="dv">6</span>)</span>
+<span id="cb115-11"><a href="cedar-bridge-nj.html#cb115-11" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb115-12"><a href="cedar-bridge-nj.html#cb115-12" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste0</span>(aoi_sf<span class="sc">$</span>study_site_lab, <span class="st">&quot; - UAS Lidar&quot;</span>))</span></code></pre></div>
+<p><img src="dod_cloud2trees_demo_files/figure-html/unnamed-chunk-128-1.png" width="1008" /></p>
+</div>
+<div id="chm-7" class="section level4 hasAnchor" number="6.2.3.3">
+<h4><span class="header-section-number">6.2.3.3</span> CHM<a href="cedar-bridge-nj.html#chm-7" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>plot the CHM and we’ll also add the extracted trees in gray</p>
+<p><em>this is a large area so we’re going to make the raster more coarse and sample from the tree list</em></p>
+<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="cedar-bridge-nj.html#cb116-1" tabindex="-1"></a>crowns_temp <span class="ot">&lt;-</span> cloud2trees_ans<span class="sc">$</span>crowns_sf <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">slice_sample</span>(<span class="at">prop =</span> <span class="fl">0.3</span>)</span>
+<span id="cb116-2"><a href="cedar-bridge-nj.html#cb116-2" tabindex="-1"></a></span>
+<span id="cb116-3"><a href="cedar-bridge-nj.html#cb116-3" tabindex="-1"></a><span class="fu">plt_rast_poly_fn</span>(</span>
+<span id="cb116-4"><a href="cedar-bridge-nj.html#cb116-4" tabindex="-1"></a>  <span class="at">rast =</span> cloud2trees_ans<span class="sc">$</span>chm_rast <span class="sc">%&gt;%</span> terra<span class="sc">::</span><span class="fu">aggregate</span>(<span class="at">fact =</span> <span class="dv">2</span>, <span class="at">cores =</span> lasR<span class="sc">::</span><span class="fu">half_cores</span>())</span>
+<span id="cb116-5"><a href="cedar-bridge-nj.html#cb116-5" tabindex="-1"></a>  , <span class="at">poly =</span> aoi_sf</span>
+<span id="cb116-6"><a href="cedar-bridge-nj.html#cb116-6" tabindex="-1"></a>  , <span class="at">title =</span> <span class="st">&quot;CHM (m)&quot;</span></span>
+<span id="cb116-7"><a href="cedar-bridge-nj.html#cb116-7" tabindex="-1"></a>  , <span class="at">crop =</span> T</span>
+<span id="cb116-8"><a href="cedar-bridge-nj.html#cb116-8" tabindex="-1"></a>  , <span class="at">buff =</span> <span class="dv">22</span></span>
+<span id="cb116-9"><a href="cedar-bridge-nj.html#cb116-9" tabindex="-1"></a>  , <span class="at">col =</span> <span class="st">&quot;navy&quot;</span></span>
+<span id="cb116-10"><a href="cedar-bridge-nj.html#cb116-10" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb116-11"><a href="cedar-bridge-nj.html#cb116-11" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">scale_fill_viridis_c</span>(</span>
+<span id="cb116-12"><a href="cedar-bridge-nj.html#cb116-12" tabindex="-1"></a>    <span class="at">option =</span> <span class="st">&quot;plasma&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.9</span>, <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">comma_format</span>(<span class="at">accuracy=</span><span class="dv">1</span>), <span class="at">breaks =</span> scales<span class="sc">::</span><span class="fu">breaks_extended</span>(<span class="at">n=</span><span class="dv">6</span>)</span>
+<span id="cb116-13"><a href="cedar-bridge-nj.html#cb116-13" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb116-14"><a href="cedar-bridge-nj.html#cb116-14" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">geom_sf</span>(</span>
+<span id="cb116-15"><a href="cedar-bridge-nj.html#cb116-15" tabindex="-1"></a>    <span class="at">data =</span> </span>
+<span id="cb116-16"><a href="cedar-bridge-nj.html#cb116-16" tabindex="-1"></a>      crowns_temp <span class="sc">%&gt;%</span> </span>
+<span id="cb116-17"><a href="cedar-bridge-nj.html#cb116-17" tabindex="-1"></a>      <span class="co"># cloud2trees_ans$crowns_sf %&gt;% </span></span>
+<span id="cb116-18"><a href="cedar-bridge-nj.html#cb116-18" tabindex="-1"></a>      <span class="co"># dplyr::slice_sample(prop = 0.1) %&gt;% </span></span>
+<span id="cb116-19"><a href="cedar-bridge-nj.html#cb116-19" tabindex="-1"></a>      sf<span class="sc">::</span><span class="fu">st_intersection</span>(</span>
+<span id="cb116-20"><a href="cedar-bridge-nj.html#cb116-20" tabindex="-1"></a>        aoi_sf <span class="sc">%&gt;%</span> sf<span class="sc">::</span><span class="fu">st_transform</span>(sf<span class="sc">::</span><span class="fu">st_crs</span>(cloud2trees_ans<span class="sc">$</span>crowns_sf))</span>
+<span id="cb116-21"><a href="cedar-bridge-nj.html#cb116-21" tabindex="-1"></a>      )</span>
+<span id="cb116-22"><a href="cedar-bridge-nj.html#cb116-22" tabindex="-1"></a>    , <span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">color =</span> <span class="st">&quot;gray33&quot;</span>, <span class="at">lwd =</span> <span class="fl">0.5</span></span>
+<span id="cb116-23"><a href="cedar-bridge-nj.html#cb116-23" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb116-24"><a href="cedar-bridge-nj.html#cb116-24" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste0</span>(aoi_sf<span class="sc">$</span>study_site_lab, <span class="st">&quot; - UAS Lidar&quot;</span>))</span></code></pre></div>
+<p><img src="dod_cloud2trees_demo_files/figure-html/unnamed-chunk-129-1.png" width="1008" /></p>
+</div>
+<div id="imagery-7" class="section level4 hasAnchor" number="6.2.3.4">
+<h4><span class="header-section-number">6.2.3.4</span> Imagery<a href="cedar-bridge-nj.html#imagery-7" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>let’s check the tree extraction results (gray) on satellite imagery with a collection date that may not coincide with the point cloud collection date</p>
+<p><em>this is a large area so we’re going to zoom way in on the image and sample from the tree list</em></p>
+<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="cedar-bridge-nj.html#cb117-1" tabindex="-1"></a><span class="co"># add crowns</span></span>
+<span id="cb117-2"><a href="cedar-bridge-nj.html#cb117-2" tabindex="-1"></a>plt_aoi_basemap <span class="sc">+</span></span>
+<span id="cb117-3"><a href="cedar-bridge-nj.html#cb117-3" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">geom_sf</span>(</span>
+<span id="cb117-4"><a href="cedar-bridge-nj.html#cb117-4" tabindex="-1"></a>    <span class="at">data =</span> </span>
+<span id="cb117-5"><a href="cedar-bridge-nj.html#cb117-5" tabindex="-1"></a>      crowns_temp <span class="sc">%&gt;%</span> </span>
+<span id="cb117-6"><a href="cedar-bridge-nj.html#cb117-6" tabindex="-1"></a>      <span class="co"># cloud2trees_ans$crowns_sf %&gt;% </span></span>
+<span id="cb117-7"><a href="cedar-bridge-nj.html#cb117-7" tabindex="-1"></a>      <span class="co"># dplyr::slice_sample(prop = 0.6) %&gt;% </span></span>
+<span id="cb117-8"><a href="cedar-bridge-nj.html#cb117-8" tabindex="-1"></a>      sf<span class="sc">::</span><span class="fu">st_intersection</span>(</span>
+<span id="cb117-9"><a href="cedar-bridge-nj.html#cb117-9" tabindex="-1"></a>        aoi_sf <span class="sc">%&gt;%</span></span>
+<span id="cb117-10"><a href="cedar-bridge-nj.html#cb117-10" tabindex="-1"></a>        <span class="co"># sf::st_centroid() %&gt;% sf::st_buffer(100, endCapStyle = &quot;SQUARE&quot;) %&gt;% </span></span>
+<span id="cb117-11"><a href="cedar-bridge-nj.html#cb117-11" tabindex="-1"></a>        sf<span class="sc">::</span><span class="fu">st_transform</span>(sf<span class="sc">::</span><span class="fu">st_crs</span>(cloud2trees_ans<span class="sc">$</span>crowns_sf))</span>
+<span id="cb117-12"><a href="cedar-bridge-nj.html#cb117-12" tabindex="-1"></a>      ) <span class="sc">%&gt;%</span> </span>
+<span id="cb117-13"><a href="cedar-bridge-nj.html#cb117-13" tabindex="-1"></a>      sf<span class="sc">::</span><span class="fu">st_transform</span>(<span class="dv">4326</span>)</span>
+<span id="cb117-14"><a href="cedar-bridge-nj.html#cb117-14" tabindex="-1"></a>    , <span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">color =</span> <span class="st">&quot;gray77&quot;</span>, <span class="at">lwd =</span> <span class="fl">0.1</span></span>
+<span id="cb117-15"><a href="cedar-bridge-nj.html#cb117-15" tabindex="-1"></a>    , <span class="at">inherit.aes =</span> F</span>
+<span id="cb117-16"><a href="cedar-bridge-nj.html#cb117-16" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb117-17"><a href="cedar-bridge-nj.html#cb117-17" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste0</span>(aoi_sf<span class="sc">$</span>study_site_lab, <span class="st">&quot; - UAS Lidar&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb117-18"><a href="cedar-bridge-nj.html#cb117-18" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">theme</span>(</span>
+<span id="cb117-19"><a href="cedar-bridge-nj.html#cb117-19" tabindex="-1"></a>    <span class="at">plot.title =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>, <span class="at">hjust =</span> <span class="dv">0</span>, <span class="at">margin =</span> ggplot2<span class="sc">::</span><span class="fu">margin</span>(<span class="dv">0</span>,<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">0</span>))</span>
+<span id="cb117-20"><a href="cedar-bridge-nj.html#cb117-20" tabindex="-1"></a>  )</span></code></pre></div>
+<p><img src="dod_cloud2trees_demo_files/figure-html/unnamed-chunk-130-1.png" width="1008" /></p>
+</div>
+<div id="tree-attributes-spatial-7" class="section level4 hasAnchor" number="6.2.3.5">
+<h4><span class="header-section-number">6.2.3.5</span> Tree Attributes Spatial<a href="cedar-bridge-nj.html#tree-attributes-spatial-7" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p><em>this is a large area so we’re going to sample from the tree list</em></p>
+<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="cedar-bridge-nj.html#cb118-1" tabindex="-1"></a>crowns_temp <span class="ot">&lt;-</span> cloud2trees_ans<span class="sc">$</span>crowns_sf <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">slice_sample</span>(<span class="at">prop =</span> <span class="fl">0.6</span>)</span>
+<span id="cb118-2"><a href="cedar-bridge-nj.html#cb118-2" tabindex="-1"></a></span>
+<span id="cb118-3"><a href="cedar-bridge-nj.html#cb118-3" tabindex="-1"></a>plt_df_temp <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">tibble</span>(</span>
+<span id="cb118-4"><a href="cedar-bridge-nj.html#cb118-4" tabindex="-1"></a>  <span class="at">fill_var =</span> <span class="fu">c</span>(<span class="st">&quot;tree_height_m&quot;</span>, <span class="st">&quot;dbh_cm&quot;</span>, <span class="st">&quot;tree_cbh_m&quot;</span>, <span class="st">&quot;max_crown_diam_height_m&quot;</span>, <span class="st">&quot;landfire_crown_biomass_kg&quot;</span>)</span>
+<span id="cb118-5"><a href="cedar-bridge-nj.html#cb118-5" tabindex="-1"></a>  , <span class="at">palette =</span> <span class="fu">c</span>(<span class="st">&quot;Blues&quot;</span>, <span class="st">&quot;Oranges&quot;</span>, <span class="st">&quot;Greens&quot;</span>, <span class="st">&quot;Purples&quot;</span>, <span class="st">&quot;Reds&quot;</span>)</span>
+<span id="cb118-6"><a href="cedar-bridge-nj.html#cb118-6" tabindex="-1"></a>  , <span class="at">title =</span> <span class="fu">c</span>(<span class="st">&quot;Height (m)&quot;</span>, <span class="st">&quot;DBH (cm)&quot;</span>, <span class="st">&quot;CBH (m)&quot;</span>, <span class="st">&quot;HMD (m)&quot;</span>, <span class="st">&quot;Crown</span><span class="sc">\n</span><span class="st">biomass (kg)&quot;</span>)</span>
+<span id="cb118-7"><a href="cedar-bridge-nj.html#cb118-7" tabindex="-1"></a>)</span>
+<span id="cb118-8"><a href="cedar-bridge-nj.html#cb118-8" tabindex="-1"></a></span>
+<span id="cb118-9"><a href="cedar-bridge-nj.html#cb118-9" tabindex="-1"></a>plts_temp <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(plt_df_temp) <span class="sc">%&gt;%</span> </span>
+<span id="cb118-10"><a href="cedar-bridge-nj.html#cb118-10" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">map</span>(</span>
+<span id="cb118-11"><a href="cedar-bridge-nj.html#cb118-11" tabindex="-1"></a>    \(x)</span>
+<span id="cb118-12"><a href="cedar-bridge-nj.html#cb118-12" tabindex="-1"></a>    <span class="fu">plt_crown_attr_fn</span>(</span>
+<span id="cb118-13"><a href="cedar-bridge-nj.html#cb118-13" tabindex="-1"></a>      <span class="at">crowns =</span> crowns_temp</span>
+<span id="cb118-14"><a href="cedar-bridge-nj.html#cb118-14" tabindex="-1"></a>      , <span class="at">aoi =</span> aoi_sf</span>
+<span id="cb118-15"><a href="cedar-bridge-nj.html#cb118-15" tabindex="-1"></a>      , <span class="at">lwd =</span> <span class="fl">0.6</span></span>
+<span id="cb118-16"><a href="cedar-bridge-nj.html#cb118-16" tabindex="-1"></a>      , <span class="at">fill_var =</span> plt_df_temp<span class="sc">$</span>fill_var[x]</span>
+<span id="cb118-17"><a href="cedar-bridge-nj.html#cb118-17" tabindex="-1"></a>      , <span class="at">palette =</span> plt_df_temp<span class="sc">$</span>palette[x]</span>
+<span id="cb118-18"><a href="cedar-bridge-nj.html#cb118-18" tabindex="-1"></a>      , <span class="at">title =</span> plt_df_temp<span class="sc">$</span>title[x]</span>
+<span id="cb118-19"><a href="cedar-bridge-nj.html#cb118-19" tabindex="-1"></a>    )  </span>
+<span id="cb118-20"><a href="cedar-bridge-nj.html#cb118-20" tabindex="-1"></a>  )</span>
+<span id="cb118-21"><a href="cedar-bridge-nj.html#cb118-21" tabindex="-1"></a><span class="co"># combine with patchwork</span></span>
+<span id="cb118-22"><a href="cedar-bridge-nj.html#cb118-22" tabindex="-1"></a>patchwork<span class="sc">::</span><span class="fu">wrap_plots</span>(plts_temp, <span class="at">ncol =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb118-23"><a href="cedar-bridge-nj.html#cb118-23" tabindex="-1"></a>  patchwork<span class="sc">::</span><span class="fu">plot_annotation</span>(</span>
+<span id="cb118-24"><a href="cedar-bridge-nj.html#cb118-24" tabindex="-1"></a>    <span class="at">title =</span> <span class="fu">paste0</span>(aoi_sf<span class="sc">$</span>study_site_lab, <span class="st">&quot; - UAS Lidar&quot;</span>)</span>
+<span id="cb118-25"><a href="cedar-bridge-nj.html#cb118-25" tabindex="-1"></a>    <span class="co"># , subtitle = &quot;huh&quot;</span></span>
+<span id="cb118-26"><a href="cedar-bridge-nj.html#cb118-26" tabindex="-1"></a>    <span class="co"># , caption = &quot;hey&quot;</span></span>
+<span id="cb118-27"><a href="cedar-bridge-nj.html#cb118-27" tabindex="-1"></a>    , <span class="at">theme =</span> ggplot2<span class="sc">::</span><span class="fu">theme</span>(</span>
+<span id="cb118-28"><a href="cedar-bridge-nj.html#cb118-28" tabindex="-1"></a>      <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">margin =</span> ggplot2<span class="sc">::</span><span class="fu">margin</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">3</span>,<span class="dv">0</span>))</span>
+<span id="cb118-29"><a href="cedar-bridge-nj.html#cb118-29" tabindex="-1"></a>    )</span>
+<span id="cb118-30"><a href="cedar-bridge-nj.html#cb118-30" tabindex="-1"></a>  )</span></code></pre></div>
+<p><img src="dod_cloud2trees_demo_files/figure-html/unnamed-chunk-131-1.png" width="1008" /></p>
+</div>
+<div id="tree-attributes-summary-stats-7" class="section level4 hasAnchor" number="6.2.3.6">
+<h4><span class="header-section-number">6.2.3.6</span> Tree Attributes Summary Stats<a href="cedar-bridge-nj.html#tree-attributes-summary-stats-7" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="cedar-bridge-nj.html#cb119-1" tabindex="-1"></a><span class="fu">stats_sum_fn</span>(</span>
+<span id="cb119-2"><a href="cedar-bridge-nj.html#cb119-2" tabindex="-1"></a>  <span class="at">crowns =</span> cloud2trees_ans<span class="sc">$</span>crowns_sf <span class="sc">%&gt;%</span> </span>
+<span id="cb119-3"><a href="cedar-bridge-nj.html#cb119-3" tabindex="-1"></a>    <span class="do">## !!!!!!!!!!!!!!!!!!!!!!!! cruz_tree_kg_per_m3 empty here</span></span>
+<span id="cb119-4"><a href="cedar-bridge-nj.html#cb119-4" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">cruz_tree_kg_per_m3 =</span> <span class="fu">as.numeric</span>(<span class="cn">NA</span>))</span>
+<span id="cb119-5"><a href="cedar-bridge-nj.html#cb119-5" tabindex="-1"></a>  , <span class="at">aoi =</span> aoi_sf</span>
+<span id="cb119-6"><a href="cedar-bridge-nj.html#cb119-6" tabindex="-1"></a>  , <span class="at">unit =</span> <span class="fu">paste0</span>(aoi_sf<span class="sc">$</span>study_site_lab, <span class="st">&quot; - UAS Lidar&quot;</span>)</span>
+<span id="cb119-7"><a href="cedar-bridge-nj.html#cb119-7" tabindex="-1"></a>)</span></code></pre></div>
+<table class="table" style="font-size: 13px; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+<span id="tab:unnamed-chunk-132">Table 6.4: </span>Summary statistics for selected metrics
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Unit Name
+</th>
+<th style="text-align:left;">
+Metric
+</th>
+<th style="text-align:left;">
+Mean
+</th>
+<th style="text-align:left;">
+Median
+</th>
+<th style="text-align:left;">
+Std Dev
+</th>
+<th style="text-align:left;">
+Range
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;vertical-align: top !important;" rowspan="6">
+Cedar Bridge (NJ) - UAS Lidar<br>(70,353 trees)
+</td>
+<td style="text-align:left;">
+Height (m)
+</td>
+<td style="text-align:left;">
+12.3
+</td>
+<td style="text-align:left;">
+12.8
+</td>
+<td style="text-align:left;">
+3.7
+</td>
+<td style="text-align:left;">
+2.0—33.5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+DBH (cm)
+</td>
+<td style="text-align:left;">
+22.6
+</td>
+<td style="text-align:left;">
+23.1
+</td>
+<td style="text-align:left;">
+7.9
+</td>
+<td style="text-align:left;">
+3.6—80.5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Crown Base Ht. (m)
+</td>
+<td style="text-align:left;">
+4.9
+</td>
+<td style="text-align:left;">
+4.9
+</td>
+<td style="text-align:left;">
+1.4
+</td>
+<td style="text-align:left;">
+1.5—19.5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+HMD (m)
+</td>
+<td style="text-align:left;">
+6.7
+</td>
+<td style="text-align:left;">
+7.0
+</td>
+<td style="text-align:left;">
+1.9
+</td>
+<td style="text-align:left;">
+0.1—19.6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Cruz CBD<br>kg m<sup>-3</sup>
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA—NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+LANDFIRE CBD<br>kg m<sup>-3</sup>
+</td>
+<td style="text-align:left;">
+0.199
+</td>
+<td style="text-align:left;">
+0.190
+</td>
+<td style="text-align:left;">
+0.074
+</td>
+<td style="text-align:left;">
+0.009—1.466
 </td>
 </tr>
 </tbody>
@@ -750,7 +1201,7 @@ LANDFIRE CBD<br>kg m<sup>-3</sup>
         </div>
       </div>
 <a href="salt-cabin-co.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="processing-time-analysis.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="point-cloud-processing-results.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

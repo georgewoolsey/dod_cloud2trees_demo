@@ -20,7 +20,7 @@
   <meta name="twitter:description" content="Using the bookdown package to write a book of data exploration. The output format for this example is bookdown::gitbook." />
   
 
-<meta name="author" content="George Woolsey" />
+<meta name="author" content="George Woolsey, Wade Tinkham, Chad Hoffman, and Sophie Bonner" />
 
 
 
@@ -242,8 +242,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.1.2" data-path="cedar-bridge-nj.html"><a href="cedar-bridge-nj.html#cloud2trees-point-cloud-processing-6"><i class="fa fa-check"></i><b>6.1.2</b> <code>cloud2trees</code> point cloud processing</a></li>
 <li class="chapter" data-level="6.1.3" data-path="cedar-bridge-nj.html"><a href="cedar-bridge-nj.html#cloud2trees-results-6"><i class="fa fa-check"></i><b>6.1.3</b> <code>cloud2trees</code> Results</a></li>
 </ul></li>
+<li class="chapter" data-level="6.2" data-path="cedar-bridge-nj.html"><a href="cedar-bridge-nj.html#uas-lidar-processing-1"><i class="fa fa-check"></i><b>6.2</b> UAS lidar Processing</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="cedar-bridge-nj.html"><a href="cedar-bridge-nj.html#itd-tuning-7"><i class="fa fa-check"></i><b>6.2.1</b> ITD tuning</a></li>
+<li class="chapter" data-level="6.2.2" data-path="cedar-bridge-nj.html"><a href="cedar-bridge-nj.html#cloud2trees-point-cloud-processing-7"><i class="fa fa-check"></i><b>6.2.2</b> <code>cloud2trees</code> point cloud processing</a></li>
+<li class="chapter" data-level="6.2.3" data-path="cedar-bridge-nj.html"><a href="cedar-bridge-nj.html#cloud2trees-results-7"><i class="fa fa-check"></i><b>6.2.3</b> <code>cloud2trees</code> Results</a></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="processing-time-analysis.html"><a href="processing-time-analysis.html"><i class="fa fa-check"></i><b>7</b> Processing Time Analysis</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="point-cloud-processing-results.html"><a href="point-cloud-processing-results.html"><i class="fa fa-check"></i><b>7</b> Point Cloud Processing Results</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="point-cloud-processing-results.html"><a href="point-cloud-processing-results.html#processing-time"><i class="fa fa-check"></i><b>7.1</b> Processing Time</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="point-cloud-processing-results.html"><a href="point-cloud-processing-results.html#point-cloud-processing-time-versus-point-density"><i class="fa fa-check"></i><b>7.1.1</b> Point Cloud Processing Time versus Point Density</a></li>
+<li class="chapter" data-level="7.1.2" data-path="point-cloud-processing-results.html"><a href="point-cloud-processing-results.html#point-cloud-processing-time-by-section"><i class="fa fa-check"></i><b>7.1.2</b> Point Cloud Processing Time by Section (%)</a></li>
+<li class="chapter" data-level="7.1.3" data-path="point-cloud-processing-results.html"><a href="point-cloud-processing-results.html#point-cloud-processing-time-by-section-total"><i class="fa fa-check"></i><b>7.1.3</b> Point Cloud Processing Time by Section (total)</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="point-cloud-processing-results.html"><a href="point-cloud-processing-results.html#silvicultural-metrics"><i class="fa fa-check"></i><b>7.2</b> Silvicultural Metrics</a></li>
+</ul></li>
 </ul>
 
       </nav>
@@ -263,15 +278,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="header">
 <h1 class="title">DoD cloud2trees Demonstration: Forest Fuel Quantification for Wildfire Modeling using QUIC-Fire</h1>
-<p class="author"><em>George Woolsey</em></p>
-<p class="date"><em>12 July, 2025</em></p>
+<p class="author"><em>George Woolsey, Wade Tinkham, Chad Hoffman, and Sophie Bonner</em></p>
+<p class="date"><em>15 July, 2025</em></p>
 </div>
 <div id="introduction" class="section level1 hasAnchor" number="1">
 <h1><span class="header-section-number">Section 1</span> Introduction<a href="index.html#introduction" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>Demonstration of <a href="https://github.com/georgewoolsey/cloud2trees"><code>cloud2trees</code></a> for processing aerial point cloud data to generate inputs for <a href="https://scholar.google.com/scholar?cluster=5135309566348498660&amp;oi=gsb&amp;hl=en&amp;as_sdt=0,6">QUIC-Fire</a></p>
 <div id="objective" class="section level2 hasAnchor" number="1.1">
 <h2><span class="header-section-number">1.1</span> Objective<a href="index.html#objective" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>The objective of this study is to demonstrate the use of <a href="https://github.com/georgewoolsey/cloud2trees"><code>cloud2trees</code></a> for processing aerial point cloud data to generate inputs for <a href="https://scholar.google.com/scholar?cluster=5135309566348498660&amp;oi=gsb&amp;hl=en&amp;as_sdt=0,6">QUIC-Fire</a>. We will use the framework to process ALS and UAS-SfM datasets across geographically variable demonstration sites. The <code>cloud2trees</code> framework generates a tree list containing individual tree-level attributes such as geographic coordinates (X, Y), height, DBH, crown dimensions, forest type, and wildfire-relevant fuel loading metrics like crown bulk density and crown base height. The outputs from <code>cloud2trees</code> will be prepared for ingestion into the QUIC-Fire model (perhaps this is built into the package by now???) to showcase the framework’s processing efficiency and reliability for timely wildfire behavior modeling.</p>
+<p>The objective of this study is to demonstrate the use of <code>cloud2trees</code> for processing aerial point cloud data to generate inputs for <a href="https://scholar.google.com/scholar?cluster=5135309566348498660&amp;oi=gsb&amp;hl=en&amp;as_sdt=0,6">QUIC-Fire</a>. We will use the framework to process ALS and UAS-SfM datasets across geographically variable demonstration sites. The <code>cloud2trees</code> framework generates a tree list containing individual tree-level attributes such as geographic coordinates (X, Y), height, DBH, crown dimensions, forest type, and wildfire-relevant fuel loading metrics like crown bulk density and crown base height. The outputs from <code>cloud2trees</code> will be prepared for ingestion into the QUIC-Fire model (perhaps this is built into the package by now???) to showcase the framework’s processing efficiency and reliability for timely wildfire behavior modeling.</p>
 </div>
 <div id="data_desc" class="section level2 hasAnchor" number="1.2">
 <h2><span class="header-section-number">1.2</span> Data<a href="index.html#data_desc" class="anchor-section" aria-label="Anchor link to header"></a></h2>

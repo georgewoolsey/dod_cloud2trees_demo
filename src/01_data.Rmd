@@ -483,7 +483,7 @@ my_ggmap_basemap(
 
 make a function specific to this data and task to grab the basemap with `my_ggmap_basemap()` and overlay the point cloud data and the study area bounds
 
-```{r, eval = F}
+```{r, eval = T}
 plt_fn_temp <- function(
   record_study_sites_las_ctg
   , my_study_sites_las_ctg = study_sites_las_ctg
@@ -545,6 +545,7 @@ plt_fn_temp <- function(
   return( plt2_temp )
 }
 # for each las ctg with crs
+sf::st_crs(study_sites_las_ctg$NewJersey_als_2012) <- paste0("EPSG:", 32618) #  D;
 plts_temp <- 
   1:length(study_sites_las_ctg %>% purrr::discard(names(.) %in% c("FortStewart_uas_lidar","NewJersey_als"))) %>% 
   purrr::map(
@@ -560,11 +561,11 @@ patchwork::wrap_plots(plts_temp, ncol = 2)
 # 
 ```
 
-```{r, include=FALSE, eval=F}
+```{r, include=FALSE, eval=T}
 ggplot2::ggsave(
   "../data/ptcld_aoi_extents.jpg"
   , dpi = "print"
-  , height = 10, width = 8
+  , height = 11, width = 8
 )
 ```
 

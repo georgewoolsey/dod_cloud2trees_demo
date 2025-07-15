@@ -410,9 +410,9 @@ clip_tree_list_aoi <- function(
 
 let's clip the tree list to the study bounds for each result for using with LANL TREES and Quic-Fire
 
-```{r}
+```{r, results=F, message=FALSE, warning=FALSE, include=FALSE, eval=FALSE}
 # dir
-dir_temp <- file.path("../data", "cloud2trees_processed_tree_lists")
+dir_temp <- file.path("c:/Users/georg/Downloads/", "cloud2trees_processed_tree_lists")
 if(!dir.exists(dir_temp)){
   dir.create(dir_temp)
 }
@@ -421,6 +421,10 @@ ans_temp <-
   1:nrow(study_sites_processing_sf) %>%
   # c(6) %>% 
   purrr::map(\(x)
+    fp <- file.path(dir_temp, study_sites_processing_sf$study_site[x])
+    if(!dir.exists(fp)){
+      dir.create(fp)
+    }
     clip_tree_list_aoi(
       trees = list.files(
           study_sites_processing_sf$fdir[x]
@@ -441,7 +445,7 @@ ans_temp <-
     ) %>% 
     sf::st_write(
       dsn = file.path(
-        dir_temp
+        fp
         , paste0(
           study_sites_processing_sf$study_site[x]
           , "_"
