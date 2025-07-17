@@ -91,7 +91,13 @@ study_sites_processing_sf <-
        , .names = "{.col}_pct"
     )
   )
-study_sites_processing_sf %>% dplyr::glimpse()
+# study_sites_processing_sf %>% dplyr::glimpse()
+```
+
+what is all included in this data?
+
+```{r}
+study_sites_processing_sf %>% names()
 ```
 
 that's a lot of tracking data, let's look at the main timing parameters
@@ -640,7 +646,7 @@ kableExtra::kbl(
   )
   , escape = F
 ) %>% 
-kableExtra::kable_styling(font_size = 12) %>% 
+kableExtra::kable_styling(font_size = 10.5) %>% 
 kableExtra::collapse_rows(columns = 1:2, valign = "top")  
 
 ```
@@ -694,7 +700,7 @@ kableExtra::kbl(
   )
   , escape = F
 ) %>% 
-kableExtra::kable_styling(font_size = 12) %>% 
+kableExtra::kable_styling(font_size = 10.5) %>% 
 kableExtra::collapse_rows(columns = 1:2, valign = "top")  
 ```
 

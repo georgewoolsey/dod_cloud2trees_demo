@@ -12,7 +12,12 @@
  * Future linkages are possible to model tree parameters from NAIP/Satellite derived canopy height models
 
 ## Challenges with these Demos:
- * Data from USGS and Forest Service Data Archive were directly usable while other data sources lacked projection information and documented metadata
+ * Most data from USGS and Forest Service Data Archive were directly usable while other data sources lacked projection information and documented metadata
     - Only about half of the data was available in public access portals
     - About a third of the data delivered with missing metadata that initially prevented processing
- * Data interpretation/comparison is hindered by having 3-12 year gap between datasets at a site
+ * Point cloud data that did not use a metric Coordinate Reference System (CRS) requires pre-processing
+    - To ensure compatibility with our processing pipeline, point cloud data requires transformation if delivered in State Plane Coordinate Systems (SPCS) or with vertical units expressed in feet. 
+    - Converting these data to a metric Coordinate Reference System (CRS) adds notable overhead to the processing timeline
+ * A significant temporal discrepancy (3-12 years) exists between datasets collected at each site, which complicates data interpretation and comparison. 
+    - This time gap acts as a confounding variable when attempting to compare data acquired by different collection systems (e.g., ALS versus UAS-SfM).
+ 

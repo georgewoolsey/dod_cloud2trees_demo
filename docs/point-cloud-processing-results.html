@@ -30,7 +30,7 @@
   
   
 <link rel="prev" href="cedar-bridge-nj.html"/>
-<link rel="next" href="cloud2trees-to-lanl-trees.html"/>
+<link rel="next" href="lanl_trees.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -258,13 +258,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7.1.2" data-path="point-cloud-processing-results.html"><a href="point-cloud-processing-results.html#point-cloud-processing-time-by-section"><i class="fa fa-check"></i><b>7.1.2</b> Point Cloud Processing Time by Section (%)</a></li>
 <li class="chapter" data-level="7.1.3" data-path="point-cloud-processing-results.html"><a href="point-cloud-processing-results.html#point-cloud-processing-time-by-section-total"><i class="fa fa-check"></i><b>7.1.3</b> Point Cloud Processing Time by Section (total)</a></li>
 </ul></li>
-<li class="chapter" data-level="7.2" data-path="point-cloud-processing-results.html"><a href="point-cloud-processing-results.html#silvicultural-metrics"><i class="fa fa-check"></i><b>7.2</b> Silvicultural Metrics</a></li>
-</ul></li>
-<li class="chapter" data-level="8" data-path="cloud2trees-to-lanl-trees.html"><a href="cloud2trees-to-lanl-trees.html"><i class="fa fa-check"></i><b>8</b> <code>cloud2trees</code> to LANL TREES</a>
+<li class="chapter" data-level="7.2" data-path="point-cloud-processing-results.html"><a href="point-cloud-processing-results.html#silvicultural-metrics"><i class="fa fa-check"></i><b>7.2</b> Silvicultural Metrics</a>
 <ul>
-<li class="chapter" data-level="8.1" data-path="cloud2trees-to-lanl-trees.html"><a href="cloud2trees-to-lanl-trees.html#surface-fuel-quantification"><i class="fa fa-check"></i><b>8.1</b> Surface Fuel Quantification</a></li>
-<li class="chapter" data-level="8.2" data-path="cloud2trees-to-lanl-trees.html"><a href="cloud2trees-to-lanl-trees.html#cloud2treescloud2trees_to_lanl_trees-example-process"><i class="fa fa-check"></i><b>8.2</b> <code>cloud2trees::cloud2trees_to_lanl_trees()</code> example process</a></li>
-<li class="chapter" data-level="8.3" data-path="cloud2trees-to-lanl-trees.html"><a href="cloud2trees-to-lanl-trees.html#cloud2treescloud2trees_to_lanl_trees-everything"><i class="fa fa-check"></i><b>8.3</b> <code>cloud2trees::cloud2trees_to_lanl_trees()</code> everything</a></li>
+<li class="chapter" data-level="7.2.1" data-path="point-cloud-processing-results.html"><a href="point-cloud-processing-results.html#example"><i class="fa fa-check"></i><b>7.2.1</b> Example</a></li>
+<li class="chapter" data-level="7.2.2" data-path="point-cloud-processing-results.html"><a href="point-cloud-processing-results.html#study-area-summaries"><i class="fa fa-check"></i><b>7.2.2</b> Study Area Summaries</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="lanl_trees.html"><a href="lanl_trees.html"><i class="fa fa-check"></i><b>8</b> <code>cloud2trees</code> to LANL TREES</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="lanl_trees.html"><a href="lanl_trees.html#surface-fuel-quantification"><i class="fa fa-check"></i><b>8.1</b> Surface Fuel Quantification</a></li>
+<li class="chapter" data-level="8.2" data-path="lanl_trees.html"><a href="lanl_trees.html#cloud2treescloud2trees_to_lanl_trees-example-process"><i class="fa fa-check"></i><b>8.2</b> <code>cloud2trees::cloud2trees_to_lanl_trees()</code> example process</a></li>
+<li class="chapter" data-level="8.3" data-path="lanl_trees.html"><a href="lanl_trees.html#cloud2treescloud2trees_to_lanl_trees-everything"><i class="fa fa-check"></i><b>8.3</b> <code>cloud2trees::cloud2trees_to_lanl_trees()</code> everything</a></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="lessons-learned.html"><a href="lessons-learned.html"><i class="fa fa-check"></i><b>9</b> Lessons Learned</a>
 <ul>
@@ -369,171 +373,171 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb121-25"><a href="point-cloud-processing-results.html#cb121-25" tabindex="-1"></a>       , <span class="at">.names =</span> <span class="st">&quot;{.col}_pct&quot;</span></span>
 <span id="cb121-26"><a href="point-cloud-processing-results.html#cb121-26" tabindex="-1"></a>    )</span>
 <span id="cb121-27"><a href="point-cloud-processing-results.html#cb121-27" tabindex="-1"></a>  )</span>
-<span id="cb121-28"><a href="point-cloud-processing-results.html#cb121-28" tabindex="-1"></a>study_sites_processing_sf <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">glimpse</span>()</span></code></pre></div>
-<pre><code>## Rows: 8
-## Columns: 80
-## $ study_site                            &lt;chr&gt; &quot;FortStewart&quot;, &quot;FortStewart&quot;, &quot;N…
-## $ study_site_lab                        &lt;chr&gt; &quot;Fort Stewart (GA)&quot;, &quot;Fort Stewa…
-## $ number_of_points                      &lt;dbl&gt; 43073560, 340216525, 80299066, 7…
-## $ las_area_m2                           &lt;dbl&gt; 8999820.0, 6859980.4, 2064120.9,…
-## $ timer_cloud2raster_mins               &lt;dbl&gt; 8.722992, 128.585765, 22.147697,…
-## $ timer_raster2trees_mins               &lt;dbl&gt; 10.01676441, 5.58708338, 1.80076…
-## $ timer_trees_competition_mins          &lt;dbl&gt; 1.446803e-05, 1.419783e-05, 1.50…
-## $ timer_treels_stem_dbh_mins            &lt;dbl&gt; 6.755193e-08, 6.755193e-08, 6.75…
-## $ timer_trees_dbh_mins                  &lt;dbl&gt; 8.720106, 11.735575, 5.896145, 7…
-## $ timer_trees_cbh_mins                  &lt;dbl&gt; 129.23120, 109.18386, 115.54459,…
-## $ timer_trees_type_mins                 &lt;dbl&gt; 0.31335723, 0.18822260, 0.101875…
-## $ timer_trees_hmd_mins                  &lt;dbl&gt; 12.984603, 12.046923, 4.840216, …
-## $ timer_trees_biomass_mins              &lt;dbl&gt; 7.52738049, 3.10699495, 1.064633…
-## $ timer_write_data_mins                 &lt;dbl&gt; 3.05878218, 1.16428173, 0.790324…
-## $ timer_total_time_mins                 &lt;dbl&gt; 180.57519, 271.59871, 152.18625,…
-## $ sttng_input_las_dir                   &lt;chr&gt; &quot;../data/fortstewart/als_2018_la…
-## $ sttng_accuracy_level                  &lt;dbl&gt; 2, 2, 2, 2, 2, 2, 2, 2
-## $ sttng_max_ctg_pts                     &lt;dbl&gt; 7e+07, 7e+07, 7e+07, 7e+07, 7e+0…
-## $ sttng_max_area_m2                     &lt;dbl&gt; 9e+07, 9e+07, 9e+07, 9e+07, 9e+0…
-## $ sttng_dtm_res_m                       &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1
-## $ sttng_chm_res_m                       &lt;dbl&gt; 0.30, 0.25, 0.25, 0.25, 0.25, 0.…
-## $ sttng_min_height                      &lt;dbl&gt; 2, 2, 2, 2, 2, 2, 2, 2
-## $ sttng_max_height                      &lt;dbl&gt; 70, 70, 70, 70, 70, 70, 70, 70
-## $ sttng_ws                              &lt;chr&gt; &quot;function (x) {    y &lt;- dplyr::c…
-## $ sttng_estimate_tree_dbh               &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TR…
-## $ sttng_max_dbh                         &lt;dbl&gt; 2, 2, 2, 2, 2, 2, 2, 2
-## $ sttng_dbh_model                       &lt;chr&gt; &quot;lin&quot;, &quot;lin&quot;, &quot;lin&quot;, &quot;lin&quot;, &quot;lin…
-## $ sttng_estimate_dbh_from_cloud         &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALS…
-## $ sttng_estimate_tree_competition       &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALS…
-## $ sttng_competition_buffer_m            &lt;dbl&gt; 5, 5, 5, 5, 5, 5, 5, 5
-## $ sttng_competition_max_search_dist_m   &lt;dbl&gt; 10, 10, 10, 10, 10, 10, 10, 10
-## $ sttng_estimate_tree_type              &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TR…
-## $ sttng_type_max_search_dist_m          &lt;dbl&gt; 1000, 1000, 1000, 1000, 1000, 10…
-## $ sttng_estimate_tree_hmd               &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TR…
-## $ sttng_hmd_tree_sample_n               &lt;dbl&gt; 20000, 20000, 20000, 20000, 2000…
-## $ sttng_hmd_tree_sample_prop            &lt;dbl&gt; 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.…
-## $ sttng_hmd_estimate_missing_hmd        &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TR…
-## $ sttng_estimate_biomass_method         &lt;chr&gt; &quot;landfire,cruz&quot;, &quot;landfire,cruz&quot;…
-## $ sttng_biomass_max_crown_kg_per_m3     &lt;dbl&gt; 2, 2, 2, 2, 2, 2, 2, 2
-## $ sttng_estimate_tree_cbh               &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TR…
-## $ sttng_cbh_tree_sample_n               &lt;dbl&gt; 20000, 20000, 20000, 20000, 2000…
-## $ sttng_cbh_tree_sample_prop            &lt;dbl&gt; 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.…
-## $ sttng_cbh_which_cbh                   &lt;chr&gt; &quot;lowest&quot;, &quot;lowest&quot;, &quot;lowest&quot;, &quot;l…
-## $ sttng_cbh_estimate_missing_cbh        &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TR…
-## $ sttng_cbh_min_vhp_n                   &lt;dbl&gt; 3, 3, 3, 3, 3, 3, 3, 3
-## $ sttng_cbh_voxel_grain_size_m          &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1
-## $ sttng_cbh_dist_btwn_bins_m            &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1
-## $ sttng_cbh_min_fuel_layer_ht_m         &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1
-## $ sttng_cbh_lad_pct_gap                 &lt;dbl&gt; 25, 25, 25, 25, 25, 25, 25, 25
-## $ sttng_cbh_lad_pct_base                &lt;dbl&gt; 25, 25, 25, 25, 25, 25, 25, 25
-## $ sttng_cbh_num_jump_steps              &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1
-## $ sttng_cbh_min_lad_pct                 &lt;dbl&gt; 10, 10, 10, 10, 10, 10, 10, 10
-## $ sttng_cbh_frst_layer_min_ht_m         &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1
-## $ data_desc                             &lt;chr&gt; &quot;ALS 2018&quot;, &quot;ALS 2025&quot;, &quot;ALS 201…
-## $ fpath                                 &lt;chr&gt; &quot;../data/FortStewart/als_2018_pr…
-## $ data_type                             &lt;chr&gt; &quot;ALS&quot;, &quot;ALS&quot;, &quot;ALS&quot;, &quot;UAS LIDAR&quot;…
-## $ fdir                                  &lt;chr&gt; &quot;../data/FortStewart/als_2018_pr…
-## $ geometry                              &lt;POLYGON [m]&gt; POLYGON ((1336943 1097560, ..., …
-## $ timer_tree_extraction_mins            &lt;dbl&gt; 18.73976, 134.17285, 23.94847, 6…
-## $ las_area_ha                           &lt;dbl&gt; 899.98200, 685.99804, 206.41209,…
-## $ points_m2                             &lt;dbl&gt; 4.786047, 49.594387, 38.902307, …
-## $ timer_cloud2raster_mins_secperha      &lt;dbl&gt; 0.5815444, 11.2466005, 6.4379067…
-## $ timer_raster2trees_mins_secperha      &lt;dbl&gt; 0.6677977, 0.4886676, 0.5234489,…
-## $ timer_trees_competition_mins_secperha &lt;dbl&gt; 9.645549e-07, 1.241796e-06, 4.38…
-## $ timer_treels_stem_dbh_mins_secperha   &lt;dbl&gt; 4.503552e-09, 5.908349e-09, 1.96…
-## $ timer_trees_dbh_mins_secperha         &lt;dbl&gt; 0.5813521, 1.0264381, 1.7138954,…
-## $ timer_trees_cbh_mins_secperha         &lt;dbl&gt; 8.615586, 9.549636, 33.586577, 4…
-## $ timer_trees_type_mins_secperha        &lt;dbl&gt; 0.02089090, 0.01646267, 0.029613…
-## $ timer_trees_hmd_mins_secperha         &lt;dbl&gt; 0.8656575, 1.0536697, 1.4069571,…
-## $ timer_trees_biomass_mins_secperha     &lt;dbl&gt; 0.50183540, 0.27174961, 0.309468…
-## $ timer_write_data_mins_secperha        &lt;dbl&gt; 0.20392289, 0.10183251, 0.229731…
-## $ timer_total_time_mins_secperha        &lt;dbl&gt; 12.03859, 23.75506, 44.23760, 19…
-## $ timer_tree_extraction_mins_secperha   &lt;dbl&gt; 1.249342, 11.735268, 6.961356, 1…
-## $ timer_tree_extraction_mins_pct        &lt;dbl&gt; 0.1037781, 0.4940114, 0.1573629,…
-## $ timer_trees_dbh_mins_pct              &lt;dbl&gt; 0.048290724, 0.043209244…
-## $ timer_trees_cbh_mins_pct              &lt;dbl&gt; 0.7156642, 0.4020044, 0.7592315,…
-## $ timer_trees_type_mins_pct             &lt;dbl&gt; 0.0017353283, 0.0006930173, 0.00…
-## $ timer_trees_hmd_mins_pct              &lt;dbl&gt; 0.07190691, 0.04435560, 0.031804…
-## $ timer_trees_biomass_mins_pct          &lt;dbl&gt; 0.0416855752, 0.0114396529, 0.00…
-## $ timer_write_data_mins_pct             &lt;dbl&gt; 0.0169391058, 0.0042867720, 0.00…</code></pre>
+<span id="cb121-28"><a href="point-cloud-processing-results.html#cb121-28" tabindex="-1"></a><span class="co"># study_sites_processing_sf %&gt;% dplyr::glimpse()</span></span></code></pre></div>
+<p>what is all included in this data?</p>
+<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb122-1"><a href="point-cloud-processing-results.html#cb122-1" tabindex="-1"></a>study_sites_processing_sf <span class="sc">%&gt;%</span> <span class="fu">names</span>()</span></code></pre></div>
+<pre><code>##  [1] &quot;study_site&quot;                           
+##  [2] &quot;study_site_lab&quot;                       
+##  [3] &quot;number_of_points&quot;                     
+##  [4] &quot;las_area_m2&quot;                          
+##  [5] &quot;timer_cloud2raster_mins&quot;              
+##  [6] &quot;timer_raster2trees_mins&quot;              
+##  [7] &quot;timer_trees_competition_mins&quot;         
+##  [8] &quot;timer_treels_stem_dbh_mins&quot;           
+##  [9] &quot;timer_trees_dbh_mins&quot;                 
+## [10] &quot;timer_trees_cbh_mins&quot;                 
+## [11] &quot;timer_trees_type_mins&quot;                
+## [12] &quot;timer_trees_hmd_mins&quot;                 
+## [13] &quot;timer_trees_biomass_mins&quot;             
+## [14] &quot;timer_write_data_mins&quot;                
+## [15] &quot;timer_total_time_mins&quot;                
+## [16] &quot;sttng_input_las_dir&quot;                  
+## [17] &quot;sttng_accuracy_level&quot;                 
+## [18] &quot;sttng_max_ctg_pts&quot;                    
+## [19] &quot;sttng_max_area_m2&quot;                    
+## [20] &quot;sttng_dtm_res_m&quot;                      
+## [21] &quot;sttng_chm_res_m&quot;                      
+## [22] &quot;sttng_min_height&quot;                     
+## [23] &quot;sttng_max_height&quot;                     
+## [24] &quot;sttng_ws&quot;                             
+## [25] &quot;sttng_estimate_tree_dbh&quot;              
+## [26] &quot;sttng_max_dbh&quot;                        
+## [27] &quot;sttng_dbh_model&quot;                      
+## [28] &quot;sttng_estimate_dbh_from_cloud&quot;        
+## [29] &quot;sttng_estimate_tree_competition&quot;      
+## [30] &quot;sttng_competition_buffer_m&quot;           
+## [31] &quot;sttng_competition_max_search_dist_m&quot;  
+## [32] &quot;sttng_estimate_tree_type&quot;             
+## [33] &quot;sttng_type_max_search_dist_m&quot;         
+## [34] &quot;sttng_estimate_tree_hmd&quot;              
+## [35] &quot;sttng_hmd_tree_sample_n&quot;              
+## [36] &quot;sttng_hmd_tree_sample_prop&quot;           
+## [37] &quot;sttng_hmd_estimate_missing_hmd&quot;       
+## [38] &quot;sttng_estimate_biomass_method&quot;        
+## [39] &quot;sttng_biomass_max_crown_kg_per_m3&quot;    
+## [40] &quot;sttng_estimate_tree_cbh&quot;              
+## [41] &quot;sttng_cbh_tree_sample_n&quot;              
+## [42] &quot;sttng_cbh_tree_sample_prop&quot;           
+## [43] &quot;sttng_cbh_which_cbh&quot;                  
+## [44] &quot;sttng_cbh_estimate_missing_cbh&quot;       
+## [45] &quot;sttng_cbh_min_vhp_n&quot;                  
+## [46] &quot;sttng_cbh_voxel_grain_size_m&quot;         
+## [47] &quot;sttng_cbh_dist_btwn_bins_m&quot;           
+## [48] &quot;sttng_cbh_min_fuel_layer_ht_m&quot;        
+## [49] &quot;sttng_cbh_lad_pct_gap&quot;                
+## [50] &quot;sttng_cbh_lad_pct_base&quot;               
+## [51] &quot;sttng_cbh_num_jump_steps&quot;             
+## [52] &quot;sttng_cbh_min_lad_pct&quot;                
+## [53] &quot;sttng_cbh_frst_layer_min_ht_m&quot;        
+## [54] &quot;data_desc&quot;                            
+## [55] &quot;fpath&quot;                                
+## [56] &quot;data_type&quot;                            
+## [57] &quot;fdir&quot;                                 
+## [58] &quot;geometry&quot;                             
+## [59] &quot;timer_tree_extraction_mins&quot;           
+## [60] &quot;las_area_ha&quot;                          
+## [61] &quot;points_m2&quot;                            
+## [62] &quot;timer_cloud2raster_mins_secperha&quot;     
+## [63] &quot;timer_raster2trees_mins_secperha&quot;     
+## [64] &quot;timer_trees_competition_mins_secperha&quot;
+## [65] &quot;timer_treels_stem_dbh_mins_secperha&quot;  
+## [66] &quot;timer_trees_dbh_mins_secperha&quot;        
+## [67] &quot;timer_trees_cbh_mins_secperha&quot;        
+## [68] &quot;timer_trees_type_mins_secperha&quot;       
+## [69] &quot;timer_trees_hmd_mins_secperha&quot;        
+## [70] &quot;timer_trees_biomass_mins_secperha&quot;    
+## [71] &quot;timer_write_data_mins_secperha&quot;       
+## [72] &quot;timer_total_time_mins_secperha&quot;       
+## [73] &quot;timer_tree_extraction_mins_secperha&quot;  
+## [74] &quot;timer_tree_extraction_mins_pct&quot;       
+## [75] &quot;timer_trees_dbh_mins_pct&quot;             
+## [76] &quot;timer_trees_cbh_mins_pct&quot;             
+## [77] &quot;timer_trees_type_mins_pct&quot;            
+## [78] &quot;timer_trees_hmd_mins_pct&quot;             
+## [79] &quot;timer_trees_biomass_mins_pct&quot;         
+## [80] &quot;timer_write_data_mins_pct&quot;</code></pre>
 <p>that’s a lot of tracking data, let’s look at the main timing parameters</p>
-<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="point-cloud-processing-results.html#cb123-1" tabindex="-1"></a><span class="co"># format data for plotting/tabling</span></span>
-<span id="cb123-2"><a href="point-cloud-processing-results.html#cb123-2" tabindex="-1"></a>table_temp <span class="ot">&lt;-</span></span>
-<span id="cb123-3"><a href="point-cloud-processing-results.html#cb123-3" tabindex="-1"></a>  study_sites_processing_sf <span class="sc">%&gt;%</span> </span>
-<span id="cb123-4"><a href="point-cloud-processing-results.html#cb123-4" tabindex="-1"></a>  sf<span class="sc">::</span><span class="fu">st_drop_geometry</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb123-5"><a href="point-cloud-processing-results.html#cb123-5" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(</span>
-<span id="cb123-6"><a href="point-cloud-processing-results.html#cb123-6" tabindex="-1"></a>    study_site, study_site_lab, data_desc, data_type, number_of_points, las_area_ha, points_m2</span>
-<span id="cb123-7"><a href="point-cloud-processing-results.html#cb123-7" tabindex="-1"></a>    , <span class="fu">c</span>(timer_tree_extraction_mins,</span>
-<span id="cb123-8"><a href="point-cloud-processing-results.html#cb123-8" tabindex="-1"></a>      timer_trees_dbh_mins, timer_trees_cbh_mins, timer_trees_type_mins,</span>
-<span id="cb123-9"><a href="point-cloud-processing-results.html#cb123-9" tabindex="-1"></a>      timer_trees_hmd_mins, timer_trees_biomass_mins, timer_write_data_mins</span>
-<span id="cb123-10"><a href="point-cloud-processing-results.html#cb123-10" tabindex="-1"></a>      , timer_total_time_mins</span>
-<span id="cb123-11"><a href="point-cloud-processing-results.html#cb123-11" tabindex="-1"></a>      , <span class="fu">c</span>(tidyselect<span class="sc">::</span><span class="fu">ends_with</span>(<span class="st">&quot;_pct&quot;</span>) <span class="sc">&amp;</span> tidyselect<span class="sc">::</span><span class="fu">starts_with</span>(<span class="st">&quot;timer_&quot;</span>))</span>
-<span id="cb123-12"><a href="point-cloud-processing-results.html#cb123-12" tabindex="-1"></a>      , <span class="fu">c</span>(tidyselect<span class="sc">::</span><span class="fu">ends_with</span>(<span class="st">&quot;_secperha&quot;</span>) <span class="sc">&amp;</span> tidyselect<span class="sc">::</span><span class="fu">starts_with</span>(<span class="st">&quot;timer_&quot;</span>))</span>
-<span id="cb123-13"><a href="point-cloud-processing-results.html#cb123-13" tabindex="-1"></a>    )</span>
-<span id="cb123-14"><a href="point-cloud-processing-results.html#cb123-14" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb123-15"><a href="point-cloud-processing-results.html#cb123-15" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_longer</span>(</span>
-<span id="cb123-16"><a href="point-cloud-processing-results.html#cb123-16" tabindex="-1"></a>    <span class="at">cols =</span> <span class="sc">-</span><span class="fu">c</span>(study_site, study_site_lab, data_desc, data_type, number_of_points, las_area_ha, points_m2)</span>
-<span id="cb123-17"><a href="point-cloud-processing-results.html#cb123-17" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb123-18"><a href="point-cloud-processing-results.html#cb123-18" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
-<span id="cb123-19"><a href="point-cloud-processing-results.html#cb123-19" tabindex="-1"></a>    <span class="at">units =</span> stringr<span class="sc">::</span><span class="fu">word</span>(name, <span class="sc">-</span><span class="dv">1</span>, <span class="at">sep =</span> <span class="st">&quot;_&quot;</span>)</span>
-<span id="cb123-20"><a href="point-cloud-processing-results.html#cb123-20" tabindex="-1"></a>    , <span class="at">section =</span> name <span class="sc">%&gt;%</span> </span>
-<span id="cb123-21"><a href="point-cloud-processing-results.html#cb123-21" tabindex="-1"></a>      stringr<span class="sc">::</span><span class="fu">str_remove_all</span>(<span class="st">&quot;timer_&quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb123-22"><a href="point-cloud-processing-results.html#cb123-22" tabindex="-1"></a>      stringr<span class="sc">::</span><span class="fu">str_remove_all</span>(<span class="st">&quot;_mins&quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb123-23"><a href="point-cloud-processing-results.html#cb123-23" tabindex="-1"></a>      stringr<span class="sc">::</span><span class="fu">str_remove_all</span>(<span class="st">&quot;_pct&quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb123-24"><a href="point-cloud-processing-results.html#cb123-24" tabindex="-1"></a>      stringr<span class="sc">::</span><span class="fu">str_remove_all</span>(<span class="st">&quot;_secperha&quot;</span>)</span>
-<span id="cb123-25"><a href="point-cloud-processing-results.html#cb123-25" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb123-26"><a href="point-cloud-processing-results.html#cb123-26" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>name) <span class="sc">%&gt;%</span> </span>
-<span id="cb123-27"><a href="point-cloud-processing-results.html#cb123-27" tabindex="-1"></a>  <span class="co"># dplyr::count(units)</span></span>
-<span id="cb123-28"><a href="point-cloud-processing-results.html#cb123-28" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_wider</span>(<span class="at">names_from =</span> units, <span class="at">values_from =</span> value) <span class="sc">%&gt;%</span> </span>
-<span id="cb123-29"><a href="point-cloud-processing-results.html#cb123-29" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
-<span id="cb123-30"><a href="point-cloud-processing-results.html#cb123-30" tabindex="-1"></a>    <span class="at">mins_lab =</span> scales<span class="sc">::</span><span class="fu">comma</span>(mins,<span class="at">accuracy =</span> <span class="fl">0.1</span>)</span>
-<span id="cb123-31"><a href="point-cloud-processing-results.html#cb123-31" tabindex="-1"></a>    , <span class="at">perha_lab =</span> scales<span class="sc">::</span><span class="fu">comma</span>(secperha,<span class="at">accuracy =</span> <span class="fl">0.01</span>)</span>
-<span id="cb123-32"><a href="point-cloud-processing-results.html#cb123-32" tabindex="-1"></a>    , <span class="at">pct_lab =</span> scales<span class="sc">::</span><span class="fu">percent</span>(pct,<span class="at">accuracy =</span> <span class="fl">0.1</span>)</span>
-<span id="cb123-33"><a href="point-cloud-processing-results.html#cb123-33" tabindex="-1"></a>    <span class="co"># site lab</span></span>
-<span id="cb123-34"><a href="point-cloud-processing-results.html#cb123-34" tabindex="-1"></a>    , <span class="at">big_lab =</span> stringr<span class="sc">::</span><span class="fu">str_c</span>(</span>
-<span id="cb123-35"><a href="point-cloud-processing-results.html#cb123-35" tabindex="-1"></a>      data_desc</span>
-<span id="cb123-36"><a href="point-cloud-processing-results.html#cb123-36" tabindex="-1"></a>      , <span class="fu">paste0</span>(<span class="st">&quot;area: &quot;</span>, scales<span class="sc">::</span><span class="fu">comma</span>(las_area_ha, <span class="at">accuracy =</span> <span class="dv">1</span>, <span class="at">suffix =</span> <span class="st">&quot; ha&quot;</span>))</span>
-<span id="cb123-37"><a href="point-cloud-processing-results.html#cb123-37" tabindex="-1"></a>      , <span class="fu">paste0</span>(<span class="st">&quot;points: &quot;</span>, scales<span class="sc">::</span><span class="fu">comma</span>(number_of_points, <span class="at">accuracy =</span> <span class="fl">0.1</span>, <span class="at">scale =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">1000000</span>, <span class="at">suffix =</span> <span class="st">&quot;M&quot;</span>))</span>
-<span id="cb123-38"><a href="point-cloud-processing-results.html#cb123-38" tabindex="-1"></a>      , <span class="fu">paste0</span>(<span class="st">&quot;points m&lt;sup&gt;-2&lt;/sup&gt;: &quot;</span>, scales<span class="sc">::</span><span class="fu">comma</span>(points_m2, <span class="at">accuracy =</span> <span class="fl">0.1</span>))</span>
-<span id="cb123-39"><a href="point-cloud-processing-results.html#cb123-39" tabindex="-1"></a>      , <span class="at">sep =</span> <span class="st">&quot;&lt;br&gt;&quot;</span></span>
-<span id="cb123-40"><a href="point-cloud-processing-results.html#cb123-40" tabindex="-1"></a>    )</span>
-<span id="cb123-41"><a href="point-cloud-processing-results.html#cb123-41" tabindex="-1"></a>    , <span class="at">big_lab_ggplot =</span> stringr<span class="sc">::</span><span class="fu">str_c</span>(</span>
-<span id="cb123-42"><a href="point-cloud-processing-results.html#cb123-42" tabindex="-1"></a>      data_desc</span>
-<span id="cb123-43"><a href="point-cloud-processing-results.html#cb123-43" tabindex="-1"></a>      , <span class="fu">paste0</span>(<span class="st">&quot;area: &quot;</span>, scales<span class="sc">::</span><span class="fu">comma</span>(las_area_ha, <span class="at">accuracy =</span> <span class="dv">1</span>, <span class="at">suffix =</span> <span class="st">&quot; ha&quot;</span>))</span>
-<span id="cb123-44"><a href="point-cloud-processing-results.html#cb123-44" tabindex="-1"></a>      , <span class="fu">paste0</span>(<span class="st">&quot;points: &quot;</span>, scales<span class="sc">::</span><span class="fu">comma</span>(number_of_points, <span class="at">accuracy =</span> <span class="fl">0.1</span>, <span class="at">scale =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">1000000</span>, <span class="at">suffix =</span> <span class="st">&quot;M&quot;</span>))</span>
-<span id="cb123-45"><a href="point-cloud-processing-results.html#cb123-45" tabindex="-1"></a>      , <span class="fu">paste0</span>(<span class="st">&quot;points/m2: &quot;</span>, scales<span class="sc">::</span><span class="fu">comma</span>(points_m2, <span class="at">accuracy =</span> <span class="fl">0.1</span>))</span>
-<span id="cb123-46"><a href="point-cloud-processing-results.html#cb123-46" tabindex="-1"></a>      , <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span></span>
-<span id="cb123-47"><a href="point-cloud-processing-results.html#cb123-47" tabindex="-1"></a>    )</span>
-<span id="cb123-48"><a href="point-cloud-processing-results.html#cb123-48" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span>  </span>
-<span id="cb123-49"><a href="point-cloud-processing-results.html#cb123-49" tabindex="-1"></a>  <span class="co"># dplyr::count(section)</span></span>
-<span id="cb123-50"><a href="point-cloud-processing-results.html#cb123-50" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(mins)) <span class="sc">%&gt;%</span> </span>
-<span id="cb123-51"><a href="point-cloud-processing-results.html#cb123-51" tabindex="-1"></a>  <span class="co"># section lab after filter so factor doesn&#39;t have rand levels</span></span>
-<span id="cb123-52"><a href="point-cloud-processing-results.html#cb123-52" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
-<span id="cb123-53"><a href="point-cloud-processing-results.html#cb123-53" tabindex="-1"></a>    <span class="at">section =</span> section <span class="sc">%&gt;%</span> </span>
-<span id="cb123-54"><a href="point-cloud-processing-results.html#cb123-54" tabindex="-1"></a>      stringr<span class="sc">::</span><span class="fu">str_replace_all</span>(<span class="st">&quot;_&quot;</span>, <span class="st">&quot; &quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb123-55"><a href="point-cloud-processing-results.html#cb123-55" tabindex="-1"></a>      stringr<span class="sc">::</span><span class="fu">str_remove_all</span>(<span class="st">&quot;time&quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb123-56"><a href="point-cloud-processing-results.html#cb123-56" tabindex="-1"></a>      stringr<span class="sc">::</span><span class="fu">str_replace_all</span>(<span class="st">&quot;dbh&quot;</span>, <span class="st">&quot;DBH&quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb123-57"><a href="point-cloud-processing-results.html#cb123-57" tabindex="-1"></a>      stringr<span class="sc">::</span><span class="fu">str_replace_all</span>(<span class="st">&quot;cbh&quot;</span>, <span class="st">&quot;CBH&quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb123-58"><a href="point-cloud-processing-results.html#cb123-58" tabindex="-1"></a>      stringr<span class="sc">::</span><span class="fu">str_replace_all</span>(<span class="st">&quot;hmd&quot;</span>, <span class="st">&quot;HMD&quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb123-59"><a href="point-cloud-processing-results.html#cb123-59" tabindex="-1"></a>      stringr<span class="sc">::</span><span class="fu">str_squish</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb123-60"><a href="point-cloud-processing-results.html#cb123-60" tabindex="-1"></a>      forcats<span class="sc">::</span><span class="fu">fct_inorder</span>()</span>
-<span id="cb123-61"><a href="point-cloud-processing-results.html#cb123-61" tabindex="-1"></a>  )</span>
-<span id="cb123-62"><a href="point-cloud-processing-results.html#cb123-62" tabindex="-1"></a>  </span>
-<span id="cb123-63"><a href="point-cloud-processing-results.html#cb123-63" tabindex="-1"></a><span class="co"># table it</span></span>
-<span id="cb123-64"><a href="point-cloud-processing-results.html#cb123-64" tabindex="-1"></a>table_temp <span class="sc">%&gt;%</span> </span>
-<span id="cb123-65"><a href="point-cloud-processing-results.html#cb123-65" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(study_site_lab,big_lab,section,mins_lab, perha_lab, pct_lab) <span class="sc">%&gt;%</span> </span>
-<span id="cb123-66"><a href="point-cloud-processing-results.html#cb123-66" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">kbl</span>(</span>
-<span id="cb123-67"><a href="point-cloud-processing-results.html#cb123-67" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">&quot;Point cloud processing section run time&quot;</span></span>
-<span id="cb123-68"><a href="point-cloud-processing-results.html#cb123-68" tabindex="-1"></a>    , <span class="at">col.names =</span> <span class="fu">c</span>(</span>
-<span id="cb123-69"><a href="point-cloud-processing-results.html#cb123-69" tabindex="-1"></a>      <span class="st">&quot;Site&quot;</span>, <span class="st">&quot;Data&quot;</span></span>
-<span id="cb123-70"><a href="point-cloud-processing-results.html#cb123-70" tabindex="-1"></a>      , <span class="st">&quot;Processing section&quot;</span></span>
-<span id="cb123-71"><a href="point-cloud-processing-results.html#cb123-71" tabindex="-1"></a>      , <span class="st">&quot;time (minutes)&quot;</span></span>
-<span id="cb123-72"><a href="point-cloud-processing-results.html#cb123-72" tabindex="-1"></a>      , <span class="st">&quot;seconds per ha&quot;</span></span>
-<span id="cb123-73"><a href="point-cloud-processing-results.html#cb123-73" tabindex="-1"></a>      , <span class="st">&quot;% of total time&quot;</span></span>
-<span id="cb123-74"><a href="point-cloud-processing-results.html#cb123-74" tabindex="-1"></a>      )</span>
-<span id="cb123-75"><a href="point-cloud-processing-results.html#cb123-75" tabindex="-1"></a>    , <span class="at">escape =</span> F</span>
-<span id="cb123-76"><a href="point-cloud-processing-results.html#cb123-76" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb123-77"><a href="point-cloud-processing-results.html#cb123-77" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">kable_styling</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb123-78"><a href="point-cloud-processing-results.html#cb123-78" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">collapse_rows</span>(<span class="at">columns =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">valign =</span> <span class="st">&quot;top&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb124-1"><a href="point-cloud-processing-results.html#cb124-1" tabindex="-1"></a><span class="co"># format data for plotting/tabling</span></span>
+<span id="cb124-2"><a href="point-cloud-processing-results.html#cb124-2" tabindex="-1"></a>table_temp <span class="ot">&lt;-</span></span>
+<span id="cb124-3"><a href="point-cloud-processing-results.html#cb124-3" tabindex="-1"></a>  study_sites_processing_sf <span class="sc">%&gt;%</span> </span>
+<span id="cb124-4"><a href="point-cloud-processing-results.html#cb124-4" tabindex="-1"></a>  sf<span class="sc">::</span><span class="fu">st_drop_geometry</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb124-5"><a href="point-cloud-processing-results.html#cb124-5" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(</span>
+<span id="cb124-6"><a href="point-cloud-processing-results.html#cb124-6" tabindex="-1"></a>    study_site, study_site_lab, data_desc, data_type, number_of_points, las_area_ha, points_m2</span>
+<span id="cb124-7"><a href="point-cloud-processing-results.html#cb124-7" tabindex="-1"></a>    , <span class="fu">c</span>(timer_tree_extraction_mins,</span>
+<span id="cb124-8"><a href="point-cloud-processing-results.html#cb124-8" tabindex="-1"></a>      timer_trees_dbh_mins, timer_trees_cbh_mins, timer_trees_type_mins,</span>
+<span id="cb124-9"><a href="point-cloud-processing-results.html#cb124-9" tabindex="-1"></a>      timer_trees_hmd_mins, timer_trees_biomass_mins, timer_write_data_mins</span>
+<span id="cb124-10"><a href="point-cloud-processing-results.html#cb124-10" tabindex="-1"></a>      , timer_total_time_mins</span>
+<span id="cb124-11"><a href="point-cloud-processing-results.html#cb124-11" tabindex="-1"></a>      , <span class="fu">c</span>(tidyselect<span class="sc">::</span><span class="fu">ends_with</span>(<span class="st">&quot;_pct&quot;</span>) <span class="sc">&amp;</span> tidyselect<span class="sc">::</span><span class="fu">starts_with</span>(<span class="st">&quot;timer_&quot;</span>))</span>
+<span id="cb124-12"><a href="point-cloud-processing-results.html#cb124-12" tabindex="-1"></a>      , <span class="fu">c</span>(tidyselect<span class="sc">::</span><span class="fu">ends_with</span>(<span class="st">&quot;_secperha&quot;</span>) <span class="sc">&amp;</span> tidyselect<span class="sc">::</span><span class="fu">starts_with</span>(<span class="st">&quot;timer_&quot;</span>))</span>
+<span id="cb124-13"><a href="point-cloud-processing-results.html#cb124-13" tabindex="-1"></a>    )</span>
+<span id="cb124-14"><a href="point-cloud-processing-results.html#cb124-14" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb124-15"><a href="point-cloud-processing-results.html#cb124-15" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_longer</span>(</span>
+<span id="cb124-16"><a href="point-cloud-processing-results.html#cb124-16" tabindex="-1"></a>    <span class="at">cols =</span> <span class="sc">-</span><span class="fu">c</span>(study_site, study_site_lab, data_desc, data_type, number_of_points, las_area_ha, points_m2)</span>
+<span id="cb124-17"><a href="point-cloud-processing-results.html#cb124-17" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb124-18"><a href="point-cloud-processing-results.html#cb124-18" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
+<span id="cb124-19"><a href="point-cloud-processing-results.html#cb124-19" tabindex="-1"></a>    <span class="at">units =</span> stringr<span class="sc">::</span><span class="fu">word</span>(name, <span class="sc">-</span><span class="dv">1</span>, <span class="at">sep =</span> <span class="st">&quot;_&quot;</span>)</span>
+<span id="cb124-20"><a href="point-cloud-processing-results.html#cb124-20" tabindex="-1"></a>    , <span class="at">section =</span> name <span class="sc">%&gt;%</span> </span>
+<span id="cb124-21"><a href="point-cloud-processing-results.html#cb124-21" tabindex="-1"></a>      stringr<span class="sc">::</span><span class="fu">str_remove_all</span>(<span class="st">&quot;timer_&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb124-22"><a href="point-cloud-processing-results.html#cb124-22" tabindex="-1"></a>      stringr<span class="sc">::</span><span class="fu">str_remove_all</span>(<span class="st">&quot;_mins&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb124-23"><a href="point-cloud-processing-results.html#cb124-23" tabindex="-1"></a>      stringr<span class="sc">::</span><span class="fu">str_remove_all</span>(<span class="st">&quot;_pct&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb124-24"><a href="point-cloud-processing-results.html#cb124-24" tabindex="-1"></a>      stringr<span class="sc">::</span><span class="fu">str_remove_all</span>(<span class="st">&quot;_secperha&quot;</span>)</span>
+<span id="cb124-25"><a href="point-cloud-processing-results.html#cb124-25" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb124-26"><a href="point-cloud-processing-results.html#cb124-26" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>name) <span class="sc">%&gt;%</span> </span>
+<span id="cb124-27"><a href="point-cloud-processing-results.html#cb124-27" tabindex="-1"></a>  <span class="co"># dplyr::count(units)</span></span>
+<span id="cb124-28"><a href="point-cloud-processing-results.html#cb124-28" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_wider</span>(<span class="at">names_from =</span> units, <span class="at">values_from =</span> value) <span class="sc">%&gt;%</span> </span>
+<span id="cb124-29"><a href="point-cloud-processing-results.html#cb124-29" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
+<span id="cb124-30"><a href="point-cloud-processing-results.html#cb124-30" tabindex="-1"></a>    <span class="at">mins_lab =</span> scales<span class="sc">::</span><span class="fu">comma</span>(mins,<span class="at">accuracy =</span> <span class="fl">0.1</span>)</span>
+<span id="cb124-31"><a href="point-cloud-processing-results.html#cb124-31" tabindex="-1"></a>    , <span class="at">perha_lab =</span> scales<span class="sc">::</span><span class="fu">comma</span>(secperha,<span class="at">accuracy =</span> <span class="fl">0.01</span>)</span>
+<span id="cb124-32"><a href="point-cloud-processing-results.html#cb124-32" tabindex="-1"></a>    , <span class="at">pct_lab =</span> scales<span class="sc">::</span><span class="fu">percent</span>(pct,<span class="at">accuracy =</span> <span class="fl">0.1</span>)</span>
+<span id="cb124-33"><a href="point-cloud-processing-results.html#cb124-33" tabindex="-1"></a>    <span class="co"># site lab</span></span>
+<span id="cb124-34"><a href="point-cloud-processing-results.html#cb124-34" tabindex="-1"></a>    , <span class="at">big_lab =</span> stringr<span class="sc">::</span><span class="fu">str_c</span>(</span>
+<span id="cb124-35"><a href="point-cloud-processing-results.html#cb124-35" tabindex="-1"></a>      data_desc</span>
+<span id="cb124-36"><a href="point-cloud-processing-results.html#cb124-36" tabindex="-1"></a>      , <span class="fu">paste0</span>(<span class="st">&quot;area: &quot;</span>, scales<span class="sc">::</span><span class="fu">comma</span>(las_area_ha, <span class="at">accuracy =</span> <span class="dv">1</span>, <span class="at">suffix =</span> <span class="st">&quot; ha&quot;</span>))</span>
+<span id="cb124-37"><a href="point-cloud-processing-results.html#cb124-37" tabindex="-1"></a>      , <span class="fu">paste0</span>(<span class="st">&quot;points: &quot;</span>, scales<span class="sc">::</span><span class="fu">comma</span>(number_of_points, <span class="at">accuracy =</span> <span class="fl">0.1</span>, <span class="at">scale =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">1000000</span>, <span class="at">suffix =</span> <span class="st">&quot;M&quot;</span>))</span>
+<span id="cb124-38"><a href="point-cloud-processing-results.html#cb124-38" tabindex="-1"></a>      , <span class="fu">paste0</span>(<span class="st">&quot;points m&lt;sup&gt;-2&lt;/sup&gt;: &quot;</span>, scales<span class="sc">::</span><span class="fu">comma</span>(points_m2, <span class="at">accuracy =</span> <span class="fl">0.1</span>))</span>
+<span id="cb124-39"><a href="point-cloud-processing-results.html#cb124-39" tabindex="-1"></a>      , <span class="at">sep =</span> <span class="st">&quot;&lt;br&gt;&quot;</span></span>
+<span id="cb124-40"><a href="point-cloud-processing-results.html#cb124-40" tabindex="-1"></a>    )</span>
+<span id="cb124-41"><a href="point-cloud-processing-results.html#cb124-41" tabindex="-1"></a>    , <span class="at">big_lab_ggplot =</span> stringr<span class="sc">::</span><span class="fu">str_c</span>(</span>
+<span id="cb124-42"><a href="point-cloud-processing-results.html#cb124-42" tabindex="-1"></a>      data_desc</span>
+<span id="cb124-43"><a href="point-cloud-processing-results.html#cb124-43" tabindex="-1"></a>      , <span class="fu">paste0</span>(<span class="st">&quot;area: &quot;</span>, scales<span class="sc">::</span><span class="fu">comma</span>(las_area_ha, <span class="at">accuracy =</span> <span class="dv">1</span>, <span class="at">suffix =</span> <span class="st">&quot; ha&quot;</span>))</span>
+<span id="cb124-44"><a href="point-cloud-processing-results.html#cb124-44" tabindex="-1"></a>      , <span class="fu">paste0</span>(<span class="st">&quot;points: &quot;</span>, scales<span class="sc">::</span><span class="fu">comma</span>(number_of_points, <span class="at">accuracy =</span> <span class="fl">0.1</span>, <span class="at">scale =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">1000000</span>, <span class="at">suffix =</span> <span class="st">&quot;M&quot;</span>))</span>
+<span id="cb124-45"><a href="point-cloud-processing-results.html#cb124-45" tabindex="-1"></a>      , <span class="fu">paste0</span>(<span class="st">&quot;points/m2: &quot;</span>, scales<span class="sc">::</span><span class="fu">comma</span>(points_m2, <span class="at">accuracy =</span> <span class="fl">0.1</span>))</span>
+<span id="cb124-46"><a href="point-cloud-processing-results.html#cb124-46" tabindex="-1"></a>      , <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span></span>
+<span id="cb124-47"><a href="point-cloud-processing-results.html#cb124-47" tabindex="-1"></a>    )</span>
+<span id="cb124-48"><a href="point-cloud-processing-results.html#cb124-48" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span>  </span>
+<span id="cb124-49"><a href="point-cloud-processing-results.html#cb124-49" tabindex="-1"></a>  <span class="co"># dplyr::count(section)</span></span>
+<span id="cb124-50"><a href="point-cloud-processing-results.html#cb124-50" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(mins)) <span class="sc">%&gt;%</span> </span>
+<span id="cb124-51"><a href="point-cloud-processing-results.html#cb124-51" tabindex="-1"></a>  <span class="co"># section lab after filter so factor doesn&#39;t have rand levels</span></span>
+<span id="cb124-52"><a href="point-cloud-processing-results.html#cb124-52" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
+<span id="cb124-53"><a href="point-cloud-processing-results.html#cb124-53" tabindex="-1"></a>    <span class="at">section =</span> section <span class="sc">%&gt;%</span> </span>
+<span id="cb124-54"><a href="point-cloud-processing-results.html#cb124-54" tabindex="-1"></a>      stringr<span class="sc">::</span><span class="fu">str_replace_all</span>(<span class="st">&quot;_&quot;</span>, <span class="st">&quot; &quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb124-55"><a href="point-cloud-processing-results.html#cb124-55" tabindex="-1"></a>      stringr<span class="sc">::</span><span class="fu">str_remove_all</span>(<span class="st">&quot;time&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb124-56"><a href="point-cloud-processing-results.html#cb124-56" tabindex="-1"></a>      stringr<span class="sc">::</span><span class="fu">str_replace_all</span>(<span class="st">&quot;dbh&quot;</span>, <span class="st">&quot;DBH&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb124-57"><a href="point-cloud-processing-results.html#cb124-57" tabindex="-1"></a>      stringr<span class="sc">::</span><span class="fu">str_replace_all</span>(<span class="st">&quot;cbh&quot;</span>, <span class="st">&quot;CBH&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb124-58"><a href="point-cloud-processing-results.html#cb124-58" tabindex="-1"></a>      stringr<span class="sc">::</span><span class="fu">str_replace_all</span>(<span class="st">&quot;hmd&quot;</span>, <span class="st">&quot;HMD&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb124-59"><a href="point-cloud-processing-results.html#cb124-59" tabindex="-1"></a>      stringr<span class="sc">::</span><span class="fu">str_squish</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb124-60"><a href="point-cloud-processing-results.html#cb124-60" tabindex="-1"></a>      forcats<span class="sc">::</span><span class="fu">fct_inorder</span>()</span>
+<span id="cb124-61"><a href="point-cloud-processing-results.html#cb124-61" tabindex="-1"></a>  )</span>
+<span id="cb124-62"><a href="point-cloud-processing-results.html#cb124-62" tabindex="-1"></a>  </span>
+<span id="cb124-63"><a href="point-cloud-processing-results.html#cb124-63" tabindex="-1"></a><span class="co"># table it</span></span>
+<span id="cb124-64"><a href="point-cloud-processing-results.html#cb124-64" tabindex="-1"></a>table_temp <span class="sc">%&gt;%</span> </span>
+<span id="cb124-65"><a href="point-cloud-processing-results.html#cb124-65" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(study_site_lab,big_lab,section,mins_lab, perha_lab, pct_lab) <span class="sc">%&gt;%</span> </span>
+<span id="cb124-66"><a href="point-cloud-processing-results.html#cb124-66" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">kbl</span>(</span>
+<span id="cb124-67"><a href="point-cloud-processing-results.html#cb124-67" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">&quot;Point cloud processing section run time&quot;</span></span>
+<span id="cb124-68"><a href="point-cloud-processing-results.html#cb124-68" tabindex="-1"></a>    , <span class="at">col.names =</span> <span class="fu">c</span>(</span>
+<span id="cb124-69"><a href="point-cloud-processing-results.html#cb124-69" tabindex="-1"></a>      <span class="st">&quot;Site&quot;</span>, <span class="st">&quot;Data&quot;</span></span>
+<span id="cb124-70"><a href="point-cloud-processing-results.html#cb124-70" tabindex="-1"></a>      , <span class="st">&quot;Processing section&quot;</span></span>
+<span id="cb124-71"><a href="point-cloud-processing-results.html#cb124-71" tabindex="-1"></a>      , <span class="st">&quot;time (minutes)&quot;</span></span>
+<span id="cb124-72"><a href="point-cloud-processing-results.html#cb124-72" tabindex="-1"></a>      , <span class="st">&quot;seconds per ha&quot;</span></span>
+<span id="cb124-73"><a href="point-cloud-processing-results.html#cb124-73" tabindex="-1"></a>      , <span class="st">&quot;% of total time&quot;</span></span>
+<span id="cb124-74"><a href="point-cloud-processing-results.html#cb124-74" tabindex="-1"></a>      )</span>
+<span id="cb124-75"><a href="point-cloud-processing-results.html#cb124-75" tabindex="-1"></a>    , <span class="at">escape =</span> F</span>
+<span id="cb124-76"><a href="point-cloud-processing-results.html#cb124-76" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb124-77"><a href="point-cloud-processing-results.html#cb124-77" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">kable_styling</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb124-78"><a href="point-cloud-processing-results.html#cb124-78" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">collapse_rows</span>(<span class="at">columns =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">valign =</span> <span class="st">&quot;top&quot;</span>)</span></code></pre></div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:unnamed-chunk-138">Table 7.1: </span>Point cloud processing section run time
+<span id="tab:unnamed-chunk-139">Table 7.1: </span>Point cloud processing section run time
 </caption>
 <thead>
 <tr>
@@ -1495,222 +1499,1089 @@ NA
 <p>that’s a lot of numbers to digest, let’s plot the data</p>
 <div id="point-cloud-processing-time-versus-point-density" class="section level3 hasAnchor" number="7.1.1">
 <h3><span class="header-section-number">7.1.1</span> Point Cloud Processing Time versus Point Density<a href="point-cloud-processing-results.html#point-cloud-processing-time-versus-point-density" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb124-1"><a href="point-cloud-processing-results.html#cb124-1" tabindex="-1"></a><span class="co"># per ha time based on point density</span></span>
-<span id="cb124-2"><a href="point-cloud-processing-results.html#cb124-2" tabindex="-1"></a>ggplot2<span class="sc">::</span><span class="fu">ggplot</span>(</span>
-<span id="cb124-3"><a href="point-cloud-processing-results.html#cb124-3" tabindex="-1"></a>  <span class="at">data =</span> table_temp <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(section <span class="sc">==</span> <span class="st">&quot;total&quot;</span>)</span>
-<span id="cb124-4"><a href="point-cloud-processing-results.html#cb124-4" tabindex="-1"></a>  , <span class="at">mapping =</span> ggplot2<span class="sc">::</span><span class="fu">aes</span>(<span class="at">y =</span> secperha, <span class="at">x =</span> points_m2, <span class="at">color =</span> data_type)</span>
-<span id="cb124-5"><a href="point-cloud-processing-results.html#cb124-5" tabindex="-1"></a>) <span class="sc">+</span></span>
-<span id="cb124-6"><a href="point-cloud-processing-results.html#cb124-6" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">4</span>, <span class="at">alpha =</span> <span class="fl">0.9</span>) <span class="sc">+</span></span>
-<span id="cb124-7"><a href="point-cloud-processing-results.html#cb124-7" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">scale_color_viridis_d</span>(<span class="at">option =</span> <span class="st">&quot;magma&quot;</span>, <span class="at">begin =</span> <span class="fl">0.1</span>, <span class="at">end =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb124-8"><a href="point-cloud-processing-results.html#cb124-8" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">labs</span>(</span>
-<span id="cb124-9"><a href="point-cloud-processing-results.html#cb124-9" tabindex="-1"></a>    <span class="at">x =</span> latex2exp<span class="sc">::</span><span class="fu">TeX</span>(<span class="st">&quot;points $m^{-2}$&quot;</span>)</span>
-<span id="cb124-10"><a href="point-cloud-processing-results.html#cb124-10" tabindex="-1"></a>    , <span class="at">y =</span> latex2exp<span class="sc">::</span><span class="fu">TeX</span>(<span class="st">&quot;total seconds $ha^{-1}$&quot;</span>)</span>
-<span id="cb124-11"><a href="point-cloud-processing-results.html#cb124-11" tabindex="-1"></a>    , <span class="at">color =</span> <span class="st">&quot;&quot;</span></span>
-<span id="cb124-12"><a href="point-cloud-processing-results.html#cb124-12" tabindex="-1"></a>    , <span class="at">subtitle =</span> <span class="st">&quot;Point Cloud Processing Time versus Point Density&quot;</span></span>
-<span id="cb124-13"><a href="point-cloud-processing-results.html#cb124-13" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb124-14"><a href="point-cloud-processing-results.html#cb124-14" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">theme_light</span>() <span class="sc">+</span></span>
-<span id="cb124-15"><a href="point-cloud-processing-results.html#cb124-15" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;top&quot;</span>)</span></code></pre></div>
-<p><img src="dod_cloud2trees_demo_files/figure-html/unnamed-chunk-139-1.png" width="1008" /></p>
+<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb125-1"><a href="point-cloud-processing-results.html#cb125-1" tabindex="-1"></a><span class="co"># per ha time based on point density</span></span>
+<span id="cb125-2"><a href="point-cloud-processing-results.html#cb125-2" tabindex="-1"></a>ggplot2<span class="sc">::</span><span class="fu">ggplot</span>(</span>
+<span id="cb125-3"><a href="point-cloud-processing-results.html#cb125-3" tabindex="-1"></a>  <span class="at">data =</span> table_temp <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(section <span class="sc">==</span> <span class="st">&quot;total&quot;</span>)</span>
+<span id="cb125-4"><a href="point-cloud-processing-results.html#cb125-4" tabindex="-1"></a>  , <span class="at">mapping =</span> ggplot2<span class="sc">::</span><span class="fu">aes</span>(<span class="at">y =</span> secperha, <span class="at">x =</span> points_m2, <span class="at">color =</span> data_type)</span>
+<span id="cb125-5"><a href="point-cloud-processing-results.html#cb125-5" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb125-6"><a href="point-cloud-processing-results.html#cb125-6" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">4</span>, <span class="at">alpha =</span> <span class="fl">0.9</span>) <span class="sc">+</span></span>
+<span id="cb125-7"><a href="point-cloud-processing-results.html#cb125-7" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">scale_color_viridis_d</span>(<span class="at">option =</span> <span class="st">&quot;magma&quot;</span>, <span class="at">begin =</span> <span class="fl">0.1</span>, <span class="at">end =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb125-8"><a href="point-cloud-processing-results.html#cb125-8" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">labs</span>(</span>
+<span id="cb125-9"><a href="point-cloud-processing-results.html#cb125-9" tabindex="-1"></a>    <span class="at">x =</span> latex2exp<span class="sc">::</span><span class="fu">TeX</span>(<span class="st">&quot;points $m^{-2}$&quot;</span>)</span>
+<span id="cb125-10"><a href="point-cloud-processing-results.html#cb125-10" tabindex="-1"></a>    , <span class="at">y =</span> latex2exp<span class="sc">::</span><span class="fu">TeX</span>(<span class="st">&quot;total seconds $ha^{-1}$&quot;</span>)</span>
+<span id="cb125-11"><a href="point-cloud-processing-results.html#cb125-11" tabindex="-1"></a>    , <span class="at">color =</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb125-12"><a href="point-cloud-processing-results.html#cb125-12" tabindex="-1"></a>    , <span class="at">subtitle =</span> <span class="st">&quot;Point Cloud Processing Time versus Point Density&quot;</span></span>
+<span id="cb125-13"><a href="point-cloud-processing-results.html#cb125-13" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb125-14"><a href="point-cloud-processing-results.html#cb125-14" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">theme_light</span>() <span class="sc">+</span></span>
+<span id="cb125-15"><a href="point-cloud-processing-results.html#cb125-15" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;top&quot;</span>)</span></code></pre></div>
+<p><img src="dod_cloud2trees_demo_files/figure-html/unnamed-chunk-140-1.png" width="1008" /></p>
 </div>
 <div id="point-cloud-processing-time-by-section" class="section level3 hasAnchor" number="7.1.2">
 <h3><span class="header-section-number">7.1.2</span> Point Cloud Processing Time by Section (%)<a href="point-cloud-processing-results.html#point-cloud-processing-time-by-section" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb125-1"><a href="point-cloud-processing-results.html#cb125-1" tabindex="-1"></a>table_temp <span class="sc">%&gt;%</span> </span>
-<span id="cb125-2"><a href="point-cloud-processing-results.html#cb125-2" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(section <span class="sc">!=</span> <span class="st">&quot;total&quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb125-3"><a href="point-cloud-processing-results.html#cb125-3" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">section =</span> forcats<span class="sc">::</span><span class="fu">fct_rev</span>(section)) <span class="sc">%&gt;%</span> </span>
-<span id="cb125-4"><a href="point-cloud-processing-results.html#cb125-4" tabindex="-1"></a>ggplot2<span class="sc">::</span><span class="fu">ggplot</span>(</span>
-<span id="cb125-5"><a href="point-cloud-processing-results.html#cb125-5" tabindex="-1"></a>  <span class="at">mapping =</span> ggplot2<span class="sc">::</span><span class="fu">aes</span>(<span class="at">y =</span> big_lab_ggplot, <span class="at">x =</span> pct, <span class="at">fill =</span> section, <span class="at">group =</span> section)</span>
-<span id="cb125-6"><a href="point-cloud-processing-results.html#cb125-6" tabindex="-1"></a>) <span class="sc">+</span></span>
-<span id="cb125-7"><a href="point-cloud-processing-results.html#cb125-7" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">geom_col</span>(</span>
-<span id="cb125-8"><a href="point-cloud-processing-results.html#cb125-8" tabindex="-1"></a>    <span class="at">width =</span> <span class="fl">0.7</span>, <span class="at">alpha=</span><span class="fl">0.8</span></span>
-<span id="cb125-9"><a href="point-cloud-processing-results.html#cb125-9" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb125-10"><a href="point-cloud-processing-results.html#cb125-10" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">geom_text</span>(</span>
-<span id="cb125-11"><a href="point-cloud-processing-results.html#cb125-11" tabindex="-1"></a>    <span class="at">mapping =</span> ggplot2<span class="sc">::</span><span class="fu">aes</span>(</span>
-<span id="cb125-12"><a href="point-cloud-processing-results.html#cb125-12" tabindex="-1"></a>        <span class="at">label =</span> scales<span class="sc">::</span><span class="fu">percent</span>(<span class="fu">ifelse</span>(pct<span class="sc">&gt;=</span><span class="fl">0.06</span>,pct,<span class="cn">NA</span>), <span class="at">accuracy =</span> <span class="dv">1</span>)</span>
-<span id="cb125-13"><a href="point-cloud-processing-results.html#cb125-13" tabindex="-1"></a>        , <span class="at">fontface =</span> <span class="st">&quot;bold&quot;</span></span>
-<span id="cb125-14"><a href="point-cloud-processing-results.html#cb125-14" tabindex="-1"></a>      )</span>
-<span id="cb125-15"><a href="point-cloud-processing-results.html#cb125-15" tabindex="-1"></a>    , <span class="at">position =</span> ggplot2<span class="sc">::</span><span class="fu">position_stack</span>(<span class="at">vjust =</span> <span class="fl">0.5</span>)</span>
-<span id="cb125-16"><a href="point-cloud-processing-results.html#cb125-16" tabindex="-1"></a>    , <span class="at">color =</span> <span class="st">&quot;black&quot;</span>, <span class="at">size =</span> <span class="dv">4</span></span>
-<span id="cb125-17"><a href="point-cloud-processing-results.html#cb125-17" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb125-18"><a href="point-cloud-processing-results.html#cb125-18" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">facet_wrap</span>(<span class="at">facets =</span> dplyr<span class="sc">::</span><span class="fu">vars</span>(study_site_lab), <span class="at">scales =</span> <span class="st">&quot;free_y&quot;</span>) <span class="sc">+</span> </span>
-<span id="cb125-19"><a href="point-cloud-processing-results.html#cb125-19" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">scale_fill_viridis_d</span>(<span class="at">option =</span> <span class="st">&quot;turbo&quot;</span>, <span class="at">begin =</span> <span class="fl">0.1</span>, <span class="at">end =</span> <span class="fl">0.9</span>) <span class="sc">+</span></span>
-<span id="cb125-20"><a href="point-cloud-processing-results.html#cb125-20" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">percent_format</span>()) <span class="sc">+</span></span>
-<span id="cb125-21"><a href="point-cloud-processing-results.html#cb125-21" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb125-22"><a href="point-cloud-processing-results.html#cb125-22" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">&quot;&quot;</span>, <span class="at">y =</span> <span class="st">&quot;&quot;</span></span>
-<span id="cb125-23"><a href="point-cloud-processing-results.html#cb125-23" tabindex="-1"></a>    , <span class="at">x =</span> <span class="st">&quot;% Point Cloud Total Processing Time&quot;</span></span>
-<span id="cb125-24"><a href="point-cloud-processing-results.html#cb125-24" tabindex="-1"></a>    , <span class="at">subtitle =</span> <span class="st">&quot;Point Cloud Processing Time by Section&quot;</span></span>
-<span id="cb125-25"><a href="point-cloud-processing-results.html#cb125-25" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb125-26"><a href="point-cloud-processing-results.html#cb125-26" tabindex="-1"></a>  <span class="fu">theme_light</span>() <span class="sc">+</span></span>
-<span id="cb125-27"><a href="point-cloud-processing-results.html#cb125-27" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb125-28"><a href="point-cloud-processing-results.html#cb125-28" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">&quot;top&quot;</span></span>
-<span id="cb125-29"><a href="point-cloud-processing-results.html#cb125-29" tabindex="-1"></a>    , <span class="at">legend.direction  =</span> <span class="st">&quot;horizontal&quot;</span></span>
-<span id="cb125-30"><a href="point-cloud-processing-results.html#cb125-30" tabindex="-1"></a>    , <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">7</span>)</span>
-<span id="cb125-31"><a href="point-cloud-processing-results.html#cb125-31" tabindex="-1"></a>    , <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">10</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>)</span>
-<span id="cb125-32"><a href="point-cloud-processing-results.html#cb125-32" tabindex="-1"></a>    , <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>)</span>
-<span id="cb125-33"><a href="point-cloud-processing-results.html#cb125-33" tabindex="-1"></a>    , <span class="at">axis.text.x =</span> <span class="fu">element_blank</span>()</span>
-<span id="cb125-34"><a href="point-cloud-processing-results.html#cb125-34" tabindex="-1"></a>    , <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">color =</span> <span class="st">&quot;black&quot;</span>,<span class="at">size=</span><span class="dv">10</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>)</span>
-<span id="cb125-35"><a href="point-cloud-processing-results.html#cb125-35" tabindex="-1"></a>    , <span class="at">axis.ticks.x =</span> <span class="fu">element_blank</span>()</span>
-<span id="cb125-36"><a href="point-cloud-processing-results.html#cb125-36" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb125-37"><a href="point-cloud-processing-results.html#cb125-37" tabindex="-1"></a>  <span class="fu">guides</span>(</span>
-<span id="cb125-38"><a href="point-cloud-processing-results.html#cb125-38" tabindex="-1"></a>    <span class="at">fill =</span> <span class="fu">guide_legend</span>(<span class="at">nrow =</span> <span class="dv">3</span>, <span class="at">byrow =</span> T, <span class="at">reverse =</span> T, <span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">alpha =</span> <span class="fl">0.9</span>))</span>
-<span id="cb125-39"><a href="point-cloud-processing-results.html#cb125-39" tabindex="-1"></a>  )</span></code></pre></div>
-<p><img src="dod_cloud2trees_demo_files/figure-html/unnamed-chunk-140-1.png" width="1008" /></p>
+<div class="sourceCode" id="cb126"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb126-1"><a href="point-cloud-processing-results.html#cb126-1" tabindex="-1"></a>table_temp <span class="sc">%&gt;%</span> </span>
+<span id="cb126-2"><a href="point-cloud-processing-results.html#cb126-2" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(section <span class="sc">!=</span> <span class="st">&quot;total&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb126-3"><a href="point-cloud-processing-results.html#cb126-3" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">section =</span> forcats<span class="sc">::</span><span class="fu">fct_rev</span>(section)) <span class="sc">%&gt;%</span> </span>
+<span id="cb126-4"><a href="point-cloud-processing-results.html#cb126-4" tabindex="-1"></a>ggplot2<span class="sc">::</span><span class="fu">ggplot</span>(</span>
+<span id="cb126-5"><a href="point-cloud-processing-results.html#cb126-5" tabindex="-1"></a>  <span class="at">mapping =</span> ggplot2<span class="sc">::</span><span class="fu">aes</span>(<span class="at">y =</span> big_lab_ggplot, <span class="at">x =</span> pct, <span class="at">fill =</span> section, <span class="at">group =</span> section)</span>
+<span id="cb126-6"><a href="point-cloud-processing-results.html#cb126-6" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb126-7"><a href="point-cloud-processing-results.html#cb126-7" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">geom_col</span>(</span>
+<span id="cb126-8"><a href="point-cloud-processing-results.html#cb126-8" tabindex="-1"></a>    <span class="at">width =</span> <span class="fl">0.7</span>, <span class="at">alpha=</span><span class="fl">0.8</span></span>
+<span id="cb126-9"><a href="point-cloud-processing-results.html#cb126-9" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb126-10"><a href="point-cloud-processing-results.html#cb126-10" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">geom_text</span>(</span>
+<span id="cb126-11"><a href="point-cloud-processing-results.html#cb126-11" tabindex="-1"></a>    <span class="at">mapping =</span> ggplot2<span class="sc">::</span><span class="fu">aes</span>(</span>
+<span id="cb126-12"><a href="point-cloud-processing-results.html#cb126-12" tabindex="-1"></a>        <span class="at">label =</span> scales<span class="sc">::</span><span class="fu">percent</span>(<span class="fu">ifelse</span>(pct<span class="sc">&gt;=</span><span class="fl">0.06</span>,pct,<span class="cn">NA</span>), <span class="at">accuracy =</span> <span class="dv">1</span>)</span>
+<span id="cb126-13"><a href="point-cloud-processing-results.html#cb126-13" tabindex="-1"></a>        , <span class="at">fontface =</span> <span class="st">&quot;bold&quot;</span></span>
+<span id="cb126-14"><a href="point-cloud-processing-results.html#cb126-14" tabindex="-1"></a>      )</span>
+<span id="cb126-15"><a href="point-cloud-processing-results.html#cb126-15" tabindex="-1"></a>    , <span class="at">position =</span> ggplot2<span class="sc">::</span><span class="fu">position_stack</span>(<span class="at">vjust =</span> <span class="fl">0.5</span>)</span>
+<span id="cb126-16"><a href="point-cloud-processing-results.html#cb126-16" tabindex="-1"></a>    , <span class="at">color =</span> <span class="st">&quot;black&quot;</span>, <span class="at">size =</span> <span class="dv">4</span></span>
+<span id="cb126-17"><a href="point-cloud-processing-results.html#cb126-17" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb126-18"><a href="point-cloud-processing-results.html#cb126-18" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">facet_wrap</span>(<span class="at">facets =</span> dplyr<span class="sc">::</span><span class="fu">vars</span>(study_site_lab), <span class="at">scales =</span> <span class="st">&quot;free_y&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb126-19"><a href="point-cloud-processing-results.html#cb126-19" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">scale_fill_viridis_d</span>(<span class="at">option =</span> <span class="st">&quot;turbo&quot;</span>, <span class="at">begin =</span> <span class="fl">0.1</span>, <span class="at">end =</span> <span class="fl">0.9</span>) <span class="sc">+</span></span>
+<span id="cb126-20"><a href="point-cloud-processing-results.html#cb126-20" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">percent_format</span>()) <span class="sc">+</span></span>
+<span id="cb126-21"><a href="point-cloud-processing-results.html#cb126-21" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb126-22"><a href="point-cloud-processing-results.html#cb126-22" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">&quot;&quot;</span>, <span class="at">y =</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb126-23"><a href="point-cloud-processing-results.html#cb126-23" tabindex="-1"></a>    , <span class="at">x =</span> <span class="st">&quot;% Point Cloud Total Processing Time&quot;</span></span>
+<span id="cb126-24"><a href="point-cloud-processing-results.html#cb126-24" tabindex="-1"></a>    , <span class="at">subtitle =</span> <span class="st">&quot;Point Cloud Processing Time by Section&quot;</span></span>
+<span id="cb126-25"><a href="point-cloud-processing-results.html#cb126-25" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb126-26"><a href="point-cloud-processing-results.html#cb126-26" tabindex="-1"></a>  <span class="fu">theme_light</span>() <span class="sc">+</span></span>
+<span id="cb126-27"><a href="point-cloud-processing-results.html#cb126-27" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb126-28"><a href="point-cloud-processing-results.html#cb126-28" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">&quot;top&quot;</span></span>
+<span id="cb126-29"><a href="point-cloud-processing-results.html#cb126-29" tabindex="-1"></a>    , <span class="at">legend.direction  =</span> <span class="st">&quot;horizontal&quot;</span></span>
+<span id="cb126-30"><a href="point-cloud-processing-results.html#cb126-30" tabindex="-1"></a>    , <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">7</span>)</span>
+<span id="cb126-31"><a href="point-cloud-processing-results.html#cb126-31" tabindex="-1"></a>    , <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">10</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>)</span>
+<span id="cb126-32"><a href="point-cloud-processing-results.html#cb126-32" tabindex="-1"></a>    , <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>)</span>
+<span id="cb126-33"><a href="point-cloud-processing-results.html#cb126-33" tabindex="-1"></a>    , <span class="at">axis.text.x =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb126-34"><a href="point-cloud-processing-results.html#cb126-34" tabindex="-1"></a>    , <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">color =</span> <span class="st">&quot;black&quot;</span>,<span class="at">size=</span><span class="dv">10</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>)</span>
+<span id="cb126-35"><a href="point-cloud-processing-results.html#cb126-35" tabindex="-1"></a>    , <span class="at">axis.ticks.x =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb126-36"><a href="point-cloud-processing-results.html#cb126-36" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb126-37"><a href="point-cloud-processing-results.html#cb126-37" tabindex="-1"></a>  <span class="fu">guides</span>(</span>
+<span id="cb126-38"><a href="point-cloud-processing-results.html#cb126-38" tabindex="-1"></a>    <span class="at">fill =</span> <span class="fu">guide_legend</span>(<span class="at">nrow =</span> <span class="dv">3</span>, <span class="at">byrow =</span> T, <span class="at">reverse =</span> T, <span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">alpha =</span> <span class="fl">0.9</span>))</span>
+<span id="cb126-39"><a href="point-cloud-processing-results.html#cb126-39" tabindex="-1"></a>  )</span></code></pre></div>
+<p><img src="dod_cloud2trees_demo_files/figure-html/unnamed-chunk-141-1.png" width="1008" /></p>
 </div>
 <div id="point-cloud-processing-time-by-section-total" class="section level3 hasAnchor" number="7.1.3">
 <h3><span class="header-section-number">7.1.3</span> Point Cloud Processing Time by Section (total)<a href="point-cloud-processing-results.html#point-cloud-processing-time-by-section-total" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb126"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb126-1"><a href="point-cloud-processing-results.html#cb126-1" tabindex="-1"></a> table_temp <span class="sc">%&gt;%</span> </span>
-<span id="cb126-2"><a href="point-cloud-processing-results.html#cb126-2" tabindex="-1"></a>   dplyr<span class="sc">::</span><span class="fu">filter</span>(section <span class="sc">!=</span> <span class="st">&quot;total&quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb126-3"><a href="point-cloud-processing-results.html#cb126-3" tabindex="-1"></a>   dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">section =</span> forcats<span class="sc">::</span><span class="fu">fct_rev</span>(section)) <span class="sc">%&gt;%</span> </span>
-<span id="cb126-4"><a href="point-cloud-processing-results.html#cb126-4" tabindex="-1"></a> ggplot2<span class="sc">::</span><span class="fu">ggplot</span>(</span>
-<span id="cb126-5"><a href="point-cloud-processing-results.html#cb126-5" tabindex="-1"></a>   <span class="at">mapping =</span> ggplot2<span class="sc">::</span><span class="fu">aes</span>(<span class="at">y =</span> big_lab_ggplot, <span class="at">x =</span> secperha, <span class="at">fill =</span> section, <span class="at">group =</span> section)</span>
-<span id="cb126-6"><a href="point-cloud-processing-results.html#cb126-6" tabindex="-1"></a> ) <span class="sc">+</span></span>
-<span id="cb126-7"><a href="point-cloud-processing-results.html#cb126-7" tabindex="-1"></a>  <span class="fu">geom_text</span>(</span>
-<span id="cb126-8"><a href="point-cloud-processing-results.html#cb126-8" tabindex="-1"></a>    <span class="at">data =</span> table_temp <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(section <span class="sc">==</span> <span class="st">&quot;total&quot;</span>)</span>
-<span id="cb126-9"><a href="point-cloud-processing-results.html#cb126-9" tabindex="-1"></a>    , <span class="at">mapping =</span> ggplot2<span class="sc">::</span><span class="fu">aes</span>(</span>
-<span id="cb126-10"><a href="point-cloud-processing-results.html#cb126-10" tabindex="-1"></a>      <span class="at">y =</span> big_lab_ggplot</span>
-<span id="cb126-11"><a href="point-cloud-processing-results.html#cb126-11" tabindex="-1"></a>      , <span class="at">x =</span> secperha</span>
-<span id="cb126-12"><a href="point-cloud-processing-results.html#cb126-12" tabindex="-1"></a>      , <span class="at">label =</span> scales<span class="sc">::</span><span class="fu">comma</span>(secperha,<span class="at">accuracy=</span><span class="fl">0.1</span>,<span class="at">suffix =</span> <span class="st">&quot;</span><span class="sc">\n</span><span class="st">total&quot;</span>)</span>
-<span id="cb126-13"><a href="point-cloud-processing-results.html#cb126-13" tabindex="-1"></a>      , <span class="at">fontface =</span> <span class="st">&quot;bold&quot;</span></span>
-<span id="cb126-14"><a href="point-cloud-processing-results.html#cb126-14" tabindex="-1"></a>    )</span>
-<span id="cb126-15"><a href="point-cloud-processing-results.html#cb126-15" tabindex="-1"></a>    , <span class="at">color =</span> <span class="st">&quot;black&quot;</span>, <span class="at">size =</span> <span class="fl">2.3</span></span>
-<span id="cb126-16"><a href="point-cloud-processing-results.html#cb126-16" tabindex="-1"></a>    , <span class="at">hjust =</span> <span class="sc">-</span><span class="fl">0.1</span></span>
-<span id="cb126-17"><a href="point-cloud-processing-results.html#cb126-17" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb126-18"><a href="point-cloud-processing-results.html#cb126-18" tabindex="-1"></a>   ggplot2<span class="sc">::</span><span class="fu">geom_col</span>(</span>
-<span id="cb126-19"><a href="point-cloud-processing-results.html#cb126-19" tabindex="-1"></a>     <span class="at">width =</span> <span class="fl">0.7</span>, <span class="at">alpha=</span><span class="fl">0.8</span></span>
-<span id="cb126-20"><a href="point-cloud-processing-results.html#cb126-20" tabindex="-1"></a>   ) <span class="sc">+</span></span>
-<span id="cb126-21"><a href="point-cloud-processing-results.html#cb126-21" tabindex="-1"></a>   ggplot2<span class="sc">::</span><span class="fu">geom_text</span>(</span>
-<span id="cb126-22"><a href="point-cloud-processing-results.html#cb126-22" tabindex="-1"></a>     <span class="at">mapping =</span> ggplot2<span class="sc">::</span><span class="fu">aes</span>(</span>
-<span id="cb126-23"><a href="point-cloud-processing-results.html#cb126-23" tabindex="-1"></a>         <span class="at">label =</span> scales<span class="sc">::</span><span class="fu">comma</span>(<span class="fu">ifelse</span>(secperha<span class="sc">&gt;=</span><span class="fl">7.5</span>,secperha,<span class="cn">NA</span>), <span class="at">accuracy =</span> <span class="fl">0.1</span>)</span>
-<span id="cb126-24"><a href="point-cloud-processing-results.html#cb126-24" tabindex="-1"></a>         , <span class="at">fontface =</span> <span class="st">&quot;bold&quot;</span></span>
-<span id="cb126-25"><a href="point-cloud-processing-results.html#cb126-25" tabindex="-1"></a>       )</span>
-<span id="cb126-26"><a href="point-cloud-processing-results.html#cb126-26" tabindex="-1"></a>     , <span class="at">position =</span> ggplot2<span class="sc">::</span><span class="fu">position_stack</span>(<span class="at">vjust =</span> <span class="fl">0.5</span>)</span>
-<span id="cb126-27"><a href="point-cloud-processing-results.html#cb126-27" tabindex="-1"></a>     , <span class="at">color =</span> <span class="st">&quot;black&quot;</span>, <span class="at">size =</span> <span class="dv">3</span></span>
-<span id="cb126-28"><a href="point-cloud-processing-results.html#cb126-28" tabindex="-1"></a>   ) <span class="sc">+</span></span>
-<span id="cb126-29"><a href="point-cloud-processing-results.html#cb126-29" tabindex="-1"></a>   ggplot2<span class="sc">::</span><span class="fu">facet_wrap</span>(<span class="at">facets =</span> dplyr<span class="sc">::</span><span class="fu">vars</span>(study_site_lab), <span class="at">scales =</span> <span class="st">&quot;free_y&quot;</span>) <span class="sc">+</span> </span>
-<span id="cb126-30"><a href="point-cloud-processing-results.html#cb126-30" tabindex="-1"></a>   ggplot2<span class="sc">::</span><span class="fu">scale_fill_viridis_d</span>(<span class="at">option =</span> <span class="st">&quot;turbo&quot;</span>, <span class="at">begin =</span> <span class="fl">0.1</span>, <span class="at">end =</span> <span class="fl">0.9</span>) <span class="sc">+</span></span>
-<span id="cb126-31"><a href="point-cloud-processing-results.html#cb126-31" tabindex="-1"></a>   ggplot2<span class="sc">::</span><span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">comma_format</span>(), <span class="at">expand =</span> ggplot2<span class="sc">::</span><span class="fu">expansion</span>(<span class="at">mult =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="fl">0.1</span>))) <span class="sc">+</span></span>
-<span id="cb126-32"><a href="point-cloud-processing-results.html#cb126-32" tabindex="-1"></a>   <span class="fu">labs</span>(</span>
-<span id="cb126-33"><a href="point-cloud-processing-results.html#cb126-33" tabindex="-1"></a>     <span class="at">fill =</span> <span class="st">&quot;&quot;</span>, <span class="at">y =</span> <span class="st">&quot;&quot;</span></span>
-<span id="cb126-34"><a href="point-cloud-processing-results.html#cb126-34" tabindex="-1"></a>     , <span class="at">x =</span> latex2exp<span class="sc">::</span><span class="fu">TeX</span>(<span class="st">&quot;seconds $ha^{-1}$&quot;</span>)</span>
-<span id="cb126-35"><a href="point-cloud-processing-results.html#cb126-35" tabindex="-1"></a>     , <span class="at">subtitle =</span> <span class="st">&quot;Point Cloud Processing Time by Section&quot;</span></span>
-<span id="cb126-36"><a href="point-cloud-processing-results.html#cb126-36" tabindex="-1"></a>   ) <span class="sc">+</span></span>
-<span id="cb126-37"><a href="point-cloud-processing-results.html#cb126-37" tabindex="-1"></a>   <span class="fu">theme_light</span>() <span class="sc">+</span></span>
-<span id="cb126-38"><a href="point-cloud-processing-results.html#cb126-38" tabindex="-1"></a>   <span class="fu">theme</span>(</span>
-<span id="cb126-39"><a href="point-cloud-processing-results.html#cb126-39" tabindex="-1"></a>     <span class="at">legend.position =</span> <span class="st">&quot;top&quot;</span></span>
-<span id="cb126-40"><a href="point-cloud-processing-results.html#cb126-40" tabindex="-1"></a>     , <span class="at">legend.direction  =</span> <span class="st">&quot;horizontal&quot;</span></span>
-<span id="cb126-41"><a href="point-cloud-processing-results.html#cb126-41" tabindex="-1"></a>     , <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">7</span>)</span>
-<span id="cb126-42"><a href="point-cloud-processing-results.html#cb126-42" tabindex="-1"></a>     , <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">10</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>)</span>
-<span id="cb126-43"><a href="point-cloud-processing-results.html#cb126-43" tabindex="-1"></a>     , <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>)</span>
-<span id="cb126-44"><a href="point-cloud-processing-results.html#cb126-44" tabindex="-1"></a>     , <span class="at">axis.text.x =</span> <span class="fu">element_blank</span>()</span>
-<span id="cb126-45"><a href="point-cloud-processing-results.html#cb126-45" tabindex="-1"></a>     , <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">color =</span> <span class="st">&quot;black&quot;</span>,<span class="at">size=</span><span class="dv">10</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>)</span>
-<span id="cb126-46"><a href="point-cloud-processing-results.html#cb126-46" tabindex="-1"></a>     , <span class="at">axis.ticks.x =</span> <span class="fu">element_blank</span>()</span>
-<span id="cb126-47"><a href="point-cloud-processing-results.html#cb126-47" tabindex="-1"></a>   ) <span class="sc">+</span></span>
-<span id="cb126-48"><a href="point-cloud-processing-results.html#cb126-48" tabindex="-1"></a>   <span class="fu">guides</span>(</span>
-<span id="cb126-49"><a href="point-cloud-processing-results.html#cb126-49" tabindex="-1"></a>     <span class="at">fill =</span> <span class="fu">guide_legend</span>(<span class="at">nrow =</span> <span class="dv">3</span>, <span class="at">byrow =</span> T, <span class="at">reverse =</span> T, <span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">alpha =</span> <span class="fl">0.9</span>))</span>
-<span id="cb126-50"><a href="point-cloud-processing-results.html#cb126-50" tabindex="-1"></a>   )</span></code></pre></div>
-<p><img src="dod_cloud2trees_demo_files/figure-html/unnamed-chunk-141-1.png" width="1008" /></p>
+<div class="sourceCode" id="cb127"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb127-1"><a href="point-cloud-processing-results.html#cb127-1" tabindex="-1"></a> table_temp <span class="sc">%&gt;%</span> </span>
+<span id="cb127-2"><a href="point-cloud-processing-results.html#cb127-2" tabindex="-1"></a>   dplyr<span class="sc">::</span><span class="fu">filter</span>(section <span class="sc">!=</span> <span class="st">&quot;total&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb127-3"><a href="point-cloud-processing-results.html#cb127-3" tabindex="-1"></a>   dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">section =</span> forcats<span class="sc">::</span><span class="fu">fct_rev</span>(section)) <span class="sc">%&gt;%</span> </span>
+<span id="cb127-4"><a href="point-cloud-processing-results.html#cb127-4" tabindex="-1"></a> ggplot2<span class="sc">::</span><span class="fu">ggplot</span>(</span>
+<span id="cb127-5"><a href="point-cloud-processing-results.html#cb127-5" tabindex="-1"></a>   <span class="at">mapping =</span> ggplot2<span class="sc">::</span><span class="fu">aes</span>(<span class="at">y =</span> big_lab_ggplot, <span class="at">x =</span> secperha, <span class="at">fill =</span> section, <span class="at">group =</span> section)</span>
+<span id="cb127-6"><a href="point-cloud-processing-results.html#cb127-6" tabindex="-1"></a> ) <span class="sc">+</span></span>
+<span id="cb127-7"><a href="point-cloud-processing-results.html#cb127-7" tabindex="-1"></a>  <span class="fu">geom_text</span>(</span>
+<span id="cb127-8"><a href="point-cloud-processing-results.html#cb127-8" tabindex="-1"></a>    <span class="at">data =</span> table_temp <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(section <span class="sc">==</span> <span class="st">&quot;total&quot;</span>)</span>
+<span id="cb127-9"><a href="point-cloud-processing-results.html#cb127-9" tabindex="-1"></a>    , <span class="at">mapping =</span> ggplot2<span class="sc">::</span><span class="fu">aes</span>(</span>
+<span id="cb127-10"><a href="point-cloud-processing-results.html#cb127-10" tabindex="-1"></a>      <span class="at">y =</span> big_lab_ggplot</span>
+<span id="cb127-11"><a href="point-cloud-processing-results.html#cb127-11" tabindex="-1"></a>      , <span class="at">x =</span> secperha</span>
+<span id="cb127-12"><a href="point-cloud-processing-results.html#cb127-12" tabindex="-1"></a>      , <span class="at">label =</span> scales<span class="sc">::</span><span class="fu">comma</span>(secperha,<span class="at">accuracy=</span><span class="fl">0.1</span>,<span class="at">suffix =</span> <span class="st">&quot;</span><span class="sc">\n</span><span class="st">total&quot;</span>)</span>
+<span id="cb127-13"><a href="point-cloud-processing-results.html#cb127-13" tabindex="-1"></a>      , <span class="at">fontface =</span> <span class="st">&quot;bold&quot;</span></span>
+<span id="cb127-14"><a href="point-cloud-processing-results.html#cb127-14" tabindex="-1"></a>    )</span>
+<span id="cb127-15"><a href="point-cloud-processing-results.html#cb127-15" tabindex="-1"></a>    , <span class="at">color =</span> <span class="st">&quot;black&quot;</span>, <span class="at">size =</span> <span class="fl">2.3</span></span>
+<span id="cb127-16"><a href="point-cloud-processing-results.html#cb127-16" tabindex="-1"></a>    , <span class="at">hjust =</span> <span class="sc">-</span><span class="fl">0.1</span></span>
+<span id="cb127-17"><a href="point-cloud-processing-results.html#cb127-17" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb127-18"><a href="point-cloud-processing-results.html#cb127-18" tabindex="-1"></a>   ggplot2<span class="sc">::</span><span class="fu">geom_col</span>(</span>
+<span id="cb127-19"><a href="point-cloud-processing-results.html#cb127-19" tabindex="-1"></a>     <span class="at">width =</span> <span class="fl">0.7</span>, <span class="at">alpha=</span><span class="fl">0.8</span></span>
+<span id="cb127-20"><a href="point-cloud-processing-results.html#cb127-20" tabindex="-1"></a>   ) <span class="sc">+</span></span>
+<span id="cb127-21"><a href="point-cloud-processing-results.html#cb127-21" tabindex="-1"></a>   ggplot2<span class="sc">::</span><span class="fu">geom_text</span>(</span>
+<span id="cb127-22"><a href="point-cloud-processing-results.html#cb127-22" tabindex="-1"></a>     <span class="at">mapping =</span> ggplot2<span class="sc">::</span><span class="fu">aes</span>(</span>
+<span id="cb127-23"><a href="point-cloud-processing-results.html#cb127-23" tabindex="-1"></a>         <span class="at">label =</span> scales<span class="sc">::</span><span class="fu">comma</span>(<span class="fu">ifelse</span>(secperha<span class="sc">&gt;=</span><span class="fl">7.5</span>,secperha,<span class="cn">NA</span>), <span class="at">accuracy =</span> <span class="fl">0.1</span>)</span>
+<span id="cb127-24"><a href="point-cloud-processing-results.html#cb127-24" tabindex="-1"></a>         , <span class="at">fontface =</span> <span class="st">&quot;bold&quot;</span></span>
+<span id="cb127-25"><a href="point-cloud-processing-results.html#cb127-25" tabindex="-1"></a>       )</span>
+<span id="cb127-26"><a href="point-cloud-processing-results.html#cb127-26" tabindex="-1"></a>     , <span class="at">position =</span> ggplot2<span class="sc">::</span><span class="fu">position_stack</span>(<span class="at">vjust =</span> <span class="fl">0.5</span>)</span>
+<span id="cb127-27"><a href="point-cloud-processing-results.html#cb127-27" tabindex="-1"></a>     , <span class="at">color =</span> <span class="st">&quot;black&quot;</span>, <span class="at">size =</span> <span class="dv">3</span></span>
+<span id="cb127-28"><a href="point-cloud-processing-results.html#cb127-28" tabindex="-1"></a>   ) <span class="sc">+</span></span>
+<span id="cb127-29"><a href="point-cloud-processing-results.html#cb127-29" tabindex="-1"></a>   ggplot2<span class="sc">::</span><span class="fu">facet_wrap</span>(<span class="at">facets =</span> dplyr<span class="sc">::</span><span class="fu">vars</span>(study_site_lab), <span class="at">scales =</span> <span class="st">&quot;free_y&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb127-30"><a href="point-cloud-processing-results.html#cb127-30" tabindex="-1"></a>   ggplot2<span class="sc">::</span><span class="fu">scale_fill_viridis_d</span>(<span class="at">option =</span> <span class="st">&quot;turbo&quot;</span>, <span class="at">begin =</span> <span class="fl">0.1</span>, <span class="at">end =</span> <span class="fl">0.9</span>) <span class="sc">+</span></span>
+<span id="cb127-31"><a href="point-cloud-processing-results.html#cb127-31" tabindex="-1"></a>   ggplot2<span class="sc">::</span><span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">comma_format</span>(), <span class="at">expand =</span> ggplot2<span class="sc">::</span><span class="fu">expansion</span>(<span class="at">mult =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="fl">0.1</span>))) <span class="sc">+</span></span>
+<span id="cb127-32"><a href="point-cloud-processing-results.html#cb127-32" tabindex="-1"></a>   <span class="fu">labs</span>(</span>
+<span id="cb127-33"><a href="point-cloud-processing-results.html#cb127-33" tabindex="-1"></a>     <span class="at">fill =</span> <span class="st">&quot;&quot;</span>, <span class="at">y =</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb127-34"><a href="point-cloud-processing-results.html#cb127-34" tabindex="-1"></a>     , <span class="at">x =</span> latex2exp<span class="sc">::</span><span class="fu">TeX</span>(<span class="st">&quot;seconds $ha^{-1}$&quot;</span>)</span>
+<span id="cb127-35"><a href="point-cloud-processing-results.html#cb127-35" tabindex="-1"></a>     , <span class="at">subtitle =</span> <span class="st">&quot;Point Cloud Processing Time by Section&quot;</span></span>
+<span id="cb127-36"><a href="point-cloud-processing-results.html#cb127-36" tabindex="-1"></a>   ) <span class="sc">+</span></span>
+<span id="cb127-37"><a href="point-cloud-processing-results.html#cb127-37" tabindex="-1"></a>   <span class="fu">theme_light</span>() <span class="sc">+</span></span>
+<span id="cb127-38"><a href="point-cloud-processing-results.html#cb127-38" tabindex="-1"></a>   <span class="fu">theme</span>(</span>
+<span id="cb127-39"><a href="point-cloud-processing-results.html#cb127-39" tabindex="-1"></a>     <span class="at">legend.position =</span> <span class="st">&quot;top&quot;</span></span>
+<span id="cb127-40"><a href="point-cloud-processing-results.html#cb127-40" tabindex="-1"></a>     , <span class="at">legend.direction  =</span> <span class="st">&quot;horizontal&quot;</span></span>
+<span id="cb127-41"><a href="point-cloud-processing-results.html#cb127-41" tabindex="-1"></a>     , <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">7</span>)</span>
+<span id="cb127-42"><a href="point-cloud-processing-results.html#cb127-42" tabindex="-1"></a>     , <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">10</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>)</span>
+<span id="cb127-43"><a href="point-cloud-processing-results.html#cb127-43" tabindex="-1"></a>     , <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>)</span>
+<span id="cb127-44"><a href="point-cloud-processing-results.html#cb127-44" tabindex="-1"></a>     , <span class="at">axis.text.x =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb127-45"><a href="point-cloud-processing-results.html#cb127-45" tabindex="-1"></a>     , <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">color =</span> <span class="st">&quot;black&quot;</span>,<span class="at">size=</span><span class="dv">10</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>)</span>
+<span id="cb127-46"><a href="point-cloud-processing-results.html#cb127-46" tabindex="-1"></a>     , <span class="at">axis.ticks.x =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb127-47"><a href="point-cloud-processing-results.html#cb127-47" tabindex="-1"></a>   ) <span class="sc">+</span></span>
+<span id="cb127-48"><a href="point-cloud-processing-results.html#cb127-48" tabindex="-1"></a>   <span class="fu">guides</span>(</span>
+<span id="cb127-49"><a href="point-cloud-processing-results.html#cb127-49" tabindex="-1"></a>     <span class="at">fill =</span> <span class="fu">guide_legend</span>(<span class="at">nrow =</span> <span class="dv">3</span>, <span class="at">byrow =</span> T, <span class="at">reverse =</span> T, <span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">alpha =</span> <span class="fl">0.9</span>))</span>
+<span id="cb127-50"><a href="point-cloud-processing-results.html#cb127-50" tabindex="-1"></a>   )</span></code></pre></div>
+<p><img src="dod_cloud2trees_demo_files/figure-html/unnamed-chunk-142-1.png" width="1008" /></p>
 </div>
 </div>
 <div id="silvicultural-metrics" class="section level2 hasAnchor" number="7.2">
 <h2><span class="header-section-number">7.2</span> Silvicultural Metrics<a href="point-cloud-processing-results.html#silvicultural-metrics" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>let’s make a function to read the tree list data, keep only trees in an AOI, and aggregate to get common silvicultural metrics</p>
-<div class="sourceCode" id="cb127"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb127-1"><a href="point-cloud-processing-results.html#cb127-1" tabindex="-1"></a><span class="co"># function to clip a tree list to an aoi</span></span>
-<span id="cb127-2"><a href="point-cloud-processing-results.html#cb127-2" tabindex="-1"></a>clip_tree_list_aoi <span class="ot">&lt;-</span> <span class="cf">function</span>(</span>
-<span id="cb127-3"><a href="point-cloud-processing-results.html#cb127-3" tabindex="-1"></a>  <span class="co"># point_cloud_processing_delivery</span></span>
-<span id="cb127-4"><a href="point-cloud-processing-results.html#cb127-4" tabindex="-1"></a>  trees</span>
-<span id="cb127-5"><a href="point-cloud-processing-results.html#cb127-5" tabindex="-1"></a>  , aoi</span>
-<span id="cb127-6"><a href="point-cloud-processing-results.html#cb127-6" tabindex="-1"></a>  , <span class="at">bbox_aoi =</span> F</span>
-<span id="cb127-7"><a href="point-cloud-processing-results.html#cb127-7" tabindex="-1"></a>  , <span class="at">buffer =</span> <span class="dv">0</span> <span class="co"># in the coordinates of trees</span></span>
-<span id="cb127-8"><a href="point-cloud-processing-results.html#cb127-8" tabindex="-1"></a>  , <span class="at">reproject_epsg =</span> <span class="cn">NULL</span></span>
-<span id="cb127-9"><a href="point-cloud-processing-results.html#cb127-9" tabindex="-1"></a>) {</span>
-<span id="cb127-10"><a href="point-cloud-processing-results.html#cb127-10" tabindex="-1"></a></span>
-<span id="cb127-11"><a href="point-cloud-processing-results.html#cb127-11" tabindex="-1"></a>  <span class="cf">if</span>(<span class="sc">!</span><span class="fu">inherits</span>(trees,<span class="st">&quot;sf&quot;</span>)){<span class="fu">stop</span>(<span class="st">&quot;trees must be sf class object&quot;</span>)}</span>
-<span id="cb127-12"><a href="point-cloud-processing-results.html#cb127-12" tabindex="-1"></a>  <span class="cf">if</span>(<span class="sc">!</span><span class="fu">inherits</span>(aoi,<span class="st">&quot;sf&quot;</span>)){<span class="fu">stop</span>(<span class="st">&quot;aoi must be sf class object&quot;</span>)}</span>
-<span id="cb127-13"><a href="point-cloud-processing-results.html#cb127-13" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">is.na</span>(sf<span class="sc">::</span><span class="fu">st_crs</span>(trees))){<span class="fu">stop</span>(<span class="st">&quot;trees does not have a CRS&quot;</span>)}</span>
-<span id="cb127-14"><a href="point-cloud-processing-results.html#cb127-14" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">is.na</span>(sf<span class="sc">::</span><span class="fu">st_crs</span>(aoi))){<span class="fu">stop</span>(<span class="st">&quot;aoi does not have a CRS&quot;</span>)}</span>
-<span id="cb127-15"><a href="point-cloud-processing-results.html#cb127-15" tabindex="-1"></a>  <span class="co"># check epsg buff</span></span>
-<span id="cb127-16"><a href="point-cloud-processing-results.html#cb127-16" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">is.character</span>(reproject_epsg)){</span>
-<span id="cb127-17"><a href="point-cloud-processing-results.html#cb127-17" tabindex="-1"></a>    reproject_epsg <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">parse_number</span>(reproject_epsg) </span>
-<span id="cb127-18"><a href="point-cloud-processing-results.html#cb127-18" tabindex="-1"></a>  }</span>
-<span id="cb127-19"><a href="point-cloud-processing-results.html#cb127-19" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">is.character</span>(buffer)){</span>
-<span id="cb127-20"><a href="point-cloud-processing-results.html#cb127-20" tabindex="-1"></a>    buffer <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">parse_number</span>(buffer) </span>
-<span id="cb127-21"><a href="point-cloud-processing-results.html#cb127-21" tabindex="-1"></a>  }</span>
-<span id="cb127-22"><a href="point-cloud-processing-results.html#cb127-22" tabindex="-1"></a>  <span class="co"># check for polygons</span></span>
-<span id="cb127-23"><a href="point-cloud-processing-results.html#cb127-23" tabindex="-1"></a>  <span class="cf">if</span>(</span>
-<span id="cb127-24"><a href="point-cloud-processing-results.html#cb127-24" tabindex="-1"></a>    sf<span class="sc">::</span><span class="fu">st_is</span>(trees, <span class="fu">c</span>(<span class="st">&quot;POLYGON&quot;</span>,<span class="st">&quot;MULTIPOLYGON&quot;</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb127-25"><a href="point-cloud-processing-results.html#cb127-25" tabindex="-1"></a>    <span class="fu">any</span>()</span>
-<span id="cb127-26"><a href="point-cloud-processing-results.html#cb127-26" tabindex="-1"></a>  ){</span>
-<span id="cb127-27"><a href="point-cloud-processing-results.html#cb127-27" tabindex="-1"></a>    <span class="co"># check for xy</span></span>
-<span id="cb127-28"><a href="point-cloud-processing-results.html#cb127-28" tabindex="-1"></a>    <span class="cf">if</span>(</span>
-<span id="cb127-29"><a href="point-cloud-processing-results.html#cb127-29" tabindex="-1"></a>      (<span class="fu">names</span>(trees) <span class="sc">%&gt;%</span> stringr<span class="sc">::</span><span class="fu">str_detect</span>(<span class="st">&quot;tree_x&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">any</span>()) <span class="sc">&amp;&amp;</span></span>
-<span id="cb127-30"><a href="point-cloud-processing-results.html#cb127-30" tabindex="-1"></a>      (<span class="fu">names</span>(trees) <span class="sc">%&gt;%</span> stringr<span class="sc">::</span><span class="fu">str_detect</span>(<span class="st">&quot;tree_y&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">any</span>())</span>
-<span id="cb127-31"><a href="point-cloud-processing-results.html#cb127-31" tabindex="-1"></a>    ){</span>
-<span id="cb127-32"><a href="point-cloud-processing-results.html#cb127-32" tabindex="-1"></a>      tree_pts <span class="ot">&lt;-</span> trees <span class="sc">%&gt;%</span> </span>
-<span id="cb127-33"><a href="point-cloud-processing-results.html#cb127-33" tabindex="-1"></a>        sf<span class="sc">::</span><span class="fu">st_drop_geometry</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb127-34"><a href="point-cloud-processing-results.html#cb127-34" tabindex="-1"></a>        sf<span class="sc">::</span><span class="fu">st_as_sf</span>(<span class="at">coords =</span> <span class="fu">c</span>(<span class="st">&quot;tree_x&quot;</span>, <span class="st">&quot;tree_y&quot;</span>), <span class="at">crs =</span> sf<span class="sc">::</span><span class="fu">st_crs</span>(trees))</span>
-<span id="cb127-35"><a href="point-cloud-processing-results.html#cb127-35" tabindex="-1"></a>    }<span class="cf">else</span>{</span>
-<span id="cb127-36"><a href="point-cloud-processing-results.html#cb127-36" tabindex="-1"></a>      tree_pts <span class="ot">&lt;-</span> trees <span class="sc">%&gt;%</span> </span>
-<span id="cb127-37"><a href="point-cloud-processing-results.html#cb127-37" tabindex="-1"></a>        sf<span class="sc">::</span><span class="fu">st_centroid</span>()</span>
-<span id="cb127-38"><a href="point-cloud-processing-results.html#cb127-38" tabindex="-1"></a>    }</span>
-<span id="cb127-39"><a href="point-cloud-processing-results.html#cb127-39" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(</span>
-<span id="cb127-40"><a href="point-cloud-processing-results.html#cb127-40" tabindex="-1"></a>    sf<span class="sc">::</span><span class="fu">st_is</span>(trees, <span class="fu">c</span>(<span class="st">&quot;POINT&quot;</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb127-41"><a href="point-cloud-processing-results.html#cb127-41" tabindex="-1"></a>    <span class="fu">all</span>()</span>
-<span id="cb127-42"><a href="point-cloud-processing-results.html#cb127-42" tabindex="-1"></a>  ){</span>
-<span id="cb127-43"><a href="point-cloud-processing-results.html#cb127-43" tabindex="-1"></a>    tree_pts <span class="ot">&lt;-</span> trees</span>
-<span id="cb127-44"><a href="point-cloud-processing-results.html#cb127-44" tabindex="-1"></a>  }<span class="cf">else</span>{</span>
-<span id="cb127-45"><a href="point-cloud-processing-results.html#cb127-45" tabindex="-1"></a>    <span class="fu">stop</span>(<span class="st">&quot;trees must contain POINT or POLYGON type geometries only&quot;</span>)</span>
-<span id="cb127-46"><a href="point-cloud-processing-results.html#cb127-46" tabindex="-1"></a>  }</span>
-<span id="cb127-47"><a href="point-cloud-processing-results.html#cb127-47" tabindex="-1"></a>  </span>
-<span id="cb127-48"><a href="point-cloud-processing-results.html#cb127-48" tabindex="-1"></a>  <span class="co"># bounds</span></span>
-<span id="cb127-49"><a href="point-cloud-processing-results.html#cb127-49" tabindex="-1"></a>  <span class="cf">if</span>(</span>
-<span id="cb127-50"><a href="point-cloud-processing-results.html#cb127-50" tabindex="-1"></a>    <span class="sc">!</span><span class="fu">all</span>( sf<span class="sc">::</span><span class="fu">st_is</span>(aoi, <span class="fu">c</span>(<span class="st">&quot;POLYGON&quot;</span>,<span class="st">&quot;MULTIPOLYGON&quot;</span>)) )</span>
-<span id="cb127-51"><a href="point-cloud-processing-results.html#cb127-51" tabindex="-1"></a>  ){</span>
-<span id="cb127-52"><a href="point-cloud-processing-results.html#cb127-52" tabindex="-1"></a>    <span class="fu">stop</span>(<span class="st">&quot;aoi must contain POLYGON type geometry only&quot;</span>)</span>
-<span id="cb127-53"><a href="point-cloud-processing-results.html#cb127-53" tabindex="-1"></a>  }</span>
-<span id="cb127-54"><a href="point-cloud-processing-results.html#cb127-54" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">nrow</span>(aoi)<span class="sc">!=</span><span class="dv">1</span>){</span>
-<span id="cb127-55"><a href="point-cloud-processing-results.html#cb127-55" tabindex="-1"></a>    <span class="fu">stop</span>(<span class="st">&quot;aoi must only have a single record geometry&quot;</span>)</span>
-<span id="cb127-56"><a href="point-cloud-processing-results.html#cb127-56" tabindex="-1"></a>  }</span>
-<span id="cb127-57"><a href="point-cloud-processing-results.html#cb127-57" tabindex="-1"></a>  </span>
-<span id="cb127-58"><a href="point-cloud-processing-results.html#cb127-58" tabindex="-1"></a>  <span class="co"># reproj</span></span>
-<span id="cb127-59"><a href="point-cloud-processing-results.html#cb127-59" tabindex="-1"></a>  <span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.null</span>(reproject_epsg) <span class="sc">&amp;&amp;</span> <span class="fu">is.numeric</span>(reproject_epsg)){</span>
-<span id="cb127-60"><a href="point-cloud-processing-results.html#cb127-60" tabindex="-1"></a>    tree_pts <span class="ot">&lt;-</span> tree_pts <span class="sc">%&gt;%</span> sf<span class="sc">::</span><span class="fu">st_transform</span>(<span class="at">crs =</span> reproject_epsg)</span>
-<span id="cb127-61"><a href="point-cloud-processing-results.html#cb127-61" tabindex="-1"></a>  }</span>
-<span id="cb127-62"><a href="point-cloud-processing-results.html#cb127-62" tabindex="-1"></a>  </span>
-<span id="cb127-63"><a href="point-cloud-processing-results.html#cb127-63" tabindex="-1"></a>  <span class="co"># bbox</span></span>
-<span id="cb127-64"><a href="point-cloud-processing-results.html#cb127-64" tabindex="-1"></a>  <span class="cf">if</span>(bbox_aoi){</span>
-<span id="cb127-65"><a href="point-cloud-processing-results.html#cb127-65" tabindex="-1"></a>    aoi <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_bbox</span>(aoi) <span class="sc">%&gt;%</span> </span>
-<span id="cb127-66"><a href="point-cloud-processing-results.html#cb127-66" tabindex="-1"></a>      sf<span class="sc">::</span><span class="fu">st_as_sfc</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb127-67"><a href="point-cloud-processing-results.html#cb127-67" tabindex="-1"></a>      sf<span class="sc">::</span><span class="fu">st_transform</span>(sf<span class="sc">::</span><span class="fu">st_crs</span>(tree_pts))</span>
-<span id="cb127-68"><a href="point-cloud-processing-results.html#cb127-68" tabindex="-1"></a>  }<span class="cf">else</span>{</span>
-<span id="cb127-69"><a href="point-cloud-processing-results.html#cb127-69" tabindex="-1"></a>    aoi <span class="ot">&lt;-</span> aoi <span class="sc">%&gt;%</span> sf<span class="sc">::</span><span class="fu">st_transform</span>(sf<span class="sc">::</span><span class="fu">st_crs</span>(tree_pts))</span>
-<span id="cb127-70"><a href="point-cloud-processing-results.html#cb127-70" tabindex="-1"></a>  }</span>
-<span id="cb127-71"><a href="point-cloud-processing-results.html#cb127-71" tabindex="-1"></a>  </span>
-<span id="cb127-72"><a href="point-cloud-processing-results.html#cb127-72" tabindex="-1"></a>  <span class="co"># buff</span></span>
-<span id="cb127-73"><a href="point-cloud-processing-results.html#cb127-73" tabindex="-1"></a>  <span class="cf">if</span>(buffer<span class="sc">&gt;</span><span class="dv">0</span>){</span>
-<span id="cb127-74"><a href="point-cloud-processing-results.html#cb127-74" tabindex="-1"></a>    aoi <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_buffer</span>(aoi, buffer)</span>
-<span id="cb127-75"><a href="point-cloud-processing-results.html#cb127-75" tabindex="-1"></a>  }</span>
-<span id="cb127-76"><a href="point-cloud-processing-results.html#cb127-76" tabindex="-1"></a>  </span>
-<span id="cb127-77"><a href="point-cloud-processing-results.html#cb127-77" tabindex="-1"></a>  <span class="co"># intersect based on points but filter original tree list</span></span>
-<span id="cb127-78"><a href="point-cloud-processing-results.html#cb127-78" tabindex="-1"></a>  trees <span class="ot">&lt;-</span> trees <span class="sc">%&gt;%</span> </span>
-<span id="cb127-79"><a href="point-cloud-processing-results.html#cb127-79" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">slice</span>(</span>
-<span id="cb127-80"><a href="point-cloud-processing-results.html#cb127-80" tabindex="-1"></a>      sf<span class="sc">::</span><span class="fu">st_intersects</span>(tree_pts, aoi, <span class="at">sparse =</span> F) <span class="sc">%&gt;%</span> <span class="fu">which</span>()</span>
-<span id="cb127-81"><a href="point-cloud-processing-results.html#cb127-81" tabindex="-1"></a>    )</span>
-<span id="cb127-82"><a href="point-cloud-processing-results.html#cb127-82" tabindex="-1"></a>  </span>
-<span id="cb127-83"><a href="point-cloud-processing-results.html#cb127-83" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">nrow</span>(trees)<span class="sc">==</span><span class="dv">0</span>){</span>
-<span id="cb127-84"><a href="point-cloud-processing-results.html#cb127-84" tabindex="-1"></a>    <span class="fu">warning</span>(<span class="st">&quot;no trees found within aoi bounds&quot;</span>)</span>
-<span id="cb127-85"><a href="point-cloud-processing-results.html#cb127-85" tabindex="-1"></a>    <span class="fu">return</span>(<span class="cn">NULL</span>)</span>
-<span id="cb127-86"><a href="point-cloud-processing-results.html#cb127-86" tabindex="-1"></a>  }<span class="cf">else</span>{</span>
-<span id="cb127-87"><a href="point-cloud-processing-results.html#cb127-87" tabindex="-1"></a>    <span class="fu">return</span>(trees)</span>
-<span id="cb127-88"><a href="point-cloud-processing-results.html#cb127-88" tabindex="-1"></a>  }</span>
-<span id="cb127-89"><a href="point-cloud-processing-results.html#cb127-89" tabindex="-1"></a></span>
-<span id="cb127-90"><a href="point-cloud-processing-results.html#cb127-90" tabindex="-1"></a>}</span>
-<span id="cb127-91"><a href="point-cloud-processing-results.html#cb127-91" tabindex="-1"></a></span>
-<span id="cb127-92"><a href="point-cloud-processing-results.html#cb127-92" tabindex="-1"></a><span class="co"># clip_tree_list_aoi(</span></span>
-<span id="cb127-93"><a href="point-cloud-processing-results.html#cb127-93" tabindex="-1"></a><span class="co">#   trees = sf::st_read(&quot;c:/data/usfs/dod_cloud2trees_demo/data/SycanMarsh/als_2021_processing/point_cloud_processing_delivery/final_detected_crowns.gpkg&quot;)</span></span>
-<span id="cb127-94"><a href="point-cloud-processing-results.html#cb127-94" tabindex="-1"></a><span class="co">#   , aoi = sf::st_read(&quot;c:/data/usfs/dod_cloud2trees_demo/data/SycanMarsh/Sycan_2A.shp&quot;)</span></span>
-<span id="cb127-95"><a href="point-cloud-processing-results.html#cb127-95" tabindex="-1"></a><span class="co"># ) %&gt;% </span></span>
-<span id="cb127-96"><a href="point-cloud-processing-results.html#cb127-96" tabindex="-1"></a><span class="co"># dplyr::glimpse()</span></span></code></pre></div>
-<p>let’s clip the tree list to the study bounds for each result</p>
+<p><code>cloud2trees</code> has some internal functions to identify <code>cloud2trees::cloud2trees()</code> outputs, read the outputs, and crop them to a given AOI, however, these are internal to the program (for now). We can use <code>cloud2trees::cloud2trees_to_lanl_trees()</code> (detailed in the <a href="lanl_trees.html#lanl_trees">next section</a>) to access this functionality since all we need to do is clip the tree list which we can then aggregate to get common silvicultural metrics</p>
+<div id="example" class="section level3 hasAnchor" number="7.2.1">
+<h3><span class="header-section-number">7.2.1</span> Example<a href="point-cloud-processing-results.html#example" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>here is an example to show the data we’ll get back from the <code>calc_silv_metrics()</code> function we define below</p>
+<div class="sourceCode" id="cb128"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb128-1"><a href="point-cloud-processing-results.html#cb128-1" tabindex="-1"></a><span class="co"># here&#39;s an example</span></span>
+<span id="cb128-2"><a href="point-cloud-processing-results.html#cb128-2" tabindex="-1"></a><span class="co"># study_sites_processing_sf %&gt;% dplyr::slice(6) %&gt;% dplyr::glimpse()</span></span>
+<span id="cb128-3"><a href="point-cloud-processing-results.html#cb128-3" tabindex="-1"></a><span class="co"># using the internal fn&#39;s would be: read_trees_flist() %&gt;% clip_tree_list_aoi()</span></span>
+<span id="cb128-4"><a href="point-cloud-processing-results.html#cb128-4" tabindex="-1"></a>ans_temp <span class="ot">&lt;-</span> cloud2trees<span class="sc">::</span><span class="fu">cloud2trees_to_lanl_trees</span>(</span>
+<span id="cb128-5"><a href="point-cloud-processing-results.html#cb128-5" tabindex="-1"></a>  <span class="at">input_dir =</span> study_sites_processing_sf<span class="sc">$</span>fdir[<span class="dv">6</span>]</span>
+<span id="cb128-6"><a href="point-cloud-processing-results.html#cb128-6" tabindex="-1"></a>  , <span class="at">study_boundary =</span> study_sites_processing_sf <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">slice</span>(<span class="dv">6</span>)</span>
+<span id="cb128-7"><a href="point-cloud-processing-results.html#cb128-7" tabindex="-1"></a>  , <span class="at">bbox_aoi =</span> F, <span class="at">buffer =</span> <span class="dv">0</span> <span class="co"># this is the key to get only trees in our AOI</span></span>
+<span id="cb128-8"><a href="point-cloud-processing-results.html#cb128-8" tabindex="-1"></a>)</span>
+<span id="cb128-9"><a href="point-cloud-processing-results.html#cb128-9" tabindex="-1"></a><span class="co"># ans_temp %&gt;% names()</span></span></code></pre></div>
+<p>let’s make a function to summarize the data and create common silvicultural metrics within our stand boundary</p>
+<div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb129-1"><a href="point-cloud-processing-results.html#cb129-1" tabindex="-1"></a><span class="do">###################################################################################</span></span>
+<span id="cb129-2"><a href="point-cloud-processing-results.html#cb129-2" tabindex="-1"></a><span class="co"># define a function to convert columns in data frame from metric to imperial</span></span>
+<span id="cb129-3"><a href="point-cloud-processing-results.html#cb129-3" tabindex="-1"></a><span class="co"># see: </span></span>
+<span id="cb129-4"><a href="point-cloud-processing-results.html#cb129-4" tabindex="-1"></a><span class="co"># https://www.forestnb.com/archives/forest-nb-news/resources/conversions/</span></span>
+<span id="cb129-5"><a href="point-cloud-processing-results.html#cb129-5" tabindex="-1"></a><span class="co"># https://www.ars.usda.gov/is/np/agbyproducts/agbyappendix.pdf</span></span>
+<span id="cb129-6"><a href="point-cloud-processing-results.html#cb129-6" tabindex="-1"></a><span class="do">###################################################################################</span></span>
+<span id="cb129-7"><a href="point-cloud-processing-results.html#cb129-7" tabindex="-1"></a>calc_imperial_units_fn <span class="ot">&lt;-</span> <span class="cf">function</span>(df) {</span>
+<span id="cb129-8"><a href="point-cloud-processing-results.html#cb129-8" tabindex="-1"></a>  df <span class="sc">%&gt;%</span> </span>
+<span id="cb129-9"><a href="point-cloud-processing-results.html#cb129-9" tabindex="-1"></a>  <span class="co"># convert to imperial units</span></span>
+<span id="cb129-10"><a href="point-cloud-processing-results.html#cb129-10" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
+<span id="cb129-11"><a href="point-cloud-processing-results.html#cb129-11" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">across</span>(</span>
+<span id="cb129-12"><a href="point-cloud-processing-results.html#cb129-12" tabindex="-1"></a>        <span class="at">.cols =</span> tidyselect<span class="sc">::</span><span class="fu">ends_with</span>(<span class="st">&quot;_cm&quot;</span>)</span>
+<span id="cb129-13"><a href="point-cloud-processing-results.html#cb129-13" tabindex="-1"></a>        , <span class="sc">~</span> .x <span class="sc">*</span> <span class="fl">0.394</span></span>
+<span id="cb129-14"><a href="point-cloud-processing-results.html#cb129-14" tabindex="-1"></a>        , <span class="at">.names =</span> <span class="st">&quot;{.col}_in&quot;</span></span>
+<span id="cb129-15"><a href="point-cloud-processing-results.html#cb129-15" tabindex="-1"></a>      )</span>
+<span id="cb129-16"><a href="point-cloud-processing-results.html#cb129-16" tabindex="-1"></a>      , dplyr<span class="sc">::</span><span class="fu">across</span>(</span>
+<span id="cb129-17"><a href="point-cloud-processing-results.html#cb129-17" tabindex="-1"></a>        <span class="at">.cols =</span> tidyselect<span class="sc">::</span><span class="fu">ends_with</span>(<span class="st">&quot;_m&quot;</span>)</span>
+<span id="cb129-18"><a href="point-cloud-processing-results.html#cb129-18" tabindex="-1"></a>        , <span class="sc">~</span> .x <span class="sc">*</span> <span class="fl">3.281</span></span>
+<span id="cb129-19"><a href="point-cloud-processing-results.html#cb129-19" tabindex="-1"></a>        , <span class="at">.names =</span> <span class="st">&quot;{.col}_ft&quot;</span></span>
+<span id="cb129-20"><a href="point-cloud-processing-results.html#cb129-20" tabindex="-1"></a>      )</span>
+<span id="cb129-21"><a href="point-cloud-processing-results.html#cb129-21" tabindex="-1"></a>      , dplyr<span class="sc">::</span><span class="fu">across</span>(</span>
+<span id="cb129-22"><a href="point-cloud-processing-results.html#cb129-22" tabindex="-1"></a>        <span class="at">.cols =</span> tidyselect<span class="sc">::</span><span class="fu">ends_with</span>(<span class="st">&quot;_m2_per_ha&quot;</span>)</span>
+<span id="cb129-23"><a href="point-cloud-processing-results.html#cb129-23" tabindex="-1"></a>        , <span class="sc">~</span> .x <span class="sc">*</span> <span class="fl">4.359</span></span>
+<span id="cb129-24"><a href="point-cloud-processing-results.html#cb129-24" tabindex="-1"></a>        , <span class="at">.names =</span> <span class="st">&quot;{.col}_ftac&quot;</span></span>
+<span id="cb129-25"><a href="point-cloud-processing-results.html#cb129-25" tabindex="-1"></a>      )</span>
+<span id="cb129-26"><a href="point-cloud-processing-results.html#cb129-26" tabindex="-1"></a>      , dplyr<span class="sc">::</span><span class="fu">across</span>(</span>
+<span id="cb129-27"><a href="point-cloud-processing-results.html#cb129-27" tabindex="-1"></a>        <span class="at">.cols =</span> tidyselect<span class="sc">::</span><span class="fu">ends_with</span>(<span class="st">&quot;_kg_per_ha&quot;</span>)</span>
+<span id="cb129-28"><a href="point-cloud-processing-results.html#cb129-28" tabindex="-1"></a>        , <span class="sc">~</span> .x <span class="sc">*</span> <span class="fl">0.892178</span></span>
+<span id="cb129-29"><a href="point-cloud-processing-results.html#cb129-29" tabindex="-1"></a>        , <span class="at">.names =</span> <span class="st">&quot;{.col}_lbsac&quot;</span></span>
+<span id="cb129-30"><a href="point-cloud-processing-results.html#cb129-30" tabindex="-1"></a>      )</span>
+<span id="cb129-31"><a href="point-cloud-processing-results.html#cb129-31" tabindex="-1"></a>      , dplyr<span class="sc">::</span><span class="fu">across</span>(</span>
+<span id="cb129-32"><a href="point-cloud-processing-results.html#cb129-32" tabindex="-1"></a>        <span class="at">.cols =</span> tidyselect<span class="sc">::</span><span class="fu">ends_with</span>(<span class="st">&quot;_per_ha&quot;</span>) <span class="sc">&amp;</span> </span>
+<span id="cb129-33"><a href="point-cloud-processing-results.html#cb129-33" tabindex="-1"></a>          <span class="sc">!</span>tidyselect<span class="sc">::</span><span class="fu">ends_with</span>(<span class="st">&quot;_m2_per_ha&quot;</span>) <span class="sc">&amp;</span> </span>
+<span id="cb129-34"><a href="point-cloud-processing-results.html#cb129-34" tabindex="-1"></a>          <span class="sc">!</span>tidyselect<span class="sc">::</span><span class="fu">ends_with</span>(<span class="st">&quot;_kg_per_ha&quot;</span>)</span>
+<span id="cb129-35"><a href="point-cloud-processing-results.html#cb129-35" tabindex="-1"></a>        , <span class="sc">~</span> .x <span class="sc">*</span> <span class="fl">0.405</span></span>
+<span id="cb129-36"><a href="point-cloud-processing-results.html#cb129-36" tabindex="-1"></a>        , <span class="at">.names =</span> <span class="st">&quot;{.col}_ac&quot;</span></span>
+<span id="cb129-37"><a href="point-cloud-processing-results.html#cb129-37" tabindex="-1"></a>      )</span>
+<span id="cb129-38"><a href="point-cloud-processing-results.html#cb129-38" tabindex="-1"></a>      , dplyr<span class="sc">::</span><span class="fu">across</span>(</span>
+<span id="cb129-39"><a href="point-cloud-processing-results.html#cb129-39" tabindex="-1"></a>        <span class="at">.cols =</span> tidyselect<span class="sc">::</span><span class="fu">ends_with</span>(<span class="st">&quot;_area_ha&quot;</span>)</span>
+<span id="cb129-40"><a href="point-cloud-processing-results.html#cb129-40" tabindex="-1"></a>        , <span class="sc">~</span> .x <span class="sc">*</span> <span class="fl">2.471</span></span>
+<span id="cb129-41"><a href="point-cloud-processing-results.html#cb129-41" tabindex="-1"></a>        , <span class="at">.names =</span> <span class="st">&quot;{.col}_ac&quot;</span></span>
+<span id="cb129-42"><a href="point-cloud-processing-results.html#cb129-42" tabindex="-1"></a>      )</span>
+<span id="cb129-43"><a href="point-cloud-processing-results.html#cb129-43" tabindex="-1"></a>      , dplyr<span class="sc">::</span><span class="fu">across</span>(</span>
+<span id="cb129-44"><a href="point-cloud-processing-results.html#cb129-44" tabindex="-1"></a>        <span class="at">.cols =</span> tidyselect<span class="sc">::</span><span class="fu">ends_with</span>(<span class="st">&quot;kg_per_m2&quot;</span>)</span>
+<span id="cb129-45"><a href="point-cloud-processing-results.html#cb129-45" tabindex="-1"></a>        , <span class="sc">~</span> .x <span class="sc">*</span> <span class="fl">0.20482</span></span>
+<span id="cb129-46"><a href="point-cloud-processing-results.html#cb129-46" tabindex="-1"></a>        , <span class="at">.names =</span> <span class="st">&quot;{.col}_lbsft2&quot;</span></span>
+<span id="cb129-47"><a href="point-cloud-processing-results.html#cb129-47" tabindex="-1"></a>      )</span>
+<span id="cb129-48"><a href="point-cloud-processing-results.html#cb129-48" tabindex="-1"></a>      , dplyr<span class="sc">::</span><span class="fu">across</span>(</span>
+<span id="cb129-49"><a href="point-cloud-processing-results.html#cb129-49" tabindex="-1"></a>        <span class="at">.cols =</span> tidyselect<span class="sc">::</span><span class="fu">ends_with</span>(<span class="st">&quot;kg_per_m3&quot;</span>)</span>
+<span id="cb129-50"><a href="point-cloud-processing-results.html#cb129-50" tabindex="-1"></a>        , <span class="sc">~</span> .x <span class="sc">*</span> <span class="fl">0.0624</span></span>
+<span id="cb129-51"><a href="point-cloud-processing-results.html#cb129-51" tabindex="-1"></a>        , <span class="at">.names =</span> <span class="st">&quot;{.col}_lbsft3&quot;</span></span>
+<span id="cb129-52"><a href="point-cloud-processing-results.html#cb129-52" tabindex="-1"></a>      )</span>
+<span id="cb129-53"><a href="point-cloud-processing-results.html#cb129-53" tabindex="-1"></a>      , dplyr<span class="sc">::</span><span class="fu">across</span>(</span>
+<span id="cb129-54"><a href="point-cloud-processing-results.html#cb129-54" tabindex="-1"></a>        <span class="at">.cols =</span> tidyselect<span class="sc">::</span><span class="fu">ends_with</span>(<span class="st">&quot;_m2&quot;</span>) <span class="sc">&amp;</span> <span class="sc">!</span>tidyselect<span class="sc">::</span><span class="fu">ends_with</span>(<span class="st">&quot;per_m2&quot;</span>)</span>
+<span id="cb129-55"><a href="point-cloud-processing-results.html#cb129-55" tabindex="-1"></a>        , <span class="sc">~</span> .x <span class="sc">*</span> <span class="fl">10.764</span></span>
+<span id="cb129-56"><a href="point-cloud-processing-results.html#cb129-56" tabindex="-1"></a>        , <span class="at">.names =</span> <span class="st">&quot;{.col}_ft2&quot;</span></span>
+<span id="cb129-57"><a href="point-cloud-processing-results.html#cb129-57" tabindex="-1"></a>      )</span>
+<span id="cb129-58"><a href="point-cloud-processing-results.html#cb129-58" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span></span>
+<span id="cb129-59"><a href="point-cloud-processing-results.html#cb129-59" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">rename_with</span>(</span>
+<span id="cb129-60"><a href="point-cloud-processing-results.html#cb129-60" tabindex="-1"></a>      <span class="at">.fn =</span> <span class="cf">function</span>(x){dplyr<span class="sc">::</span><span class="fu">case_when</span>(</span>
+<span id="cb129-61"><a href="point-cloud-processing-results.html#cb129-61" tabindex="-1"></a>        stringr<span class="sc">::</span><span class="fu">str_ends</span>(x,<span class="st">&quot;_cm_in&quot;</span>) <span class="sc">~</span> stringr<span class="sc">::</span><span class="fu">str_replace</span>(x,<span class="st">&quot;_cm_in&quot;</span>,<span class="st">&quot;_in&quot;</span>)</span>
+<span id="cb129-62"><a href="point-cloud-processing-results.html#cb129-62" tabindex="-1"></a>        , stringr<span class="sc">::</span><span class="fu">str_ends</span>(x,<span class="st">&quot;_m_ft&quot;</span>) <span class="sc">~</span> stringr<span class="sc">::</span><span class="fu">str_replace</span>(x,<span class="st">&quot;_m_ft&quot;</span>,<span class="st">&quot;_ft&quot;</span>)</span>
+<span id="cb129-63"><a href="point-cloud-processing-results.html#cb129-63" tabindex="-1"></a>        , stringr<span class="sc">::</span><span class="fu">str_ends</span>(x,<span class="st">&quot;_m2_per_ha_ftac&quot;</span>) <span class="sc">~</span> stringr<span class="sc">::</span><span class="fu">str_replace</span>(x,<span class="st">&quot;_m2_per_ha_ftac&quot;</span>,<span class="st">&quot;_ft2_per_ac&quot;</span>)</span>
+<span id="cb129-64"><a href="point-cloud-processing-results.html#cb129-64" tabindex="-1"></a>        , stringr<span class="sc">::</span><span class="fu">str_ends</span>(x,<span class="st">&quot;_kg_per_ha_lbsac&quot;</span>) <span class="sc">~</span> stringr<span class="sc">::</span><span class="fu">str_replace</span>(x,<span class="st">&quot;_kg_per_ha_lbsac&quot;</span>,<span class="st">&quot;_lbs_per_ac&quot;</span>)</span>
+<span id="cb129-65"><a href="point-cloud-processing-results.html#cb129-65" tabindex="-1"></a>        , stringr<span class="sc">::</span><span class="fu">str_ends</span>(x,<span class="st">&quot;_per_ha_ac&quot;</span>) <span class="sc">~</span> stringr<span class="sc">::</span><span class="fu">str_replace</span>(x,<span class="st">&quot;_per_ha_ac&quot;</span>,<span class="st">&quot;_per_ac&quot;</span>)</span>
+<span id="cb129-66"><a href="point-cloud-processing-results.html#cb129-66" tabindex="-1"></a>        , stringr<span class="sc">::</span><span class="fu">str_ends</span>(x,<span class="st">&quot;_area_ha_ac&quot;</span>) <span class="sc">~</span> stringr<span class="sc">::</span><span class="fu">str_replace</span>(x,<span class="st">&quot;_area_ha_ac&quot;</span>,<span class="st">&quot;_area_ac&quot;</span>)</span>
+<span id="cb129-67"><a href="point-cloud-processing-results.html#cb129-67" tabindex="-1"></a>        , stringr<span class="sc">::</span><span class="fu">str_ends</span>(x,<span class="st">&quot;_kg_per_m2_lbsft2&quot;</span>) <span class="sc">~</span> stringr<span class="sc">::</span><span class="fu">str_replace</span>(x,<span class="st">&quot;_kg_per_m2_lbsft2&quot;</span>,<span class="st">&quot;_lbs_per_ft2&quot;</span>)</span>
+<span id="cb129-68"><a href="point-cloud-processing-results.html#cb129-68" tabindex="-1"></a>        , stringr<span class="sc">::</span><span class="fu">str_ends</span>(x,<span class="st">&quot;_kg_per_m3_lbsft3&quot;</span>) <span class="sc">~</span> stringr<span class="sc">::</span><span class="fu">str_replace</span>(x,<span class="st">&quot;_kg_per_m3_lbsft3&quot;</span>,<span class="st">&quot;_lbs_per_ft3&quot;</span>)</span>
+<span id="cb129-69"><a href="point-cloud-processing-results.html#cb129-69" tabindex="-1"></a>        , stringr<span class="sc">::</span><span class="fu">str_ends</span>(x,<span class="st">&quot;_m2_ft2&quot;</span>) <span class="sc">~</span> stringr<span class="sc">::</span><span class="fu">str_replace</span>(x,<span class="st">&quot;_m2_ft2&quot;</span>,<span class="st">&quot;_ft2&quot;</span>)</span>
+<span id="cb129-70"><a href="point-cloud-processing-results.html#cb129-70" tabindex="-1"></a>        , <span class="cn">TRUE</span> <span class="sc">~</span> x</span>
+<span id="cb129-71"><a href="point-cloud-processing-results.html#cb129-71" tabindex="-1"></a>      )}</span>
+<span id="cb129-72"><a href="point-cloud-processing-results.html#cb129-72" tabindex="-1"></a>    )</span>
+<span id="cb129-73"><a href="point-cloud-processing-results.html#cb129-73" tabindex="-1"></a>}</span>
+<span id="cb129-74"><a href="point-cloud-processing-results.html#cb129-74" tabindex="-1"></a></span>
+<span id="cb129-75"><a href="point-cloud-processing-results.html#cb129-75" tabindex="-1"></a><span class="do">###################################################################################</span></span>
+<span id="cb129-76"><a href="point-cloud-processing-results.html#cb129-76" tabindex="-1"></a><span class="do">### stand-level summaries</span></span>
+<span id="cb129-77"><a href="point-cloud-processing-results.html#cb129-77" tabindex="-1"></a><span class="do">###################################################################################</span></span>
+<span id="cb129-78"><a href="point-cloud-processing-results.html#cb129-78" tabindex="-1"></a>calc_silv_metrics <span class="ot">&lt;-</span> <span class="cf">function</span>(tree_list, <span class="at">stand_area_ha =</span> <span class="cn">NULL</span>, <span class="at">study_boundary =</span> <span class="cn">NULL</span>, <span class="at">calc_imperial_units =</span> F) {</span>
+<span id="cb129-79"><a href="point-cloud-processing-results.html#cb129-79" tabindex="-1"></a>  <span class="co"># get study area</span></span>
+<span id="cb129-80"><a href="point-cloud-processing-results.html#cb129-80" tabindex="-1"></a>  <span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.null</span>(study_boundary)){</span>
+<span id="cb129-81"><a href="point-cloud-processing-results.html#cb129-81" tabindex="-1"></a>    <span class="co"># bounds check</span></span>
+<span id="cb129-82"><a href="point-cloud-processing-results.html#cb129-82" tabindex="-1"></a>    <span class="cf">if</span>(</span>
+<span id="cb129-83"><a href="point-cloud-processing-results.html#cb129-83" tabindex="-1"></a>      <span class="sc">!</span><span class="fu">inherits</span>(study_boundary,<span class="st">&quot;sf&quot;</span>)</span>
+<span id="cb129-84"><a href="point-cloud-processing-results.html#cb129-84" tabindex="-1"></a>      <span class="sc">&amp;&amp;</span> <span class="sc">!</span><span class="fu">inherits</span>(study_boundary,<span class="st">&quot;sfc&quot;</span>)</span>
+<span id="cb129-85"><a href="point-cloud-processing-results.html#cb129-85" tabindex="-1"></a>    ){<span class="fu">stop</span>(<span class="st">&quot;study_boundary must be sf class object&quot;</span>)}</span>
+<span id="cb129-86"><a href="point-cloud-processing-results.html#cb129-86" tabindex="-1"></a>    <span class="cf">if</span>(<span class="fu">is.na</span>(sf<span class="sc">::</span><span class="fu">st_crs</span>(study_boundary))){<span class="fu">stop</span>(<span class="st">&quot;study_boundary does not have a CRS&quot;</span>)}</span>
+<span id="cb129-87"><a href="point-cloud-processing-results.html#cb129-87" tabindex="-1"></a>    <span class="cf">if</span>(<span class="fu">inherits</span>(study_boundary,<span class="st">&quot;sf&quot;</span>) <span class="sc">&amp;&amp;</span> <span class="fu">nrow</span>(study_boundary)<span class="sc">!=</span><span class="dv">1</span>){</span>
+<span id="cb129-88"><a href="point-cloud-processing-results.html#cb129-88" tabindex="-1"></a>      <span class="fu">stop</span>(<span class="st">&quot;study_boundary must only have a single record geometry&quot;</span>)</span>
+<span id="cb129-89"><a href="point-cloud-processing-results.html#cb129-89" tabindex="-1"></a>    }</span>
+<span id="cb129-90"><a href="point-cloud-processing-results.html#cb129-90" tabindex="-1"></a>    <span class="cf">if</span>(<span class="fu">inherits</span>(study_boundary,<span class="st">&quot;sfc&quot;</span>) <span class="sc">&amp;&amp;</span> <span class="fu">length</span>(study_boundary)<span class="sc">!=</span><span class="dv">1</span>){</span>
+<span id="cb129-91"><a href="point-cloud-processing-results.html#cb129-91" tabindex="-1"></a>      <span class="fu">stop</span>(<span class="st">&quot;study_boundary must only have a single record geometry&quot;</span>)</span>
+<span id="cb129-92"><a href="point-cloud-processing-results.html#cb129-92" tabindex="-1"></a>    }</span>
+<span id="cb129-93"><a href="point-cloud-processing-results.html#cb129-93" tabindex="-1"></a>    <span class="cf">if</span>(</span>
+<span id="cb129-94"><a href="point-cloud-processing-results.html#cb129-94" tabindex="-1"></a>      <span class="sc">!</span><span class="fu">all</span>( sf<span class="sc">::</span><span class="fu">st_is</span>(study_boundary, <span class="fu">c</span>(<span class="st">&quot;POLYGON&quot;</span>,<span class="st">&quot;MULTIPOLYGON&quot;</span>)) )</span>
+<span id="cb129-95"><a href="point-cloud-processing-results.html#cb129-95" tabindex="-1"></a>    ){</span>
+<span id="cb129-96"><a href="point-cloud-processing-results.html#cb129-96" tabindex="-1"></a>      <span class="fu">stop</span>(<span class="st">&quot;study_boundary must contain POLYGON type geometry only&quot;</span>)</span>
+<span id="cb129-97"><a href="point-cloud-processing-results.html#cb129-97" tabindex="-1"></a>    }</span>
+<span id="cb129-98"><a href="point-cloud-processing-results.html#cb129-98" tabindex="-1"></a>    <span class="co"># area</span></span>
+<span id="cb129-99"><a href="point-cloud-processing-results.html#cb129-99" tabindex="-1"></a>    xxstand_area_ha <span class="ot">&lt;-</span> study_boundary <span class="sc">%&gt;%</span> </span>
+<span id="cb129-100"><a href="point-cloud-processing-results.html#cb129-100" tabindex="-1"></a>      sf<span class="sc">::</span><span class="fu">st_area</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb129-101"><a href="point-cloud-processing-results.html#cb129-101" tabindex="-1"></a>      <span class="fu">as.numeric</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb129-102"><a href="point-cloud-processing-results.html#cb129-102" tabindex="-1"></a>      <span class="st">`</span><span class="at">/</span><span class="st">`</span>(<span class="dv">10000</span>)</span>
+<span id="cb129-103"><a href="point-cloud-processing-results.html#cb129-103" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(<span class="fu">is.numeric</span>(stand_area_ha)){</span>
+<span id="cb129-104"><a href="point-cloud-processing-results.html#cb129-104" tabindex="-1"></a>    xxstand_area_ha <span class="ot">&lt;-</span> stand_area_ha[<span class="dv">1</span>]</span>
+<span id="cb129-105"><a href="point-cloud-processing-results.html#cb129-105" tabindex="-1"></a>  }<span class="cf">else</span>{</span>
+<span id="cb129-106"><a href="point-cloud-processing-results.html#cb129-106" tabindex="-1"></a>    <span class="fu">stop</span>(<span class="st">&quot;must provide `stand_area_ha` as numeric or `study_boundary` as sf object&quot;</span>)</span>
+<span id="cb129-107"><a href="point-cloud-processing-results.html#cb129-107" tabindex="-1"></a>  }</span>
+<span id="cb129-108"><a href="point-cloud-processing-results.html#cb129-108" tabindex="-1"></a>  </span>
+<span id="cb129-109"><a href="point-cloud-processing-results.html#cb129-109" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">is.null</span>(xxstand_area_ha) <span class="sc">||</span> <span class="fu">is.na</span>(xxstand_area_ha) <span class="sc">||</span> dplyr<span class="sc">::</span><span class="fu">coalesce</span>(xxstand_area_ha,<span class="dv">0</span>)<span class="sc">&lt;=</span><span class="dv">0</span>){</span>
+<span id="cb129-110"><a href="point-cloud-processing-results.html#cb129-110" tabindex="-1"></a>    <span class="fu">stop</span>(<span class="st">&quot;could not determine valid stand_area_ha&quot;</span>)</span>
+<span id="cb129-111"><a href="point-cloud-processing-results.html#cb129-111" tabindex="-1"></a>  }</span>
+<span id="cb129-112"><a href="point-cloud-processing-results.html#cb129-112" tabindex="-1"></a>  </span>
+<span id="cb129-113"><a href="point-cloud-processing-results.html#cb129-113" tabindex="-1"></a>  <span class="co"># summarize tree list</span></span>
+<span id="cb129-114"><a href="point-cloud-processing-results.html#cb129-114" tabindex="-1"></a>  <span class="cf">if</span>(<span class="sc">!</span><span class="fu">inherits</span>(tree_list,<span class="st">&quot;data.frame&quot;</span>)){<span class="fu">stop</span>(<span class="st">&quot;tree_list must be data.frame class object&quot;</span>)}</span>
+<span id="cb129-115"><a href="point-cloud-processing-results.html#cb129-115" tabindex="-1"></a>  </span>
+<span id="cb129-116"><a href="point-cloud-processing-results.html#cb129-116" tabindex="-1"></a>  <span class="do">###### !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! NEED TO PUT IN CHECKS FOR COLUMNS USED</span></span>
+<span id="cb129-117"><a href="point-cloud-processing-results.html#cb129-117" tabindex="-1"></a>  <span class="co"># see: cloud2trees::check_df_cols_all_missing()</span></span>
+<span id="cb129-118"><a href="point-cloud-processing-results.html#cb129-118" tabindex="-1"></a>  <span class="cf">if</span>( <span class="sc">!</span><span class="fu">any</span>(stringr<span class="sc">::</span><span class="fu">str_detect</span>(<span class="fu">names</span>(tree_list), <span class="st">&quot;landfire_crown_biomass_kg&quot;</span>)) ){</span>
+<span id="cb129-119"><a href="point-cloud-processing-results.html#cb129-119" tabindex="-1"></a>    tree_list <span class="ot">&lt;-</span> tree_list <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">landfire_crown_biomass_kg=</span><span class="fu">as.numeric</span>(<span class="cn">NA</span>))</span>
+<span id="cb129-120"><a href="point-cloud-processing-results.html#cb129-120" tabindex="-1"></a>  }</span>
+<span id="cb129-121"><a href="point-cloud-processing-results.html#cb129-121" tabindex="-1"></a>  <span class="cf">if</span>( <span class="sc">!</span><span class="fu">any</span>(stringr<span class="sc">::</span><span class="fu">str_detect</span>(<span class="fu">names</span>(tree_list), <span class="st">&quot;cruz_crown_biomass_kg&quot;</span>)) ){</span>
+<span id="cb129-122"><a href="point-cloud-processing-results.html#cb129-122" tabindex="-1"></a>    tree_list <span class="ot">&lt;-</span> tree_list <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">cruz_crown_biomass_kg=</span><span class="fu">as.numeric</span>(<span class="cn">NA</span>))</span>
+<span id="cb129-123"><a href="point-cloud-processing-results.html#cb129-123" tabindex="-1"></a>  }</span>
+<span id="cb129-124"><a href="point-cloud-processing-results.html#cb129-124" tabindex="-1"></a>  <span class="cf">if</span>( <span class="sc">!</span><span class="fu">any</span>(stringr<span class="sc">::</span><span class="fu">str_detect</span>(<span class="fu">names</span>(tree_list), <span class="st">&quot;landfire_tree_kg_per_m3&quot;</span>)) ){</span>
+<span id="cb129-125"><a href="point-cloud-processing-results.html#cb129-125" tabindex="-1"></a>    tree_list <span class="ot">&lt;-</span> tree_list <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">landfire_tree_kg_per_m3=</span><span class="fu">as.numeric</span>(<span class="cn">NA</span>))</span>
+<span id="cb129-126"><a href="point-cloud-processing-results.html#cb129-126" tabindex="-1"></a>  }</span>
+<span id="cb129-127"><a href="point-cloud-processing-results.html#cb129-127" tabindex="-1"></a>  <span class="cf">if</span>( <span class="sc">!</span><span class="fu">any</span>(stringr<span class="sc">::</span><span class="fu">str_detect</span>(<span class="fu">names</span>(tree_list), <span class="st">&quot;cruz_tree_kg_per_m3&quot;</span>)) ){</span>
+<span id="cb129-128"><a href="point-cloud-processing-results.html#cb129-128" tabindex="-1"></a>    tree_list <span class="ot">&lt;-</span> tree_list <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">cruz_tree_kg_per_m3=</span><span class="fu">as.numeric</span>(<span class="cn">NA</span>))</span>
+<span id="cb129-129"><a href="point-cloud-processing-results.html#cb129-129" tabindex="-1"></a>  }</span>
+<span id="cb129-130"><a href="point-cloud-processing-results.html#cb129-130" tabindex="-1"></a>  </span>
+<span id="cb129-131"><a href="point-cloud-processing-results.html#cb129-131" tabindex="-1"></a>  <span class="co"># agg</span></span>
+<span id="cb129-132"><a href="point-cloud-processing-results.html#cb129-132" tabindex="-1"></a>  agg <span class="ot">&lt;-</span> tree_list <span class="sc">%&gt;%</span></span>
+<span id="cb129-133"><a href="point-cloud-processing-results.html#cb129-133" tabindex="-1"></a>    sf<span class="sc">::</span><span class="fu">st_drop_geometry</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb129-134"><a href="point-cloud-processing-results.html#cb129-134" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb129-135"><a href="point-cloud-processing-results.html#cb129-135" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">summarise</span>(</span>
+<span id="cb129-136"><a href="point-cloud-processing-results.html#cb129-136" tabindex="-1"></a>      <span class="at">n_trees =</span> dplyr<span class="sc">::</span><span class="fu">n</span>()</span>
+<span id="cb129-137"><a href="point-cloud-processing-results.html#cb129-137" tabindex="-1"></a>      , <span class="at">mean_dbh_cm =</span> <span class="fu">mean</span>(dbh_cm, <span class="at">na.rm =</span> T)</span>
+<span id="cb129-138"><a href="point-cloud-processing-results.html#cb129-138" tabindex="-1"></a>      , <span class="at">mean_tree_height_m =</span> <span class="fu">mean</span>(tree_height_m, <span class="at">na.rm =</span> T)</span>
+<span id="cb129-139"><a href="point-cloud-processing-results.html#cb129-139" tabindex="-1"></a>      , <span class="at">mean_tree_cbh_m =</span> <span class="fu">mean</span>(tree_cbh_m, <span class="at">na.rm =</span> T)</span>
+<span id="cb129-140"><a href="point-cloud-processing-results.html#cb129-140" tabindex="-1"></a>      , <span class="at">loreys_height_m =</span> <span class="fu">sum</span>(basal_area_m2<span class="sc">*</span>tree_height_m, <span class="at">na.rm =</span> T) <span class="sc">/</span> <span class="fu">sum</span>(basal_area_m2, <span class="at">na.rm =</span> T)</span>
+<span id="cb129-141"><a href="point-cloud-processing-results.html#cb129-141" tabindex="-1"></a>      , <span class="at">basal_area_m2 =</span> <span class="fu">sum</span>(basal_area_m2, <span class="at">na.rm =</span> T)</span>
+<span id="cb129-142"><a href="point-cloud-processing-results.html#cb129-142" tabindex="-1"></a>      , <span class="at">sum_dbh_cm_sq =</span> <span class="fu">sum</span>(dbh_cm<span class="sc">^</span><span class="dv">2</span>, <span class="at">na.rm =</span> T)</span>
+<span id="cb129-143"><a href="point-cloud-processing-results.html#cb129-143" tabindex="-1"></a>      , <span class="at">landfire_crown_biomass_kg =</span> <span class="fu">sum</span>(landfire_crown_biomass_kg, <span class="at">na.rm =</span> F)</span>
+<span id="cb129-144"><a href="point-cloud-processing-results.html#cb129-144" tabindex="-1"></a>      , <span class="at">cruz_crown_biomass_kg =</span> <span class="fu">sum</span>(cruz_crown_biomass_kg, <span class="at">na.rm =</span> F)</span>
+<span id="cb129-145"><a href="point-cloud-processing-results.html#cb129-145" tabindex="-1"></a>      , <span class="at">mean_landfire_tree_kg_per_m3 =</span> <span class="fu">mean</span>(landfire_tree_kg_per_m3, <span class="at">na.rm =</span> T)</span>
+<span id="cb129-146"><a href="point-cloud-processing-results.html#cb129-146" tabindex="-1"></a>      , <span class="at">mean_cruz_tree_kg_per_m3 =</span> <span class="fu">mean</span>(cruz_tree_kg_per_m3, <span class="at">na.rm =</span> T)</span>
+<span id="cb129-147"><a href="point-cloud-processing-results.html#cb129-147" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span></span>
+<span id="cb129-148"><a href="point-cloud-processing-results.html#cb129-148" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb129-149"><a href="point-cloud-processing-results.html#cb129-149" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
+<span id="cb129-150"><a href="point-cloud-processing-results.html#cb129-150" tabindex="-1"></a>      <span class="at">stand_area_ha =</span> xxstand_area_ha</span>
+<span id="cb129-151"><a href="point-cloud-processing-results.html#cb129-151" tabindex="-1"></a>      , <span class="at">trees_per_ha =</span> (n_trees<span class="sc">/</span>stand_area_ha)</span>
+<span id="cb129-152"><a href="point-cloud-processing-results.html#cb129-152" tabindex="-1"></a>      , <span class="at">basal_area_m2_per_ha =</span> (basal_area_m2<span class="sc">/</span>stand_area_ha)</span>
+<span id="cb129-153"><a href="point-cloud-processing-results.html#cb129-153" tabindex="-1"></a>      , <span class="at">qmd_cm =</span> <span class="fu">sqrt</span>(sum_dbh_cm_sq<span class="sc">/</span>n_trees)</span>
+<span id="cb129-154"><a href="point-cloud-processing-results.html#cb129-154" tabindex="-1"></a>      , <span class="at">landfire_cfl_kg_per_m2 =</span> landfire_crown_biomass_kg<span class="sc">/</span>(stand_area_ha<span class="sc">*</span><span class="dv">10000</span>)</span>
+<span id="cb129-155"><a href="point-cloud-processing-results.html#cb129-155" tabindex="-1"></a>      , <span class="at">cruz_cfl_kg_per_m2 =</span> cruz_crown_biomass_kg<span class="sc">/</span>(stand_area_ha<span class="sc">*</span><span class="dv">10000</span>)</span>
+<span id="cb129-156"><a href="point-cloud-processing-results.html#cb129-156" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span></span>
+<span id="cb129-157"><a href="point-cloud-processing-results.html#cb129-157" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(sum_dbh_cm_sq,landfire_crown_biomass_kg,cruz_crown_biomass_kg))</span>
+<span id="cb129-158"><a href="point-cloud-processing-results.html#cb129-158" tabindex="-1"></a>  <span class="co"># imperial</span></span>
+<span id="cb129-159"><a href="point-cloud-processing-results.html#cb129-159" tabindex="-1"></a>  <span class="cf">if</span>(calc_imperial_units){</span>
+<span id="cb129-160"><a href="point-cloud-processing-results.html#cb129-160" tabindex="-1"></a>    agg <span class="ot">&lt;-</span> <span class="fu">calc_imperial_units_fn</span>(agg)</span>
+<span id="cb129-161"><a href="point-cloud-processing-results.html#cb129-161" tabindex="-1"></a>  }</span>
+<span id="cb129-162"><a href="point-cloud-processing-results.html#cb129-162" tabindex="-1"></a>  <span class="fu">return</span>(agg)</span>
+<span id="cb129-163"><a href="point-cloud-processing-results.html#cb129-163" tabindex="-1"></a>}</span></code></pre></div>
+<p>check out the data structure returned by the <code>calc_silv_metrics()</code> function</p>
+<div class="sourceCode" id="cb130"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb130-1"><a href="point-cloud-processing-results.html#cb130-1" tabindex="-1"></a><span class="fu">calc_silv_metrics</span>(<span class="at">tree_list =</span> ans_temp<span class="sc">$</span>tree_list ,<span class="at">study_boundary =</span> ans_temp<span class="sc">$</span>aoi, <span class="at">calc_imperial_units =</span> T) <span class="sc">%&gt;%</span> </span>
+<span id="cb130-2"><a href="point-cloud-processing-results.html#cb130-2" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">glimpse</span>()</span></code></pre></div>
+<pre><code>## Rows: 1
+## Columns: 27
+## $ n_trees                        &lt;int&gt; 3571
+## $ mean_dbh_cm                    &lt;dbl&gt; 16.34315
+## $ mean_tree_height_m             &lt;dbl&gt; 9.180978
+## $ mean_tree_cbh_m                &lt;dbl&gt; 4.284259
+## $ loreys_height_m                &lt;dbl&gt; 14.18135
+## $ basal_area_m2                  &lt;dbl&gt; 102.9316
+## $ mean_landfire_tree_kg_per_m3   &lt;dbl&gt; 0.1129203
+## $ mean_cruz_tree_kg_per_m3       &lt;dbl&gt; 0.2209229
+## $ stand_area_ha                  &lt;dbl&gt; 11.72581
+## $ trees_per_ha                   &lt;dbl&gt; 304.542
+## $ basal_area_m2_per_ha           &lt;dbl&gt; 8.778214
+## $ qmd_cm                         &lt;dbl&gt; 19.15731
+## $ landfire_cfl_kg_per_m2         &lt;dbl&gt; 0.2577802
+## $ cruz_cfl_kg_per_m2             &lt;dbl&gt; NA
+## $ mean_dbh_in                    &lt;dbl&gt; 6.4392
+## $ qmd_in                         &lt;dbl&gt; 7.547981
+## $ mean_tree_height_ft            &lt;dbl&gt; 30.12279
+## $ mean_tree_cbh_ft               &lt;dbl&gt; 14.05665
+## $ loreys_height_ft               &lt;dbl&gt; 46.52901
+## $ basal_area_ft2_per_ac          &lt;dbl&gt; 38.26423
+## $ trees_per_ac                   &lt;dbl&gt; 123.3395
+## $ stand_area_ac                  &lt;dbl&gt; 28.97447
+## $ landfire_cfl_lbs_per_ft2       &lt;dbl&gt; 0.05279854
+## $ cruz_cfl_lbs_per_ft2           &lt;dbl&gt; NA
+## $ mean_landfire_tree_lbs_per_ft3 &lt;dbl&gt; 0.007046227
+## $ mean_cruz_tree_lbs_per_ft3     &lt;dbl&gt; 0.01378559
+## $ basal_area_ft2                 &lt;dbl&gt; 1107.956</code></pre>
+</div>
+<div id="study-area-summaries" class="section level3 hasAnchor" number="7.2.2">
+<h3><span class="header-section-number">7.2.2</span> Study Area Summaries<a href="point-cloud-processing-results.html#study-area-summaries" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>let’s calculate the metrics for all study areas</p>
+<div class="sourceCode" id="cb132"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb132-1"><a href="point-cloud-processing-results.html#cb132-1" tabindex="-1"></a><span class="co"># map the process over all data</span></span>
+<span id="cb132-2"><a href="point-cloud-processing-results.html#cb132-2" tabindex="-1"></a>silv_metrics_by_data <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(study_sites_processing_sf) <span class="sc">%&gt;%</span> </span>
+<span id="cb132-3"><a href="point-cloud-processing-results.html#cb132-3" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">map</span>(<span class="cf">function</span>(x){</span>
+<span id="cb132-4"><a href="point-cloud-processing-results.html#cb132-4" tabindex="-1"></a>    <span class="co"># clip the data</span></span>
+<span id="cb132-5"><a href="point-cloud-processing-results.html#cb132-5" tabindex="-1"></a>    ans_temp <span class="ot">&lt;-</span> cloud2trees<span class="sc">::</span><span class="fu">cloud2trees_to_lanl_trees</span>(</span>
+<span id="cb132-6"><a href="point-cloud-processing-results.html#cb132-6" tabindex="-1"></a>      <span class="at">input_dir =</span> study_sites_processing_sf<span class="sc">$</span>fdir[x]</span>
+<span id="cb132-7"><a href="point-cloud-processing-results.html#cb132-7" tabindex="-1"></a>      , <span class="at">study_boundary =</span> study_sites_processing_sf <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">slice</span>(x)</span>
+<span id="cb132-8"><a href="point-cloud-processing-results.html#cb132-8" tabindex="-1"></a>      , <span class="at">bbox_aoi =</span> F, <span class="at">buffer =</span> <span class="dv">0</span> <span class="co"># this is the key to get only trees in our AOI</span></span>
+<span id="cb132-9"><a href="point-cloud-processing-results.html#cb132-9" tabindex="-1"></a>    )</span>
+<span id="cb132-10"><a href="point-cloud-processing-results.html#cb132-10" tabindex="-1"></a>    <span class="co"># silv metrics</span></span>
+<span id="cb132-11"><a href="point-cloud-processing-results.html#cb132-11" tabindex="-1"></a>    <span class="fu">calc_silv_metrics</span>(</span>
+<span id="cb132-12"><a href="point-cloud-processing-results.html#cb132-12" tabindex="-1"></a>      <span class="at">tree_list =</span> ans_temp<span class="sc">$</span>tree_list </span>
+<span id="cb132-13"><a href="point-cloud-processing-results.html#cb132-13" tabindex="-1"></a>      , <span class="at">study_boundary =</span> ans_temp<span class="sc">$</span>aoi</span>
+<span id="cb132-14"><a href="point-cloud-processing-results.html#cb132-14" tabindex="-1"></a>      , <span class="at">calc_imperial_units =</span> T</span>
+<span id="cb132-15"><a href="point-cloud-processing-results.html#cb132-15" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> </span>
+<span id="cb132-16"><a href="point-cloud-processing-results.html#cb132-16" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
+<span id="cb132-17"><a href="point-cloud-processing-results.html#cb132-17" tabindex="-1"></a>      <span class="at">study_site =</span> study_sites_processing_sf<span class="sc">$</span>study_site[x]</span>
+<span id="cb132-18"><a href="point-cloud-processing-results.html#cb132-18" tabindex="-1"></a>      , <span class="at">study_site_lab =</span> study_sites_processing_sf<span class="sc">$</span>study_site_lab[x]</span>
+<span id="cb132-19"><a href="point-cloud-processing-results.html#cb132-19" tabindex="-1"></a>      , <span class="at">data_desc =</span> study_sites_processing_sf<span class="sc">$</span>data_desc[x]</span>
+<span id="cb132-20"><a href="point-cloud-processing-results.html#cb132-20" tabindex="-1"></a>      , <span class="at">data_type =</span> study_sites_processing_sf<span class="sc">$</span>data_type[x]</span>
+<span id="cb132-21"><a href="point-cloud-processing-results.html#cb132-21" tabindex="-1"></a>    )</span>
+<span id="cb132-22"><a href="point-cloud-processing-results.html#cb132-22" tabindex="-1"></a>  }) <span class="sc">%&gt;%</span> </span>
+<span id="cb132-23"><a href="point-cloud-processing-results.html#cb132-23" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">bind_rows</span>()</span>
+<span id="cb132-24"><a href="point-cloud-processing-results.html#cb132-24" tabindex="-1"></a><span class="co"># huh?</span></span>
+<span id="cb132-25"><a href="point-cloud-processing-results.html#cb132-25" tabindex="-1"></a>silv_metrics_by_data <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">glimpse</span>()</span></code></pre></div>
+<div id="metric-units" class="section level4 hasAnchor" number="7.2.2.1">
+<h4><span class="header-section-number">7.2.2.1</span> Metric units<a href="point-cloud-processing-results.html#metric-units" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<div class="sourceCode" id="cb133"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb133-1"><a href="point-cloud-processing-results.html#cb133-1" tabindex="-1"></a>silv_metrics_by_data <span class="sc">%&gt;%</span> </span>
+<span id="cb133-2"><a href="point-cloud-processing-results.html#cb133-2" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
+<span id="cb133-3"><a href="point-cloud-processing-results.html#cb133-3" tabindex="-1"></a>    <span class="at">nlab =</span> <span class="fu">paste0</span>(study_site_lab,<span class="st">&quot;&lt;br&gt;&quot;</span>,scales<span class="sc">::</span><span class="fu">comma</span>(stand_area_ha,<span class="at">accuracy=</span><span class="dv">1</span>),<span class="st">&quot; ha&quot;</span>)</span>
+<span id="cb133-4"><a href="point-cloud-processing-results.html#cb133-4" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb133-5"><a href="point-cloud-processing-results.html#cb133-5" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">relocate</span>(nlab) <span class="sc">%&gt;%</span> </span>
+<span id="cb133-6"><a href="point-cloud-processing-results.html#cb133-6" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(</span>
+<span id="cb133-7"><a href="point-cloud-processing-results.html#cb133-7" tabindex="-1"></a>    nlab</span>
+<span id="cb133-8"><a href="point-cloud-processing-results.html#cb133-8" tabindex="-1"></a>    , data_desc</span>
+<span id="cb133-9"><a href="point-cloud-processing-results.html#cb133-9" tabindex="-1"></a>    <span class="co"># different</span></span>
+<span id="cb133-10"><a href="point-cloud-processing-results.html#cb133-10" tabindex="-1"></a>    , n_trees</span>
+<span id="cb133-11"><a href="point-cloud-processing-results.html#cb133-11" tabindex="-1"></a>    , trees_per_ha</span>
+<span id="cb133-12"><a href="point-cloud-processing-results.html#cb133-12" tabindex="-1"></a>    , mean_tree_height_m</span>
+<span id="cb133-13"><a href="point-cloud-processing-results.html#cb133-13" tabindex="-1"></a>    , loreys_height_m</span>
+<span id="cb133-14"><a href="point-cloud-processing-results.html#cb133-14" tabindex="-1"></a>    , mean_dbh_cm</span>
+<span id="cb133-15"><a href="point-cloud-processing-results.html#cb133-15" tabindex="-1"></a>    , qmd_cm</span>
+<span id="cb133-16"><a href="point-cloud-processing-results.html#cb133-16" tabindex="-1"></a>    , basal_area_m2_per_ha</span>
+<span id="cb133-17"><a href="point-cloud-processing-results.html#cb133-17" tabindex="-1"></a>    , mean_landfire_tree_kg_per_m3</span>
+<span id="cb133-18"><a href="point-cloud-processing-results.html#cb133-18" tabindex="-1"></a>    , mean_cruz_tree_kg_per_m3</span>
+<span id="cb133-19"><a href="point-cloud-processing-results.html#cb133-19" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb133-20"><a href="point-cloud-processing-results.html#cb133-20" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
+<span id="cb133-21"><a href="point-cloud-processing-results.html#cb133-21" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">across</span>(<span class="fu">c</span>(n_trees), <span class="sc">~</span>scales<span class="sc">::</span><span class="fu">comma</span>(.x,<span class="at">accuracy=</span><span class="dv">1</span>))</span>
+<span id="cb133-22"><a href="point-cloud-processing-results.html#cb133-22" tabindex="-1"></a>  , dplyr<span class="sc">::</span><span class="fu">across</span>(</span>
+<span id="cb133-23"><a href="point-cloud-processing-results.html#cb133-23" tabindex="-1"></a>    <span class="sc">-</span><span class="fu">c</span>(nlab,data_desc,n_trees,tidyselect<span class="sc">::</span><span class="fu">ends_with</span>(<span class="st">&quot;3&quot;</span>))</span>
+<span id="cb133-24"><a href="point-cloud-processing-results.html#cb133-24" tabindex="-1"></a>    , <span class="sc">~</span>scales<span class="sc">::</span><span class="fu">comma</span>(.x,<span class="at">accuracy=</span><span class="fl">0.1</span>)</span>
+<span id="cb133-25"><a href="point-cloud-processing-results.html#cb133-25" tabindex="-1"></a>  )</span>
+<span id="cb133-26"><a href="point-cloud-processing-results.html#cb133-26" tabindex="-1"></a>  , dplyr<span class="sc">::</span><span class="fu">across</span>(</span>
+<span id="cb133-27"><a href="point-cloud-processing-results.html#cb133-27" tabindex="-1"></a>    tidyselect<span class="sc">::</span><span class="fu">ends_with</span>(<span class="st">&quot;3&quot;</span>)</span>
+<span id="cb133-28"><a href="point-cloud-processing-results.html#cb133-28" tabindex="-1"></a>    , <span class="sc">~</span>scales<span class="sc">::</span><span class="fu">comma</span>(.x,<span class="at">accuracy=</span><span class="fl">0.001</span>)</span>
+<span id="cb133-29"><a href="point-cloud-processing-results.html#cb133-29" tabindex="-1"></a>  )</span>
+<span id="cb133-30"><a href="point-cloud-processing-results.html#cb133-30" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb133-31"><a href="point-cloud-processing-results.html#cb133-31" tabindex="-1"></a>kableExtra<span class="sc">::</span><span class="fu">kbl</span>(</span>
+<span id="cb133-32"><a href="point-cloud-processing-results.html#cb133-32" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">&quot;Stand summary metrics in metric units&quot;</span></span>
+<span id="cb133-33"><a href="point-cloud-processing-results.html#cb133-33" tabindex="-1"></a>  , <span class="at">col.names =</span> <span class="fu">c</span>(</span>
+<span id="cb133-34"><a href="point-cloud-processing-results.html#cb133-34" tabindex="-1"></a>    <span class="st">&quot;site&quot;</span>,<span class="st">&quot;collection&quot;</span></span>
+<span id="cb133-35"><a href="point-cloud-processing-results.html#cb133-35" tabindex="-1"></a>    , <span class="st">&quot;trees&quot;</span></span>
+<span id="cb133-36"><a href="point-cloud-processing-results.html#cb133-36" tabindex="-1"></a>    , <span class="st">&quot;trees ha&lt;sup&gt;-1&lt;/sup&gt;&quot;</span></span>
+<span id="cb133-37"><a href="point-cloud-processing-results.html#cb133-37" tabindex="-1"></a>    , <span class="st">&quot;mean&lt;br&gt;tree ht. (m)&quot;</span></span>
+<span id="cb133-38"><a href="point-cloud-processing-results.html#cb133-38" tabindex="-1"></a>    , <span class="st">&quot;Lorey&#39;s&lt;br&gt;tree ht. (m)&quot;</span></span>
+<span id="cb133-39"><a href="point-cloud-processing-results.html#cb133-39" tabindex="-1"></a>    , <span class="st">&quot;mean&lt;br&gt;DBH (cm)&quot;</span></span>
+<span id="cb133-40"><a href="point-cloud-processing-results.html#cb133-40" tabindex="-1"></a>    , <span class="st">&quot;QMD (cm)&quot;</span></span>
+<span id="cb133-41"><a href="point-cloud-processing-results.html#cb133-41" tabindex="-1"></a>    , <span class="st">&quot;BA (m&lt;sup&gt;2&lt;/sup&gt; ha&lt;sup&gt;-1&lt;/sup&gt;)&quot;</span></span>
+<span id="cb133-42"><a href="point-cloud-processing-results.html#cb133-42" tabindex="-1"></a>    , <span class="st">&quot;mean&lt;br&gt;CBD (kg m&lt;sup&gt;-3&lt;/sup&gt;)&lt;br&gt;LANDFIRE&quot;</span></span>
+<span id="cb133-43"><a href="point-cloud-processing-results.html#cb133-43" tabindex="-1"></a>    , <span class="st">&quot;mean&lt;br&gt;CBD (kg m&lt;sup&gt;-3&lt;/sup&gt;)&lt;br&gt;Cruz&quot;</span></span>
+<span id="cb133-44"><a href="point-cloud-processing-results.html#cb133-44" tabindex="-1"></a>  )</span>
+<span id="cb133-45"><a href="point-cloud-processing-results.html#cb133-45" tabindex="-1"></a>  , <span class="at">escape =</span> F</span>
+<span id="cb133-46"><a href="point-cloud-processing-results.html#cb133-46" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb133-47"><a href="point-cloud-processing-results.html#cb133-47" tabindex="-1"></a>kableExtra<span class="sc">::</span><span class="fu">kable_styling</span>(<span class="at">font_size =</span> <span class="fl">10.5</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb133-48"><a href="point-cloud-processing-results.html#cb133-48" tabindex="-1"></a>kableExtra<span class="sc">::</span><span class="fu">collapse_rows</span>(<span class="at">columns =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">valign =</span> <span class="st">&quot;top&quot;</span>)  </span></code></pre></div>
+<table class="table" style="font-size: 10.5px; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+<span id="tab:unnamed-chunk-150">Table 7.2: </span>Stand summary metrics in metric units
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+site
+</th>
+<th style="text-align:left;">
+collection
+</th>
+<th style="text-align:left;">
+trees
+</th>
+<th style="text-align:left;">
+trees ha<sup>-1</sup>
+</th>
+<th style="text-align:left;">
+mean<br>tree ht. (m)
+</th>
+<th style="text-align:left;">
+Lorey’s<br>tree ht. (m)
+</th>
+<th style="text-align:left;">
+mean<br>DBH (cm)
+</th>
+<th style="text-align:left;">
+QMD (cm)
+</th>
+<th style="text-align:left;">
+BA (m<sup>2</sup> ha<sup>-1</sup>)
+</th>
+<th style="text-align:left;">
+mean<br>CBD (kg m<sup>-3</sup>)<br>LANDFIRE
+</th>
+<th style="text-align:left;">
+mean<br>CBD (kg m<sup>-3</sup>)<br>Cruz
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;vertical-align: top !important;" rowspan="2">
+Fort Stewart (GA)<br>306 ha
+</td>
+<td style="text-align:left;">
+ALS 2018
+</td>
+<td style="text-align:left;">
+152,917
+</td>
+<td style="text-align:left;">
+499.6
+</td>
+<td style="text-align:left;">
+17.5
+</td>
+<td style="text-align:left;">
+21.4
+</td>
+<td style="text-align:left;">
+22.2
+</td>
+<td style="text-align:left;">
+23.9
+</td>
+<td style="text-align:left;">
+22.4
+</td>
+<td style="text-align:left;">
+0.235
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ALS 2025
+</td>
+<td style="text-align:left;">
+74,205
+</td>
+<td style="text-align:left;">
+242.6
+</td>
+<td style="text-align:left;">
+19.0
+</td>
+<td style="text-align:left;">
+22.8
+</td>
+<td style="text-align:left;">
+24.9
+</td>
+<td style="text-align:left;">
+26.7
+</td>
+<td style="text-align:left;">
+13.6
+</td>
+<td style="text-align:left;">
+0.358
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;vertical-align: top !important;" rowspan="2">
+Cedar Bridge (NJ)<br>147 ha
+</td>
+<td style="text-align:left;">
+ALS 2012
+</td>
+<td style="text-align:left;">
+110,993
+</td>
+<td style="text-align:left;">
+754.9
+</td>
+<td style="text-align:left;">
+8.9
+</td>
+<td style="text-align:left;">
+11.9
+</td>
+<td style="text-align:left;">
+15.4
+</td>
+<td style="text-align:left;">
+17.0
+</td>
+<td style="text-align:left;">
+17.2
+</td>
+<td style="text-align:left;">
+0.239
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+UAS LIDAR 2024
+</td>
+<td style="text-align:left;">
+69,865
+</td>
+<td style="text-align:left;">
+475.2
+</td>
+<td style="text-align:left;">
+12.3
+</td>
+<td style="text-align:left;">
+14.4
+</td>
+<td style="text-align:left;">
+22.5
+</td>
+<td style="text-align:left;">
+23.9
+</td>
+<td style="text-align:left;">
+21.3
+</td>
+<td style="text-align:left;">
+0.199
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;vertical-align: top !important;" rowspan="2">
+Salt Cabin (CO)<br>12 ha
+</td>
+<td style="text-align:left;">
+ALS 2021
+</td>
+<td style="text-align:left;">
+7,224
+</td>
+<td style="text-align:left;">
+615.6
+</td>
+<td style="text-align:left;">
+7.7
+</td>
+<td style="text-align:left;">
+12.6
+</td>
+<td style="text-align:left;">
+12.5
+</td>
+<td style="text-align:left;">
+14.7
+</td>
+<td style="text-align:left;">
+10.4
+</td>
+<td style="text-align:left;">
+0.094
+</td>
+<td style="text-align:left;">
+0.292
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+UAS SFM 2024
+</td>
+<td style="text-align:left;">
+3,571
+</td>
+<td style="text-align:left;">
+304.5
+</td>
+<td style="text-align:left;">
+9.2
+</td>
+<td style="text-align:left;">
+14.2
+</td>
+<td style="text-align:left;">
+16.3
+</td>
+<td style="text-align:left;">
+19.2
+</td>
+<td style="text-align:left;">
+8.8
+</td>
+<td style="text-align:left;">
+0.113
+</td>
+<td style="text-align:left;">
+0.221
+</td>
+</tr>
+<tr>
+<td style="text-align:left;vertical-align: top !important;" rowspan="2">
+Sycan Marsh (OR)<br>16 ha
+</td>
+<td style="text-align:left;">
+ALS 2021
+</td>
+<td style="text-align:left;">
+4,205
+</td>
+<td style="text-align:left;">
+257.5
+</td>
+<td style="text-align:left;">
+12.7
+</td>
+<td style="text-align:left;">
+18.5
+</td>
+<td style="text-align:left;">
+24.2
+</td>
+<td style="text-align:left;">
+27.9
+</td>
+<td style="text-align:left;">
+15.7
+</td>
+<td style="text-align:left;">
+0.217
+</td>
+<td style="text-align:left;">
+0.420
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+UAS LIDAR 2023
+</td>
+<td style="text-align:left;">
+4,435
+</td>
+<td style="text-align:left;">
+271.6
+</td>
+<td style="text-align:left;">
+11.5
+</td>
+<td style="text-align:left;">
+19.1
+</td>
+<td style="text-align:left;">
+22.4
+</td>
+<td style="text-align:left;">
+27.3
+</td>
+<td style="text-align:left;">
+15.9
+</td>
+<td style="text-align:left;">
+0.147
+</td>
+<td style="text-align:left;">
+0.299
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="imperial-units" class="section level4 hasAnchor" number="7.2.2.2">
+<h4><span class="header-section-number">7.2.2.2</span> Imperial units<a href="point-cloud-processing-results.html#imperial-units" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<div class="sourceCode" id="cb134"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb134-1"><a href="point-cloud-processing-results.html#cb134-1" tabindex="-1"></a>silv_metrics_by_data <span class="sc">%&gt;%</span> </span>
+<span id="cb134-2"><a href="point-cloud-processing-results.html#cb134-2" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
+<span id="cb134-3"><a href="point-cloud-processing-results.html#cb134-3" tabindex="-1"></a>    <span class="at">nlab =</span> <span class="fu">paste0</span>(study_site_lab,<span class="st">&quot;&lt;br&gt;&quot;</span>,scales<span class="sc">::</span><span class="fu">comma</span>(stand_area_ac,<span class="at">accuracy=</span><span class="dv">1</span>),<span class="st">&quot; ac&quot;</span>)</span>
+<span id="cb134-4"><a href="point-cloud-processing-results.html#cb134-4" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb134-5"><a href="point-cloud-processing-results.html#cb134-5" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">relocate</span>(nlab) <span class="sc">%&gt;%</span> </span>
+<span id="cb134-6"><a href="point-cloud-processing-results.html#cb134-6" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(</span>
+<span id="cb134-7"><a href="point-cloud-processing-results.html#cb134-7" tabindex="-1"></a>    nlab</span>
+<span id="cb134-8"><a href="point-cloud-processing-results.html#cb134-8" tabindex="-1"></a>    , data_desc</span>
+<span id="cb134-9"><a href="point-cloud-processing-results.html#cb134-9" tabindex="-1"></a>    <span class="co"># different</span></span>
+<span id="cb134-10"><a href="point-cloud-processing-results.html#cb134-10" tabindex="-1"></a>    , n_trees</span>
+<span id="cb134-11"><a href="point-cloud-processing-results.html#cb134-11" tabindex="-1"></a>    , trees_per_ac</span>
+<span id="cb134-12"><a href="point-cloud-processing-results.html#cb134-12" tabindex="-1"></a>    , mean_tree_height_ft</span>
+<span id="cb134-13"><a href="point-cloud-processing-results.html#cb134-13" tabindex="-1"></a>    , loreys_height_ft</span>
+<span id="cb134-14"><a href="point-cloud-processing-results.html#cb134-14" tabindex="-1"></a>    , mean_dbh_in</span>
+<span id="cb134-15"><a href="point-cloud-processing-results.html#cb134-15" tabindex="-1"></a>    , qmd_in</span>
+<span id="cb134-16"><a href="point-cloud-processing-results.html#cb134-16" tabindex="-1"></a>    , basal_area_ft2_per_ac</span>
+<span id="cb134-17"><a href="point-cloud-processing-results.html#cb134-17" tabindex="-1"></a>    , mean_landfire_tree_lbs_per_ft3</span>
+<span id="cb134-18"><a href="point-cloud-processing-results.html#cb134-18" tabindex="-1"></a>    , mean_cruz_tree_lbs_per_ft3</span>
+<span id="cb134-19"><a href="point-cloud-processing-results.html#cb134-19" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb134-20"><a href="point-cloud-processing-results.html#cb134-20" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
+<span id="cb134-21"><a href="point-cloud-processing-results.html#cb134-21" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">across</span>(<span class="fu">c</span>(n_trees), <span class="sc">~</span>scales<span class="sc">::</span><span class="fu">comma</span>(.x,<span class="at">accuracy=</span><span class="dv">1</span>))</span>
+<span id="cb134-22"><a href="point-cloud-processing-results.html#cb134-22" tabindex="-1"></a>  , dplyr<span class="sc">::</span><span class="fu">across</span>(</span>
+<span id="cb134-23"><a href="point-cloud-processing-results.html#cb134-23" tabindex="-1"></a>    <span class="sc">-</span><span class="fu">c</span>(nlab,data_desc,n_trees,tidyselect<span class="sc">::</span><span class="fu">ends_with</span>(<span class="st">&quot;3&quot;</span>))</span>
+<span id="cb134-24"><a href="point-cloud-processing-results.html#cb134-24" tabindex="-1"></a>    , <span class="sc">~</span>scales<span class="sc">::</span><span class="fu">comma</span>(.x,<span class="at">accuracy=</span><span class="fl">0.1</span>)</span>
+<span id="cb134-25"><a href="point-cloud-processing-results.html#cb134-25" tabindex="-1"></a>  )</span>
+<span id="cb134-26"><a href="point-cloud-processing-results.html#cb134-26" tabindex="-1"></a>  , dplyr<span class="sc">::</span><span class="fu">across</span>(</span>
+<span id="cb134-27"><a href="point-cloud-processing-results.html#cb134-27" tabindex="-1"></a>    tidyselect<span class="sc">::</span><span class="fu">ends_with</span>(<span class="st">&quot;3&quot;</span>)</span>
+<span id="cb134-28"><a href="point-cloud-processing-results.html#cb134-28" tabindex="-1"></a>    , <span class="sc">~</span>scales<span class="sc">::</span><span class="fu">comma</span>(.x,<span class="at">accuracy=</span><span class="fl">0.001</span>)</span>
+<span id="cb134-29"><a href="point-cloud-processing-results.html#cb134-29" tabindex="-1"></a>  )</span>
+<span id="cb134-30"><a href="point-cloud-processing-results.html#cb134-30" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb134-31"><a href="point-cloud-processing-results.html#cb134-31" tabindex="-1"></a>kableExtra<span class="sc">::</span><span class="fu">kbl</span>(</span>
+<span id="cb134-32"><a href="point-cloud-processing-results.html#cb134-32" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">&quot;Stand summary metrics in imperial units&quot;</span></span>
+<span id="cb134-33"><a href="point-cloud-processing-results.html#cb134-33" tabindex="-1"></a>  , <span class="at">col.names =</span> <span class="fu">c</span>(</span>
+<span id="cb134-34"><a href="point-cloud-processing-results.html#cb134-34" tabindex="-1"></a>    <span class="st">&quot;site&quot;</span>,<span class="st">&quot;collection&quot;</span></span>
+<span id="cb134-35"><a href="point-cloud-processing-results.html#cb134-35" tabindex="-1"></a>    , <span class="st">&quot;trees&quot;</span></span>
+<span id="cb134-36"><a href="point-cloud-processing-results.html#cb134-36" tabindex="-1"></a>    , <span class="st">&quot;trees ac&lt;sup&gt;-1&lt;/sup&gt;&quot;</span></span>
+<span id="cb134-37"><a href="point-cloud-processing-results.html#cb134-37" tabindex="-1"></a>    , <span class="st">&quot;mean&lt;br&gt;tree ht. (ft)&quot;</span></span>
+<span id="cb134-38"><a href="point-cloud-processing-results.html#cb134-38" tabindex="-1"></a>    , <span class="st">&quot;Lorey&#39;s&lt;br&gt;tree ht. (ft)&quot;</span></span>
+<span id="cb134-39"><a href="point-cloud-processing-results.html#cb134-39" tabindex="-1"></a>    , <span class="st">&quot;mean&lt;br&gt;DBH (in)&quot;</span></span>
+<span id="cb134-40"><a href="point-cloud-processing-results.html#cb134-40" tabindex="-1"></a>    , <span class="st">&quot;QMD (in)&quot;</span></span>
+<span id="cb134-41"><a href="point-cloud-processing-results.html#cb134-41" tabindex="-1"></a>    , <span class="st">&quot;BA (ft&lt;sup&gt;2&lt;/sup&gt; ac&lt;sup&gt;-1&lt;/sup&gt;)&quot;</span></span>
+<span id="cb134-42"><a href="point-cloud-processing-results.html#cb134-42" tabindex="-1"></a>    , <span class="st">&quot;mean&lt;br&gt;CBD (lb ft&lt;sup&gt;-3&lt;/sup&gt;)&lt;br&gt;LANDFIRE&quot;</span></span>
+<span id="cb134-43"><a href="point-cloud-processing-results.html#cb134-43" tabindex="-1"></a>    , <span class="st">&quot;mean&lt;br&gt;CBD (lb ft&lt;sup&gt;-3&lt;/sup&gt;)&lt;br&gt;Cruz&quot;</span></span>
+<span id="cb134-44"><a href="point-cloud-processing-results.html#cb134-44" tabindex="-1"></a>  )</span>
+<span id="cb134-45"><a href="point-cloud-processing-results.html#cb134-45" tabindex="-1"></a>  , <span class="at">escape =</span> F</span>
+<span id="cb134-46"><a href="point-cloud-processing-results.html#cb134-46" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb134-47"><a href="point-cloud-processing-results.html#cb134-47" tabindex="-1"></a>kableExtra<span class="sc">::</span><span class="fu">kable_styling</span>(<span class="at">font_size =</span> <span class="fl">10.5</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb134-48"><a href="point-cloud-processing-results.html#cb134-48" tabindex="-1"></a>kableExtra<span class="sc">::</span><span class="fu">collapse_rows</span>(<span class="at">columns =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">valign =</span> <span class="st">&quot;top&quot;</span>)  </span></code></pre></div>
+<table class="table" style="font-size: 10.5px; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+<span id="tab:unnamed-chunk-151">Table 7.3: </span>Stand summary metrics in imperial units
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+site
+</th>
+<th style="text-align:left;">
+collection
+</th>
+<th style="text-align:left;">
+trees
+</th>
+<th style="text-align:left;">
+trees ac<sup>-1</sup>
+</th>
+<th style="text-align:left;">
+mean<br>tree ht. (ft)
+</th>
+<th style="text-align:left;">
+Lorey’s<br>tree ht. (ft)
+</th>
+<th style="text-align:left;">
+mean<br>DBH (in)
+</th>
+<th style="text-align:left;">
+QMD (in)
+</th>
+<th style="text-align:left;">
+BA (ft<sup>2</sup> ac<sup>-1</sup>)
+</th>
+<th style="text-align:left;">
+mean<br>CBD (lb ft<sup>-3</sup>)<br>LANDFIRE
+</th>
+<th style="text-align:left;">
+mean<br>CBD (lb ft<sup>-3</sup>)<br>Cruz
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;vertical-align: top !important;" rowspan="2">
+Fort Stewart (GA)<br>756 ac
+</td>
+<td style="text-align:left;">
+ALS 2018
+</td>
+<td style="text-align:left;">
+152,917
+</td>
+<td style="text-align:left;">
+202.3
+</td>
+<td style="text-align:left;">
+57.4
+</td>
+<td style="text-align:left;">
+70.2
+</td>
+<td style="text-align:left;">
+8.7
+</td>
+<td style="text-align:left;">
+9.4
+</td>
+<td style="text-align:left;">
+97.5
+</td>
+<td style="text-align:left;">
+0.015
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ALS 2025
+</td>
+<td style="text-align:left;">
+74,205
+</td>
+<td style="text-align:left;">
+98.2
+</td>
+<td style="text-align:left;">
+62.4
+</td>
+<td style="text-align:left;">
+74.9
+</td>
+<td style="text-align:left;">
+9.8
+</td>
+<td style="text-align:left;">
+10.5
+</td>
+<td style="text-align:left;">
+59.3
+</td>
+<td style="text-align:left;">
+0.022
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;vertical-align: top !important;" rowspan="2">
+Cedar Bridge (NJ)<br>363 ac
+</td>
+<td style="text-align:left;">
+ALS 2012
+</td>
+<td style="text-align:left;">
+110,993
+</td>
+<td style="text-align:left;">
+305.7
+</td>
+<td style="text-align:left;">
+29.2
+</td>
+<td style="text-align:left;">
+39.1
+</td>
+<td style="text-align:left;">
+6.1
+</td>
+<td style="text-align:left;">
+6.7
+</td>
+<td style="text-align:left;">
+75.0
+</td>
+<td style="text-align:left;">
+0.015
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+UAS LIDAR 2024
+</td>
+<td style="text-align:left;">
+69,865
+</td>
+<td style="text-align:left;">
+192.4
+</td>
+<td style="text-align:left;">
+40.3
+</td>
+<td style="text-align:left;">
+47.4
+</td>
+<td style="text-align:left;">
+8.9
+</td>
+<td style="text-align:left;">
+9.4
+</td>
+<td style="text-align:left;">
+92.8
+</td>
+<td style="text-align:left;">
+0.012
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;vertical-align: top !important;" rowspan="2">
+Salt Cabin (CO)<br>29 ac
+</td>
+<td style="text-align:left;">
+ALS 2021
+</td>
+<td style="text-align:left;">
+7,224
+</td>
+<td style="text-align:left;">
+249.3
+</td>
+<td style="text-align:left;">
+25.3
+</td>
+<td style="text-align:left;">
+41.3
+</td>
+<td style="text-align:left;">
+4.9
+</td>
+<td style="text-align:left;">
+5.8
+</td>
+<td style="text-align:left;">
+45.4
+</td>
+<td style="text-align:left;">
+0.006
+</td>
+<td style="text-align:left;">
+0.018
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+UAS SFM 2024
+</td>
+<td style="text-align:left;">
+3,571
+</td>
+<td style="text-align:left;">
+123.3
+</td>
+<td style="text-align:left;">
+30.1
+</td>
+<td style="text-align:left;">
+46.5
+</td>
+<td style="text-align:left;">
+6.4
+</td>
+<td style="text-align:left;">
+7.5
+</td>
+<td style="text-align:left;">
+38.3
+</td>
+<td style="text-align:left;">
+0.007
+</td>
+<td style="text-align:left;">
+0.014
+</td>
+</tr>
+<tr>
+<td style="text-align:left;vertical-align: top !important;" rowspan="2">
+Sycan Marsh (OR)<br>40 ac
+</td>
+<td style="text-align:left;">
+ALS 2021
+</td>
+<td style="text-align:left;">
+4,205
+</td>
+<td style="text-align:left;">
+104.3
+</td>
+<td style="text-align:left;">
+41.8
+</td>
+<td style="text-align:left;">
+60.5
+</td>
+<td style="text-align:left;">
+9.6
+</td>
+<td style="text-align:left;">
+11.0
+</td>
+<td style="text-align:left;">
+68.5
+</td>
+<td style="text-align:left;">
+0.014
+</td>
+<td style="text-align:left;">
+0.026
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+UAS LIDAR 2023
+</td>
+<td style="text-align:left;">
+4,435
+</td>
+<td style="text-align:left;">
+110.0
+</td>
+<td style="text-align:left;">
+37.8
+</td>
+<td style="text-align:left;">
+62.7
+</td>
+<td style="text-align:left;">
+8.8
+</td>
+<td style="text-align:left;">
+10.8
+</td>
+<td style="text-align:left;">
+69.5
+</td>
+<td style="text-align:left;">
+0.009
+</td>
+<td style="text-align:left;">
+0.019
+</td>
+</tr>
+</tbody>
+</table>
 
+</div>
+</div>
 </div>
 </div>
             </section>
@@ -1719,7 +2590,7 @@ NA
         </div>
       </div>
 <a href="cedar-bridge-nj.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="cloud2trees-to-lanl-trees.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="lanl_trees.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

@@ -14,8 +14,10 @@ tab:unnamed-chunk-115
 tab:unnamed-chunk-120
 tab:unnamed-chunk-128
 tab:unnamed-chunk-133
-tab:unnamed-chunk-138
-tab:unnamed-chunk-147
+tab:unnamed-chunk-139
+tab:unnamed-chunk-150
+tab:unnamed-chunk-151
+tab:unnamed-chunk-153
 introduction
 objective
 data_desc
@@ -115,7 +117,11 @@ point-cloud-processing-time-versus-point-density
 point-cloud-processing-time-by-section
 point-cloud-processing-time-by-section-total
 silvicultural-metrics
-cloud2trees-to-lanl-trees
+example
+study-area-summaries
+metric-units
+imperial-units
+lanl_trees
 surface-fuel-quantification
 cloud2treescloud2trees_to_lanl_trees-example-process
 cloud2treescloud2trees_to_lanl_trees-everything

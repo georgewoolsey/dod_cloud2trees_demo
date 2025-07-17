@@ -29,7 +29,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="cloud2trees-to-lanl-trees.html"/>
+<link rel="prev" href="lanl_trees.html"/>
 
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -258,13 +258,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7.1.2" data-path="point-cloud-processing-results.html"><a href="point-cloud-processing-results.html#point-cloud-processing-time-by-section"><i class="fa fa-check"></i><b>7.1.2</b> Point Cloud Processing Time by Section (%)</a></li>
 <li class="chapter" data-level="7.1.3" data-path="point-cloud-processing-results.html"><a href="point-cloud-processing-results.html#point-cloud-processing-time-by-section-total"><i class="fa fa-check"></i><b>7.1.3</b> Point Cloud Processing Time by Section (total)</a></li>
 </ul></li>
-<li class="chapter" data-level="7.2" data-path="point-cloud-processing-results.html"><a href="point-cloud-processing-results.html#silvicultural-metrics"><i class="fa fa-check"></i><b>7.2</b> Silvicultural Metrics</a></li>
-</ul></li>
-<li class="chapter" data-level="8" data-path="cloud2trees-to-lanl-trees.html"><a href="cloud2trees-to-lanl-trees.html"><i class="fa fa-check"></i><b>8</b> <code>cloud2trees</code> to LANL TREES</a>
+<li class="chapter" data-level="7.2" data-path="point-cloud-processing-results.html"><a href="point-cloud-processing-results.html#silvicultural-metrics"><i class="fa fa-check"></i><b>7.2</b> Silvicultural Metrics</a>
 <ul>
-<li class="chapter" data-level="8.1" data-path="cloud2trees-to-lanl-trees.html"><a href="cloud2trees-to-lanl-trees.html#surface-fuel-quantification"><i class="fa fa-check"></i><b>8.1</b> Surface Fuel Quantification</a></li>
-<li class="chapter" data-level="8.2" data-path="cloud2trees-to-lanl-trees.html"><a href="cloud2trees-to-lanl-trees.html#cloud2treescloud2trees_to_lanl_trees-example-process"><i class="fa fa-check"></i><b>8.2</b> <code>cloud2trees::cloud2trees_to_lanl_trees()</code> example process</a></li>
-<li class="chapter" data-level="8.3" data-path="cloud2trees-to-lanl-trees.html"><a href="cloud2trees-to-lanl-trees.html#cloud2treescloud2trees_to_lanl_trees-everything"><i class="fa fa-check"></i><b>8.3</b> <code>cloud2trees::cloud2trees_to_lanl_trees()</code> everything</a></li>
+<li class="chapter" data-level="7.2.1" data-path="point-cloud-processing-results.html"><a href="point-cloud-processing-results.html#example"><i class="fa fa-check"></i><b>7.2.1</b> Example</a></li>
+<li class="chapter" data-level="7.2.2" data-path="point-cloud-processing-results.html"><a href="point-cloud-processing-results.html#study-area-summaries"><i class="fa fa-check"></i><b>7.2.2</b> Study Area Summaries</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="lanl_trees.html"><a href="lanl_trees.html"><i class="fa fa-check"></i><b>8</b> <code>cloud2trees</code> to LANL TREES</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="lanl_trees.html"><a href="lanl_trees.html#surface-fuel-quantification"><i class="fa fa-check"></i><b>8.1</b> Surface Fuel Quantification</a></li>
+<li class="chapter" data-level="8.2" data-path="lanl_trees.html"><a href="lanl_trees.html#cloud2treescloud2trees_to_lanl_trees-example-process"><i class="fa fa-check"></i><b>8.2</b> <code>cloud2trees::cloud2trees_to_lanl_trees()</code> example process</a></li>
+<li class="chapter" data-level="8.3" data-path="lanl_trees.html"><a href="lanl_trees.html#cloud2treescloud2trees_to_lanl_trees-everything"><i class="fa fa-check"></i><b>8.3</b> <code>cloud2trees::cloud2trees_to_lanl_trees()</code> everything</a></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="lessons-learned.html"><a href="lessons-learned.html"><i class="fa fa-check"></i><b>9</b> Lessons Learned</a>
 <ul>
@@ -309,12 +313,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="challenges-with-these-demos" class="section level2 hasAnchor" number="9.2">
 <h2><span class="header-section-number">9.2</span> Challenges with these Demos:<a href="lessons-learned.html#challenges-with-these-demos" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <ul>
-<li>Data from USGS and Forest Service Data Archive were directly usable while other data sources lacked projection information and documented metadata
+<li>Most data from USGS and Forest Service Data Archive were directly usable while other data sources lacked projection information and documented metadata
 <ul>
 <li>Only about half of the data was available in public access portals</li>
 <li>About a third of the data delivered with missing metadata that initially prevented processing</li>
 </ul></li>
-<li>Data interpretation/comparison is hindered by having 3-12 year gap between datasets at a site</li>
+<li>Point cloud data that did not use a metric Coordinate Reference System (CRS) requires pre-processing
+<ul>
+<li>To ensure compatibility with our processing pipeline, point cloud data requires transformation if delivered in State Plane Coordinate Systems (SPCS) or with vertical units expressed in feet.</li>
+<li>Converting these data to a metric Coordinate Reference System (CRS) adds notable overhead to the processing timeline</li>
+</ul></li>
+<li>A significant temporal discrepancy (3-12 years) exists between datasets collected at each site, which complicates data interpretation and comparison.
+<ul>
+<li>This time gap acts as a confounding variable when attempting to compare data acquired by different collection systems (e.g., ALS versus UAS-SfM).</li>
+</ul></li>
 </ul>
 
 </div>
@@ -324,7 +336,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="cloud2trees-to-lanl-trees.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="lanl_trees.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 
     </div>
   </div>
