@@ -1,4 +1,4 @@
-# `cloud2trees` to LANL TREES
+# `cloud2trees` to LANL TREES{#lanl_trees}
 
 we format the `cloud2trees::cloud2trees()` outputs to meet the requirements of the [LANL TREES](https://github.com/lanl/Trees/) program, which prepares data for fire modeling. This data formatting process is accomplished via `cloud2trees::cloud2trees_to_lanl_trees()`. The current iteration of this function requires the user to specify surface fuel load parameters, such as litter and herbaceous/grass fuel loads, which are assumed constant across the study area. 
 
@@ -207,7 +207,7 @@ study_sites_processing_sf %>%
   dplyr::mutate(dplyr::across(dplyr::where(is.numeric),~scales::comma(.x))) %>% 
   dplyr::rename(cloud2trees_output_dir = fdir) %>% 
   kableExtra::kbl() %>% 
-  kableExtra::kable_styling()
+  kableExtra::kable_styling(font_size = 12)
 ```
 
 `cloud2trees::cloud2trees_to_lanl_trees()` all of the `cloud2trees::cloud2trees()` processed data

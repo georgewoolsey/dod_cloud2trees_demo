@@ -483,7 +483,7 @@ my_ggmap_basemap(
 
 make a function specific to this data and task to grab the basemap with `my_ggmap_basemap()` and overlay the point cloud data and the study area bounds
 
-```{r, eval = T}
+```{r, eval = F}
 plt_fn_temp <- function(
   record_study_sites_las_ctg
   , my_study_sites_las_ctg = study_sites_las_ctg
@@ -561,7 +561,7 @@ patchwork::wrap_plots(plts_temp, ncol = 2)
 # 
 ```
 
-```{r, include=FALSE, eval=T}
+```{r, include=FALSE, eval=F}
 ggplot2::ggsave(
   "../data/ptcld_aoi_extents.jpg"
   , dpi = "print"
@@ -999,6 +999,8 @@ ggplot2::ggplot(
 # forest type group summary
 foresttype_sum_fn <- function(crowns, aoi, unit) {
   crowns %>% 
+    sf::st_drop_geometry() %>% 
+    sf::st_as_sf(coords = c("tree_x", "tree_y"), crs = sf::st_crs(crowns)) %>% 
     sf::st_intersection(
       aoi %>% sf::st_transform(sf::st_crs(crowns))
     ) %>% 
@@ -1029,7 +1031,9 @@ foresttype_sum_fn <- function(crowns, aoi, unit) {
 
 # summarize tree metrics
 stats_sum_fn <- function(crowns, aoi, unit) {
-  crowns %>% 
+  crowns %>%
+    sf::st_drop_geometry() %>% 
+    sf::st_as_sf(coords = c("tree_x", "tree_y"), crs = sf::st_crs(crowns)) %>% 
     sf::st_intersection(
       aoi %>% sf::st_transform(sf::st_crs(crowns))
     ) %>% 

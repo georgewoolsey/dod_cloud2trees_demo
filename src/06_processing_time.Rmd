@@ -307,196 +307,394 @@ gc()
 
 ## Silvicultural Metrics
 
-let's make a function to read the tree list data, keep only trees in an AOI, and aggregate to get common silvicultural metrics
+`cloud2trees` has some internal functions to identify `cloud2trees::cloud2trees()` outputs, read the outputs, and crop them to a given AOI, however, these are internal to the program (for now). We can use `cloud2trees::cloud2trees_to_lanl_trees()` (detailed in the [next section](#lanl_trees)) to access this functionality since all we need to do is clip the tree list which we can then aggregate to get common silvicultural metrics
+
+### Example
+
+here is an example to show the data we'll get back from the `calc_silv_metrics()` function we define below
+
+```{r, results=F, message=FALSE}
+# here's an example
+# study_sites_processing_sf %>% dplyr::slice(6) %>% dplyr::glimpse()
+# using the internal fn's would be: read_trees_flist() %>% clip_tree_list_aoi()
+ans_temp <- cloud2trees::cloud2trees_to_lanl_trees(
+  input_dir = study_sites_processing_sf$fdir[6]
+  , study_boundary = study_sites_processing_sf %>% dplyr::slice(6)
+  , bbox_aoi = F, buffer = 0 # this is the key to get only trees in our AOI
+)
+# ans_temp %>% names()
+```
+
+let's make a function to summarize the data and create common silvicultural metrics within our stand boundary
 
 ```{r}
-# function to clip a tree list to an aoi
-clip_tree_list_aoi <- function(
-  # point_cloud_processing_delivery
-  trees
-  , aoi
-  , bbox_aoi = F
-  , buffer = 0 # in the coordinates of trees
-  , reproject_epsg = NULL
-) {
-
-  if(!inherits(trees,"sf")){stop("trees must be sf class object")}
-  if(!inherits(aoi,"sf")){stop("aoi must be sf class object")}
-  if(is.na(sf::st_crs(trees))){stop("trees does not have a CRS")}
-  if(is.na(sf::st_crs(aoi))){stop("aoi does not have a CRS")}
-  # check epsg buff
-  if(is.character(reproject_epsg)){
-    reproject_epsg <- readr::parse_number(reproject_epsg) 
-  }
-  if(is.character(buffer)){
-    buffer <- readr::parse_number(buffer) 
-  }
-  # check for polygons
-  if(
-    sf::st_is(trees, c("POLYGON","MULTIPOLYGON")) %>% 
-    any()
-  ){
-    # check for xy
-    if(
-      (names(trees) %>% stringr::str_detect("tree_x") %>% any()) &&
-      (names(trees) %>% stringr::str_detect("tree_y") %>% any())
-    ){
-      tree_pts <- trees %>% 
-        sf::st_drop_geometry() %>% 
-        sf::st_as_sf(coords = c("tree_x", "tree_y"), crs = sf::st_crs(trees))
-    }else{
-      tree_pts <- trees %>% 
-        sf::st_centroid()
-    }
-  }else if(
-    sf::st_is(trees, c("POINT")) %>% 
-    all()
-  ){
-    tree_pts <- trees
-  }else{
-    stop("trees must contain POINT or POLYGON type geometries only")
-  }
-  
-  # bounds
-  if(
-    !all( sf::st_is(aoi, c("POLYGON","MULTIPOLYGON")) )
-  ){
-    stop("aoi must contain POLYGON type geometry only")
-  }
-  if(nrow(aoi)!=1){
-    stop("aoi must only have a single record geometry")
-  }
-  
-  # reproj
-  if(!is.null(reproject_epsg) && is.numeric(reproject_epsg)){
-    tree_pts <- tree_pts %>% sf::st_transform(crs = reproject_epsg)
-  }
-  
-  # bbox
-  if(bbox_aoi){
-    aoi <- sf::st_bbox(aoi) %>% 
-      sf::st_as_sfc() %>% 
-      sf::st_transform(sf::st_crs(tree_pts))
-  }else{
-    aoi <- aoi %>% sf::st_transform(sf::st_crs(tree_pts))
-  }
-  
-  # buff
-  if(buffer>0){
-    aoi <- sf::st_buffer(aoi, buffer)
-  }
-  
-  # intersect based on points but filter original tree list
-  trees <- trees %>% 
-    dplyr::slice(
-      sf::st_intersects(tree_pts, aoi, sparse = F) %>% which()
-    )
-  
-  if(nrow(trees)==0){
-    warning("no trees found within aoi bounds")
-    return(NULL)
-  }else{
-    return(trees)
-  }
-
-}
-
-# clip_tree_list_aoi(
-#   trees = sf::st_read("c:/data/usfs/dod_cloud2trees_demo/data/SycanMarsh/als_2021_processing/point_cloud_processing_delivery/final_detected_crowns.gpkg")
-#   , aoi = sf::st_read("c:/data/usfs/dod_cloud2trees_demo/data/SycanMarsh/Sycan_2A.shp")
-# ) %>% 
-# dplyr::glimpse()
-```
-
-let's clip the tree list to the study bounds for each result
-
-```{r, results=F, message=FALSE, warning=FALSE, include=FALSE, eval=FALSE}
-# dir
-dir_temp <- file.path("c:/Users/georg/Downloads/", "cloud2trees_processed_tree_lists")
-if(!dir.exists(dir_temp)){
-  dir.create(dir_temp)
-}
-# every data
-ans_temp <- 
-  1:nrow(study_sites_processing_sf) %>%
-  # c(6) %>% 
-  purrr::map(\(x)
-    fp <- file.path(dir_temp, study_sites_processing_sf$study_site[x])
-    if(!dir.exists(fp)){
-      dir.create(fp)
-    }
-    clip_tree_list_aoi(
-      trees = list.files(
-          study_sites_processing_sf$fdir[x]
-          , pattern = "final_detected_tree_tops.*\\.gpkg$"
-          , full.names = T
-        ) %>% 
-        normalizePath() %>% 
-        purrr::map(\(ff)
-          sf::st_read(
-            dsn = ff
-            , quiet = T
-          )
-        ) %>% 
-        dplyr::bind_rows()
-      , aoi = study_sites_processing_sf %>% dplyr::slice(x)
-      , bbox_aoi = T
-      , buffer = 50
-    ) %>% 
-    sf::st_write(
-      dsn = file.path(
-        fp
-        , paste0(
-          study_sites_processing_sf$study_site[x]
-          , "_"
-          , stringr::str_replace_all(study_sites_processing_sf$data_desc[x], " ", "_")
-          , "_treetops.gpkg"
-        )
+###################################################################################
+# define a function to convert columns in data frame from metric to imperial
+# see: 
+# https://www.forestnb.com/archives/forest-nb-news/resources/conversions/
+# https://www.ars.usda.gov/is/np/agbyproducts/agbyappendix.pdf
+###################################################################################
+calc_imperial_units_fn <- function(df) {
+  df %>% 
+  # convert to imperial units
+    dplyr::mutate(
+      dplyr::across(
+        .cols = tidyselect::ends_with("_cm")
+        , ~ .x * 0.394
+        , .names = "{.col}_in"
       )
-      , quiet = T
-      , append = F
+      , dplyr::across(
+        .cols = tidyselect::ends_with("_m")
+        , ~ .x * 3.281
+        , .names = "{.col}_ft"
+      )
+      , dplyr::across(
+        .cols = tidyselect::ends_with("_m2_per_ha")
+        , ~ .x * 4.359
+        , .names = "{.col}_ftac"
+      )
+      , dplyr::across(
+        .cols = tidyselect::ends_with("_kg_per_ha")
+        , ~ .x * 0.892178
+        , .names = "{.col}_lbsac"
+      )
+      , dplyr::across(
+        .cols = tidyselect::ends_with("_per_ha") & 
+          !tidyselect::ends_with("_m2_per_ha") & 
+          !tidyselect::ends_with("_kg_per_ha")
+        , ~ .x * 0.405
+        , .names = "{.col}_ac"
+      )
+      , dplyr::across(
+        .cols = tidyselect::ends_with("_area_ha")
+        , ~ .x * 2.471
+        , .names = "{.col}_ac"
+      )
+      , dplyr::across(
+        .cols = tidyselect::ends_with("kg_per_m2")
+        , ~ .x * 0.20482
+        , .names = "{.col}_lbsft2"
+      )
+      , dplyr::across(
+        .cols = tidyselect::ends_with("kg_per_m3")
+        , ~ .x * 0.0624
+        , .names = "{.col}_lbsft3"
+      )
+      , dplyr::across(
+        .cols = tidyselect::ends_with("_m2") & !tidyselect::ends_with("per_m2")
+        , ~ .x * 10.764
+        , .names = "{.col}_ft2"
+      )
+    ) %>%
+    dplyr::rename_with(
+      .fn = function(x){dplyr::case_when(
+        stringr::str_ends(x,"_cm_in") ~ stringr::str_replace(x,"_cm_in","_in")
+        , stringr::str_ends(x,"_m_ft") ~ stringr::str_replace(x,"_m_ft","_ft")
+        , stringr::str_ends(x,"_m2_per_ha_ftac") ~ stringr::str_replace(x,"_m2_per_ha_ftac","_ft2_per_ac")
+        , stringr::str_ends(x,"_kg_per_ha_lbsac") ~ stringr::str_replace(x,"_kg_per_ha_lbsac","_lbs_per_ac")
+        , stringr::str_ends(x,"_per_ha_ac") ~ stringr::str_replace(x,"_per_ha_ac","_per_ac")
+        , stringr::str_ends(x,"_area_ha_ac") ~ stringr::str_replace(x,"_area_ha_ac","_area_ac")
+        , stringr::str_ends(x,"_kg_per_m2_lbsft2") ~ stringr::str_replace(x,"_kg_per_m2_lbsft2","_lbs_per_ft2")
+        , stringr::str_ends(x,"_kg_per_m3_lbsft3") ~ stringr::str_replace(x,"_kg_per_m3_lbsft3","_lbs_per_ft3")
+        , stringr::str_ends(x,"_m2_ft2") ~ stringr::str_replace(x,"_m2_ft2","_ft2")
+        , TRUE ~ x
+      )}
     )
-  )
+}
 
- # sf::st_read("../data/cloud2trees_processed_tree_lists/SycanMarsh_ALS_2021_treetops.gpkg") %>% 
- #  ggplot() + geom_sf() + geom_sf(data = study_sites_processing_sf %>% dplyr::slice(6) %>% sf::st_transform(6339), fill = NA, color = "navy")
-```
-
-
-```{r, include=FALSE, eval=FALSE}
+###################################################################################
 ### stand-level summaries
-silv_metrics <-
-  treetops_sf %>%
+###################################################################################
+calc_silv_metrics <- function(tree_list, stand_area_ha = NULL, study_boundary = NULL, calc_imperial_units = F) {
+  # get study area
+  if(!is.null(study_boundary)){
+    # bounds check
+    if(
+      !inherits(study_boundary,"sf")
+      && !inherits(study_boundary,"sfc")
+    ){stop("study_boundary must be sf class object")}
+    if(is.na(sf::st_crs(study_boundary))){stop("study_boundary does not have a CRS")}
+    if(inherits(study_boundary,"sf") && nrow(study_boundary)!=1){
+      stop("study_boundary must only have a single record geometry")
+    }
+    if(inherits(study_boundary,"sfc") && length(study_boundary)!=1){
+      stop("study_boundary must only have a single record geometry")
+    }
+    if(
+      !all( sf::st_is(study_boundary, c("POLYGON","MULTIPOLYGON")) )
+    ){
+      stop("study_boundary must contain POLYGON type geometry only")
+    }
+    # area
+    xxstand_area_ha <- study_boundary %>% 
+      sf::st_area() %>% 
+      as.numeric() %>% 
+      `/`(10000)
+  }else if(is.numeric(stand_area_ha)){
+    xxstand_area_ha <- stand_area_ha[1]
+  }else{
+    stop("must provide `stand_area_ha` as numeric or `study_boundary` as sf object")
+  }
+  
+  if(is.null(xxstand_area_ha) || is.na(xxstand_area_ha) || dplyr::coalesce(xxstand_area_ha,0)<=0){
+    stop("could not determine valid stand_area_ha")
+  }
+  
+  # summarize tree list
+  if(!inherits(tree_list,"data.frame")){stop("tree_list must be data.frame class object")}
+  
+  ###### !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! NEED TO PUT IN CHECKS FOR COLUMNS USED
+  # see: cloud2trees::check_df_cols_all_missing()
+  if( !any(stringr::str_detect(names(tree_list), "landfire_crown_biomass_kg")) ){
+    tree_list <- tree_list %>% dplyr::mutate(landfire_crown_biomass_kg=as.numeric(NA))
+  }
+  if( !any(stringr::str_detect(names(tree_list), "cruz_crown_biomass_kg")) ){
+    tree_list <- tree_list %>% dplyr::mutate(cruz_crown_biomass_kg=as.numeric(NA))
+  }
+  if( !any(stringr::str_detect(names(tree_list), "landfire_tree_kg_per_m3")) ){
+    tree_list <- tree_list %>% dplyr::mutate(landfire_tree_kg_per_m3=as.numeric(NA))
+  }
+  if( !any(stringr::str_detect(names(tree_list), "cruz_tree_kg_per_m3")) ){
+    tree_list <- tree_list %>% dplyr::mutate(cruz_tree_kg_per_m3=as.numeric(NA))
+  }
+  
+  # agg
+  agg <- tree_list %>%
     sf::st_drop_geometry() %>% 
-    # dplyr::filter(dbh_cm >= ostory_dbh_cm) %>% 
     dplyr::ungroup() %>%
-    dplyr::group_by(unit_id, unit_name, stand_area_ha) %>%
     dplyr::summarise(
-      n_trees = dplyr::n_distinct(treeID)
+      n_trees = dplyr::n()
       , mean_dbh_cm = mean(dbh_cm, na.rm = T)
       , mean_tree_height_m = mean(tree_height_m, na.rm = T)
+      , mean_tree_cbh_m = mean(tree_cbh_m, na.rm = T)
       , loreys_height_m = sum(basal_area_m2*tree_height_m, na.rm = T) / sum(basal_area_m2, na.rm = T)
       , basal_area_m2 = sum(basal_area_m2, na.rm = T)
       , sum_dbh_cm_sq = sum(dbh_cm^2, na.rm = T)
-      , landfire_crown_biomass_kg = sum(landfire_crown_biomass_kg, na.rm = T)
-      , cruz_crown_biomass_kg = sum(cruz_crown_biomass_kg, na.rm = T)
+      , landfire_crown_biomass_kg = sum(landfire_crown_biomass_kg, na.rm = F)
+      , cruz_crown_biomass_kg = sum(cruz_crown_biomass_kg, na.rm = F)
+      , mean_landfire_tree_kg_per_m3 = mean(landfire_tree_kg_per_m3, na.rm = T)
+      , mean_cruz_tree_kg_per_m3 = mean(cruz_tree_kg_per_m3, na.rm = T)
     ) %>%
     dplyr::ungroup() %>%
     dplyr::mutate(
-      trees_per_ha = (n_trees/stand_area_ha)
+      stand_area_ha = xxstand_area_ha
+      , trees_per_ha = (n_trees/stand_area_ha)
       , basal_area_m2_per_ha = (basal_area_m2/stand_area_ha)
       , qmd_cm = sqrt(sum_dbh_cm_sq/n_trees)
-      , landfire_cfl_kg_m2 = landfire_crown_biomass_kg/(stand_area_ha*10000)
-      , cruz_cfl_kg_m2 = cruz_crown_biomass_kg/(stand_area_ha*10000)
+      , landfire_cfl_kg_per_m2 = landfire_crown_biomass_kg/(stand_area_ha*10000)
+      , cruz_cfl_kg_per_m2 = cruz_crown_biomass_kg/(stand_area_ha*10000)
     ) %>%
     dplyr::select(-c(sum_dbh_cm_sq,landfire_crown_biomass_kg,cruz_crown_biomass_kg))
+  # imperial
+  if(calc_imperial_units){
+    agg <- calc_imperial_units_fn(agg)
+  }
+  return(agg)
+}
+```
 
-### export tabular
-write.csv(
-    silv_metrics
-    , file.path(outdir, "stand_silv_metrics.csv")
-    , row.names = F
-    , append = F
+check out the data structure returned by the `calc_silv_metrics()` function
+
+```{r}
+calc_silv_metrics(tree_list = ans_temp$tree_list ,study_boundary = ans_temp$aoi, calc_imperial_units = T) %>% 
+  dplyr::glimpse()
+```
+
+```{r, warning=FALSE, message=FALSE, echo=FALSE, include=FALSE}
+remove(list = ls()[grep("_temp",ls())])
+gc()
+```
+
+### Study Area Summaries
+
+let's calculate the metrics for all study areas
+
+```{r, results=F, message=F}
+# map the process over all data
+silv_metrics_by_data <- 1:nrow(study_sites_processing_sf) %>% 
+  purrr::map(function(x){
+    # clip the data
+    ans_temp <- cloud2trees::cloud2trees_to_lanl_trees(
+      input_dir = study_sites_processing_sf$fdir[x]
+      , study_boundary = study_sites_processing_sf %>% dplyr::slice(x)
+      , bbox_aoi = F, buffer = 0 # this is the key to get only trees in our AOI
+    )
+    # silv metrics
+    calc_silv_metrics(
+      tree_list = ans_temp$tree_list 
+      , study_boundary = ans_temp$aoi
+      , calc_imperial_units = T
+    ) %>% 
+    dplyr::mutate(
+      study_site = study_sites_processing_sf$study_site[x]
+      , study_site_lab = study_sites_processing_sf$study_site_lab[x]
+      , data_desc = study_sites_processing_sf$data_desc[x]
+      , data_type = study_sites_processing_sf$data_type[x]
+    )
+  }) %>% 
+dplyr::bind_rows()
+# huh?
+silv_metrics_by_data %>% dplyr::glimpse()
+```
+
+```{r, include=FALSE, eval=FALSE}
+silv_metrics_by_data %>% 
+dplyr::select(
+  study_site,study_site_lab,data_desc,data_type
+  , dplyr::all_of(c(
+    "stand_area_ac"
+    , "n_trees"
+    , "trees_per_ac"
+    , "mean_tree_height_ft"
+    , "loreys_height_ft"
+    , "mean_dbh_in"
+    , "qmd_in"
+    , "basal_area_ft2_per_ac"
+  ))
+) %>% 
+tidyr::pivot_longer(
+  cols = -c(study_site,study_site_lab,data_desc,data_type), names_to = "metric", values_to = "val"
+) %>% 
+# order metrics
+dplyr::mutate(
+  metric = factor(
+    metric
+    , ordered = T
+    , levels = c(
+        "stand_area_ac"
+        , "n_trees"
+        , "trees_per_ac"
+        , "mean_tree_height_ft"
+        , "loreys_height_ft"
+        , "mean_dbh_in"
+        , "qmd_in"
+        , "basal_area_ft2_per_ac"
+      )
+    , labels = c(
+        latex2exp::TeX("Stand Area (ac)", output = "character")
+        , latex2exp::TeX("Number of Trees", output = "character")
+        , latex2exp::TeX("Trees $ac^{-1}$")
+        , latex2exp::TeX("Mean Tree Height (ft)", output = "character")
+        , latex2exp::TeX("Lorey's Mean Height (ft)", output = "character")
+        , latex2exp::TeX("Mean DBH (in)", output = "character")
+        , latex2exp::TeX("QMD (in)", output = "character")
+        , latex2exp::TeX("Basal Area $ft^{2} \\cdot ac^{-1}$")
+      )
   )
+) %>% 
+# dplyr::mutate(val = scales::comma(val,accuracy=0.1)) %>% 
+ggplot2::ggplot(
+  mapping = ggplot2::aes(y = study_site_lab, x = val, color = data_type)
+) +
+ggplot2::geom_point() +
+ggplot2::facet_wrap(facets = dplyr::vars(metric), scales = "free_x", labeller = ggplot2::label_parsed) +
+ggplot2::theme_light()
+```
+
+#### Metric units
+
+```{r}
+silv_metrics_by_data %>% 
+  dplyr::mutate(
+    nlab = paste0(study_site_lab,"<br>",scales::comma(stand_area_ha,accuracy=1)," ha")
+  ) %>% 
+  dplyr::relocate(nlab) %>% 
+  dplyr::select(
+    nlab
+    , data_desc
+    # different
+    , n_trees
+    , trees_per_ha
+    , mean_tree_height_m
+    , loreys_height_m
+    , mean_dbh_cm
+    , qmd_cm
+    , basal_area_m2_per_ha
+    , mean_landfire_tree_kg_per_m3
+    , mean_cruz_tree_kg_per_m3
+) %>% 
+dplyr::mutate(
+  dplyr::across(c(n_trees), ~scales::comma(.x,accuracy=1))
+  , dplyr::across(
+    -c(nlab,data_desc,n_trees,tidyselect::ends_with("3"))
+    , ~scales::comma(.x,accuracy=0.1)
+  )
+  , dplyr::across(
+    tidyselect::ends_with("3")
+    , ~scales::comma(.x,accuracy=0.001)
+  )
+) %>% 
+kableExtra::kbl(
+  caption = "Stand summary metrics in metric units"
+  , col.names = c(
+    "site","collection"
+    , "trees"
+    , "trees ha<sup>-1</sup>"
+    , "mean<br>tree ht. (m)"
+    , "Lorey's<br>tree ht. (m)"
+    , "mean<br>DBH (cm)"
+    , "QMD (cm)"
+    , "BA (m<sup>2</sup> ha<sup>-1</sup>)"
+    , "mean<br>CBD (kg m<sup>-3</sup>)<br>LANDFIRE"
+    , "mean<br>CBD (kg m<sup>-3</sup>)<br>Cruz"
+  )
+  , escape = F
+) %>% 
+kableExtra::kable_styling(font_size = 12) %>% 
+kableExtra::collapse_rows(columns = 1:2, valign = "top")  
+
+```
+
+#### Imperial units
+
+```{r}
+silv_metrics_by_data %>% 
+  dplyr::mutate(
+    nlab = paste0(study_site_lab,"<br>",scales::comma(stand_area_ac,accuracy=1)," ac")
+  ) %>% 
+  dplyr::relocate(nlab) %>% 
+  dplyr::select(
+    nlab
+    , data_desc
+    # different
+    , n_trees
+    , trees_per_ac
+    , mean_tree_height_ft
+    , loreys_height_ft
+    , mean_dbh_in
+    , qmd_in
+    , basal_area_ft2_per_ac
+    , mean_landfire_tree_lbs_per_ft3
+    , mean_cruz_tree_lbs_per_ft3
+) %>% 
+dplyr::mutate(
+  dplyr::across(c(n_trees), ~scales::comma(.x,accuracy=1))
+  , dplyr::across(
+    -c(nlab,data_desc,n_trees,tidyselect::ends_with("3"))
+    , ~scales::comma(.x,accuracy=0.1)
+  )
+  , dplyr::across(
+    tidyselect::ends_with("3")
+    , ~scales::comma(.x,accuracy=0.001)
+  )
+) %>% 
+kableExtra::kbl(
+  caption = "Stand summary metrics in imperial units"
+  , col.names = c(
+    "site","collection"
+    , "trees"
+    , "trees ac<sup>-1</sup>"
+    , "mean<br>tree ht. (ft)"
+    , "Lorey's<br>tree ht. (ft)"
+    , "mean<br>DBH (in)"
+    , "QMD (in)"
+    , "BA (ft<sup>2</sup> ac<sup>-1</sup>)"
+    , "mean<br>CBD (lb ft<sup>-3</sup>)<br>LANDFIRE"
+    , "mean<br>CBD (lb ft<sup>-3</sup>)<br>Cruz"
+  )
+  , escape = F
+) %>% 
+kableExtra::kable_styling(font_size = 12) %>% 
+kableExtra::collapse_rows(columns = 1:2, valign = "top")  
 ```
 
