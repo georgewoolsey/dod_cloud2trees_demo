@@ -30,7 +30,7 @@
   
   
 <link rel="prev" href="cedar-bridge-nj.html"/>
-
+<link rel="next" href="cloud2trees-to-lanl-trees.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -181,6 +181,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#objective"><i class="fa fa-check"></i><b>1.1</b> Objective</a></li>
 <li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#data_desc"><i class="fa fa-check"></i><b>1.2</b> Data</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#processing-workflow"><i class="fa fa-check"></i><b>1.3</b> Processing Workflow</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="data-preparation.html"><a href="data-preparation.html"><i class="fa fa-check"></i><b>2</b> Data Preparation</a>
 <ul>
@@ -258,6 +259,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7.1.3" data-path="point-cloud-processing-results.html"><a href="point-cloud-processing-results.html#point-cloud-processing-time-by-section-total"><i class="fa fa-check"></i><b>7.1.3</b> Point Cloud Processing Time by Section (total)</a></li>
 </ul></li>
 <li class="chapter" data-level="7.2" data-path="point-cloud-processing-results.html"><a href="point-cloud-processing-results.html#silvicultural-metrics"><i class="fa fa-check"></i><b>7.2</b> Silvicultural Metrics</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="cloud2trees-to-lanl-trees.html"><a href="cloud2trees-to-lanl-trees.html"><i class="fa fa-check"></i><b>8</b> <code>cloud2trees</code> to LANL TREES</a></li>
+<li class="chapter" data-level="9" data-path="lessons-learned.html"><a href="lessons-learned.html"><i class="fa fa-check"></i><b>9</b> Lessons Learned</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="lessons-learned.html"><a href="lessons-learned.html#data-processing-challengesgaps"><i class="fa fa-check"></i><b>9.1</b> Data Processing Challenges/Gaps</a></li>
+<li class="chapter" data-level="9.2" data-path="lessons-learned.html"><a href="lessons-learned.html#challenges-with-these-demos"><i class="fa fa-check"></i><b>9.2</b> Challenges with these Demos:</a></li>
 </ul></li>
 </ul>
 
@@ -521,7 +528,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb123-78"><a href="point-cloud-processing-results.html#cb123-78" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">collapse_rows</span>(<span class="at">columns =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">valign =</span> <span class="st">&quot;top&quot;</span>)</span></code></pre></div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:unnamed-chunk-137">Table 7.1: </span>Point cloud processing section run time
+<span id="tab:unnamed-chunk-138">Table 7.1: </span>Point cloud processing section run time
 </caption>
 <thead>
 <tr>
@@ -1498,7 +1505,7 @@ NA
 <span id="cb124-13"><a href="point-cloud-processing-results.html#cb124-13" tabindex="-1"></a>  ) <span class="sc">+</span></span>
 <span id="cb124-14"><a href="point-cloud-processing-results.html#cb124-14" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">theme_light</span>() <span class="sc">+</span></span>
 <span id="cb124-15"><a href="point-cloud-processing-results.html#cb124-15" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;top&quot;</span>)</span></code></pre></div>
-<p><img src="dod_cloud2trees_demo_files/figure-html/unnamed-chunk-138-1.png" width="1008" /></p>
+<p><img src="dod_cloud2trees_demo_files/figure-html/unnamed-chunk-139-1.png" width="1008" /></p>
 </div>
 <div id="point-cloud-processing-time-by-section" class="section level3 hasAnchor" number="7.1.2">
 <h3><span class="header-section-number">7.1.2</span> Point Cloud Processing Time by Section (%)<a href="point-cloud-processing-results.html#point-cloud-processing-time-by-section" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -1541,7 +1548,7 @@ NA
 <span id="cb125-37"><a href="point-cloud-processing-results.html#cb125-37" tabindex="-1"></a>  <span class="fu">guides</span>(</span>
 <span id="cb125-38"><a href="point-cloud-processing-results.html#cb125-38" tabindex="-1"></a>    <span class="at">fill =</span> <span class="fu">guide_legend</span>(<span class="at">nrow =</span> <span class="dv">3</span>, <span class="at">byrow =</span> T, <span class="at">reverse =</span> T, <span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">alpha =</span> <span class="fl">0.9</span>))</span>
 <span id="cb125-39"><a href="point-cloud-processing-results.html#cb125-39" tabindex="-1"></a>  )</span></code></pre></div>
-<p><img src="dod_cloud2trees_demo_files/figure-html/unnamed-chunk-139-1.png" width="1008" /></p>
+<p><img src="dod_cloud2trees_demo_files/figure-html/unnamed-chunk-140-1.png" width="1008" /></p>
 </div>
 <div id="point-cloud-processing-time-by-section-total" class="section level3 hasAnchor" number="7.1.3">
 <h3><span class="header-section-number">7.1.3</span> Point Cloud Processing Time by Section (total)<a href="point-cloud-processing-results.html#point-cloud-processing-time-by-section-total" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -1595,7 +1602,7 @@ NA
 <span id="cb126-48"><a href="point-cloud-processing-results.html#cb126-48" tabindex="-1"></a>   <span class="fu">guides</span>(</span>
 <span id="cb126-49"><a href="point-cloud-processing-results.html#cb126-49" tabindex="-1"></a>     <span class="at">fill =</span> <span class="fu">guide_legend</span>(<span class="at">nrow =</span> <span class="dv">3</span>, <span class="at">byrow =</span> T, <span class="at">reverse =</span> T, <span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">alpha =</span> <span class="fl">0.9</span>))</span>
 <span id="cb126-50"><a href="point-cloud-processing-results.html#cb126-50" tabindex="-1"></a>   )</span></code></pre></div>
-<p><img src="dod_cloud2trees_demo_files/figure-html/unnamed-chunk-140-1.png" width="1008" /></p>
+<p><img src="dod_cloud2trees_demo_files/figure-html/unnamed-chunk-141-1.png" width="1008" /></p>
 </div>
 </div>
 <div id="silvicultural-metrics" class="section level2 hasAnchor" number="7.2">
@@ -1697,7 +1704,7 @@ NA
 <span id="cb127-94"><a href="point-cloud-processing-results.html#cb127-94" tabindex="-1"></a><span class="co">#   , aoi = sf::st_read(&quot;c:/data/usfs/dod_cloud2trees_demo/data/SycanMarsh/Sycan_2A.shp&quot;)</span></span>
 <span id="cb127-95"><a href="point-cloud-processing-results.html#cb127-95" tabindex="-1"></a><span class="co"># ) %&gt;% </span></span>
 <span id="cb127-96"><a href="point-cloud-processing-results.html#cb127-96" tabindex="-1"></a><span class="co"># dplyr::glimpse()</span></span></code></pre></div>
-<p>let’s clip the tree list to the study bounds for each result for using with LANL TREES and Quic-Fire</p>
+<p>let’s clip the tree list to the study bounds for each result</p>
 
 </div>
 </div>
@@ -1706,8 +1713,8 @@ NA
           </div>
         </div>
       </div>
-<a href="cedar-bridge-nj.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="cedar-bridge-nj.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="cloud2trees-to-lanl-trees.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

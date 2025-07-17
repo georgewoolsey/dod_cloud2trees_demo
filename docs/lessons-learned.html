@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Page not found | DoD cloud2trees Demonstration: Forest Fuel Quantification for Wildfire Modeling using QUIC-Fire</title>
+  <title>Section 9 Lessons Learned | DoD cloud2trees Demonstration: Forest Fuel Quantification for Wildfire Modeling using QUIC-Fire</title>
   <meta name="description" content="Using the bookdown package to write a book of data exploration. The output format for this example is bookdown::gitbook." />
   <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Page not found | DoD cloud2trees Demonstration: Forest Fuel Quantification for Wildfire Modeling using QUIC-Fire" />
+  <meta property="og:title" content="Section 9 Lessons Learned | DoD cloud2trees Demonstration: Forest Fuel Quantification for Wildfire Modeling using QUIC-Fire" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="Using the bookdown package to write a book of data exploration. The output format for this example is bookdown::gitbook." />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Page not found | DoD cloud2trees Demonstration: Forest Fuel Quantification for Wildfire Modeling using QUIC-Fire" />
+  <meta name="twitter:title" content="Section 9 Lessons Learned | DoD cloud2trees Demonstration: Forest Fuel Quantification for Wildfire Modeling using QUIC-Fire" />
   
   <meta name="twitter:description" content="Using the bookdown package to write a book of data exploration. The output format for this example is bookdown::gitbook." />
   
@@ -29,7 +29,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-
+<link rel="prev" href="cloud2trees-to-lanl-trees.html"/>
 
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -283,18 +283,43 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="page-not-found" class="section level1">
-<h1>Page not found</h1>
-<p>The page you requested cannot be found (perhaps it was moved or renamed).</p>
-<p>You may want to try searching to find the page's new location, or use
-the table of contents to find the page you are looking for.</p>
+<div id="lessons-learned" class="section level1 hasAnchor" number="9">
+<h1><span class="header-section-number">Section 9</span> Lessons Learned<a href="lessons-learned.html#lessons-learned" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="data-processing-challengesgaps" class="section level2 hasAnchor" number="9.1">
+<h2><span class="header-section-number">9.1</span> Data Processing Challenges/Gaps<a href="lessons-learned.html#data-processing-challengesgaps" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ul>
+<li>LANDFIRE canopy biomass estimation errors, this could lead to underestimating tree level crown bulk density
+<ul>
+<li>LANDFIRE estimated bulk density values seem low for three of the sites</li>
+</ul></li>
+<li>FIA Forest Type mapping errors</li>
+<li>Intrinsic fuel properties currently user defined (e.g., fuel moisture, low heat of combustion, surface area to volume, etc.)</li>
+<li>Requires ocular interpretation to tune trees extraction process, future work could automate starting parameters by forest type</li>
+<li>Data formatting for fire modeling currently only done by TREES program</li>
+<li>Surface fuels are currently assigned as either constants or as spatially formatted using the TREES program</li>
+<li>Most metrics require broader validation across forest types than has been completed</li>
+<li>Future linkages are possible to model tree parameters from NAIP/Satellite derived canopy height models</li>
+</ul>
+</div>
+<div id="challenges-with-these-demos" class="section level2 hasAnchor" number="9.2">
+<h2><span class="header-section-number">9.2</span> Challenges with these Demos:<a href="lessons-learned.html#challenges-with-these-demos" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ul>
+<li>Data from USGS and Forest Service Data Archive were directly usable while other data sources lacked projection information and documented metadata
+<ul>
+<li>Only about half of the data was available in public access portals</li>
+<li>About a third of the data delivered with missing metadata that initially prevented processing</li>
+</ul></li>
+<li>Data interpretation/comparison is hindered by having 3-12 year gap between datasets at a site</li>
+</ul>
+
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-
+<a href="cloud2trees-to-lanl-trees.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 
     </div>
   </div>

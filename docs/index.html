@@ -181,6 +181,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#objective"><i class="fa fa-check"></i><b>1.1</b> Objective</a></li>
 <li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#data_desc"><i class="fa fa-check"></i><b>1.2</b> Data</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#processing-workflow"><i class="fa fa-check"></i><b>1.3</b> Processing Workflow</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="data-preparation.html"><a href="data-preparation.html"><i class="fa fa-check"></i><b>2</b> Data Preparation</a>
 <ul>
@@ -259,6 +260,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="7.2" data-path="point-cloud-processing-results.html"><a href="point-cloud-processing-results.html#silvicultural-metrics"><i class="fa fa-check"></i><b>7.2</b> Silvicultural Metrics</a></li>
 </ul></li>
+<li class="chapter" data-level="8" data-path="cloud2trees-to-lanl-trees.html"><a href="cloud2trees-to-lanl-trees.html"><i class="fa fa-check"></i><b>8</b> <code>cloud2trees</code> to LANL TREES</a></li>
+<li class="chapter" data-level="9" data-path="lessons-learned.html"><a href="lessons-learned.html"><i class="fa fa-check"></i><b>9</b> Lessons Learned</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="lessons-learned.html"><a href="lessons-learned.html#data-processing-challengesgaps"><i class="fa fa-check"></i><b>9.1</b> Data Processing Challenges/Gaps</a></li>
+<li class="chapter" data-level="9.2" data-path="lessons-learned.html"><a href="lessons-learned.html#challenges-with-these-demos"><i class="fa fa-check"></i><b>9.2</b> Challenges with these Demos:</a></li>
+</ul></li>
 </ul>
 
       </nav>
@@ -279,18 +286,22 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">DoD cloud2trees Demonstration: Forest Fuel Quantification for Wildfire Modeling using QUIC-Fire</h1>
 <p class="author"><em>George Woolsey, Wade Tinkham, Chad Hoffman, and Sophie Bonner</em></p>
-<p class="date"><em>15 July, 2025</em></p>
+<p class="date"><em>16 July, 2025</em></p>
 </div>
 <div id="introduction" class="section level1 hasAnchor" number="1">
 <h1><span class="header-section-number">Section 1</span> Introduction<a href="index.html#introduction" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>Demonstration of <a href="https://github.com/georgewoolsey/cloud2trees"><code>cloud2trees</code></a> for processing aerial point cloud data to generate inputs for <a href="https://scholar.google.com/scholar?cluster=5135309566348498660&amp;oi=gsb&amp;hl=en&amp;as_sdt=0,6">QUIC-Fire</a></p>
+<p>Demonstration of <code>cloud2trees</code> for processing aerial point cloud data to generate inputs for <a href="https://scholar.google.com/scholar?cluster=5135309566348498660&amp;oi=gsb&amp;hl=en&amp;as_sdt=0,6">QUIC-Fire</a></p>
 <div id="objective" class="section level2 hasAnchor" number="1.1">
 <h2><span class="header-section-number">1.1</span> Objective<a href="index.html#objective" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The objective of this study is to demonstrate the use of <code>cloud2trees</code> for processing aerial point cloud data to generate inputs for <a href="https://scholar.google.com/scholar?cluster=5135309566348498660&amp;oi=gsb&amp;hl=en&amp;as_sdt=0,6">QUIC-Fire</a>. We will use the framework to process ALS and UAS-SfM datasets across geographically variable demonstration sites. The <code>cloud2trees</code> framework generates a tree list containing individual tree-level attributes such as geographic coordinates (X, Y), height, DBH, crown dimensions, forest type, and wildfire-relevant fuel loading metrics like crown bulk density and crown base height. The outputs from <code>cloud2trees</code> will be prepared for ingestion into the QUIC-Fire model (perhaps this is built into the package by now???) to showcase the framework’s processing efficiency and reliability for timely wildfire behavior modeling.</p>
 </div>
 <div id="data_desc" class="section level2 hasAnchor" number="1.2">
 <h2><span class="header-section-number">1.2</span> Data<a href="index.html#data_desc" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>ALS data was mostly obtained at the <a href="https://www.usgs.gov/tools/lidarexplorer">USGS LidarExplorer</a> and UAS-SfM data was…..</p>
+<p>Data was obtained for four stands in Oregon, Colorado, New Jersey, and Georgia. Data was provided from USDA and SERDP funded projects to include different combinations of ALS, UAS-LiDAR, and UAS-SfM datasets. Datasets covered a total of 2,900 hectares of point cloud data.</p>
+</div>
+<div id="processing-workflow" class="section level2 hasAnchor" number="1.3">
+<h2><span class="header-section-number">1.3</span> Processing Workflow<a href="index.html#processing-workflow" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><img src="https://i.ibb.co/xtzW7v0R/cloud2trees-workflow-graphic.png" width="100%" height="100%" style="display: block; margin: auto;" /></p>
 
 </div>
 </div>

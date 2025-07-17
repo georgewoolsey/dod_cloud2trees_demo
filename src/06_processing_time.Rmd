@@ -407,8 +407,7 @@ clip_tree_list_aoi <- function(
 # ) %>% 
 # dplyr::glimpse()
 ```
-
-let's clip the tree list to the study bounds for each result for using with LANL TREES and Quic-Fire
+let's clip the tree list to the study bounds for each result
 
 ```{r, results=F, message=FALSE, warning=FALSE, include=FALSE, eval=FALSE}
 # dir

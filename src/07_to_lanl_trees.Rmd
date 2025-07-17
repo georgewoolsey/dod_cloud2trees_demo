@@ -1,0 +1,62 @@
+# `cloud2trees` to LANL TREES
+
+format `cloud2trees` data outputs for [LANL TREES](https://github.com/lanl/Trees/) program which does formatting for fire modeling
+
+this is accomplished via `cloud2trees::cloud2trees_to_lanl_trees()`
+
+```{r, warning=FALSE, message=FALSE, echo=FALSE, include=FALSE}
+remove(list = ls()[grep("_temp",ls())])
+gc()
+```
+
+```{r, results=F, message=FALSE, warning=FALSE, include=FALSE, eval=FALSE}
+# dir
+dir_temp <- file.path("c:/Users/georg/Downloads/", "cloud2trees_TREES_data")
+if(!dir.exists(dir_temp)){
+  dir.create(dir_temp)
+}
+# every data
+ans_temp <- 
+  1:nrow(study_sites_processing_sf) %>%
+  # c(6) %>% 
+  purrr::map(\(x)
+    fp <- file.path(dir_temp, study_sites_processing_sf$study_site[x])
+    if(!dir.exists(fp)){
+      dir.create(fp)
+    }
+    clip_tree_list_aoi(
+      trees = list.files(
+          study_sites_processing_sf$fdir[x]
+          , pattern = "final_detected_tree_tops.*\\.gpkg$"
+          , full.names = T
+        ) %>% 
+        normalizePath() %>% 
+        purrr::map(\(ff)
+          sf::st_read(
+            dsn = ff
+            , quiet = T
+          )
+        ) %>% 
+        dplyr::bind_rows()
+      , aoi = study_sites_processing_sf %>% dplyr::slice(x)
+      , bbox_aoi = T
+      , buffer = 50
+    ) %>% 
+    sf::st_write(
+      dsn = file.path(
+        fp
+        , paste0(
+          study_sites_processing_sf$study_site[x]
+          , "_"
+          , stringr::str_replace_all(study_sites_processing_sf$data_desc[x], " ", "_")
+          , "_treetops.gpkg"
+        )
+      )
+      , quiet = T
+      , append = F
+    )
+  )
+
+ # sf::st_read("../data/cloud2trees_processed_tree_lists/SycanMarsh_ALS_2021_treetops.gpkg") %>% 
+ #  ggplot() + geom_sf() + geom_sf(data = study_sites_processing_sf %>% dplyr::slice(6) %>% sf::st_transform(6339), fill = NA, color = "navy")
+```
