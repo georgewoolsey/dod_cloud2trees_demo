@@ -1,62 +1,346 @@
 # `cloud2trees` to LANL TREES
 
-format `cloud2trees` data outputs for [LANL TREES](https://github.com/lanl/Trees/) program which does formatting for fire modeling
+we format the `cloud2trees::cloud2trees()` outputs to meet the requirements of the [LANL TREES](https://github.com/lanl/Trees/) program, which prepares data for fire modeling. This data formatting process is accomplished via `cloud2trees::cloud2trees_to_lanl_trees()`. The current iteration of this function requires the user to specify surface fuel load parameters, such as litter and herbaceous/grass fuel loads, which are assumed constant across the study area. 
 
-this is accomplished via `cloud2trees::cloud2trees_to_lanl_trees()`
+## Surface Fuel Quantification
+
+let's pull in surface fuel loading parameters which were determined through a literature review ([Gallagher et al. 2017](https://www.fs.usda.gov/rds/archive/catalog/RDS-2017-0061); [Ottmar & Andreu 2007](https://iris.fws.gov/APPS/ServCat/DownloadFile/25710))
 
 ```{r, warning=FALSE, message=FALSE, echo=FALSE, include=FALSE}
 remove(list = ls()[grep("_temp",ls())])
 gc()
 ```
 
-```{r, results=F, message=FALSE, warning=FALSE, include=FALSE, eval=FALSE}
+```{r}
+surface_fuels <-
+  readxl::read_excel("../data/Surface_Fuels.xlsx") %>% 
+  dplyr::mutate(dplyr::across(
+    .cols = tidyselect::contains("%")
+    , ~ .x*.01
+  )) %>% 
+  dplyr::rename_with(
+    ~ stringr::str_replace_all(.x,"%","pct") %>% 
+      stringr::str_replace_all("[ .]", "_") %>% 
+      stringr::str_replace_all("[^[:alnum:]_]+", "") %>% 
+      tolower()
+  ) %>% 
+  dplyr::rename(study_site=site) %>% 
+  dplyr::mutate(
+    study_site = study_site %>% stringr::str_to_title() %>% stringr::str_remove_all("[ .]")
+    # these are somewhat based on the literature assuming Fall timing
+    , herbaceous_moisture_pct = dplyr::case_when(
+      is.na(herbaceous_moisture_pct) & study_site == "SycanMarsh" ~ 0.3
+      , is.na(herbaceous_moisture_pct) & study_site == "FortStewart" ~ 0.95
+      , is.na(herbaceous_moisture_pct) & study_site == "SaltCabin" ~ 0.3
+      , is.na(herbaceous_moisture_pct) & study_site == "NewJersey" ~ 0.6
+      , T ~ herbaceous_moisture_pct
+    )
+  ) %>% 
+  # put on our fancy labels
+  dplyr::inner_join(
+    study_sites_sf %>% sf::st_drop_geometry() %>% dplyr::select(study_site, study_site_lab)
+    , by = "study_site"
+  )
+# add it to our processing data table
+study_sites_processing_sf <- study_sites_processing_sf %>% 
+  dplyr::left_join(surface_fuels %>% dplyr::select(-study_site_lab),by="study_site")
+
+# table it
+surface_fuels %>% 
+  tidyr::pivot_longer(
+    cols = -tidyselect::starts_with("study_site")
+  ) %>% 
+  dplyr::mutate(
+    fuel_type = stringr::word(name,sep="_")
+    , name = stringr::str_remove(name, paste0(fuel_type,"_"))
+  ) %>%
+  tidyr::pivot_wider(names_from = name, values_from = value) %>% 
+  dplyr::mutate(
+    dplyr::across(
+      tidyselect::ends_with("_pct"), ~scales::percent(.x,accuracy=1)
+    )
+    # , dplyr::across(
+    #   dplyr::where(is.numeric), ~scales::comma(.x)
+    # )
+  ) %>% 
+  dplyr::select(-study_site) %>% 
+   kableExtra::kbl(
+    caption = "surface fuel loading parameters determined through a literature review"
+    , col.names = c(
+      "site","layer"
+      , "Bulk Density<br>(kg m<sup>-3</sup>)"
+      , "Height (m)"
+      , "Moisture"
+      , "Surface Area<br>to Volume (m)"
+    )
+    , escape = F
+  ) %>% 
+  kableExtra::kable_styling() %>% 
+  kableExtra::collapse_rows(columns = 1:2, valign = "top")  
+```
+
+## `cloud2trees::cloud2trees_to_lanl_trees()` example process
+
+let's use Sycan Marsh (OR) to show how easy it is to use `cloud2trees::cloud2trees_to_lanl_trees()`
+
+```{r, message=FALSE, results=F}
+# just one record with surface fuels for ease
+processing_info_temp <- study_sites_processing_sf %>% 
+  dplyr::filter(
+    study_site=="SycanMarsh"
+    & data_type=="ALS"
+  )
+# save a dir path
+my_dir_temp <- tempdir()
+# pass info to the fn
+cloud2trees_to_lanl_trees_ans_temp <- cloud2trees::cloud2trees_to_lanl_trees(
+  input_dir = processing_info_temp$fdir # point_cloud_processing_delivery 
+  , study_boundary = processing_info_temp # sf data
+  , bbox_aoi = T # use a bbox
+  , buffer = 20
+  , topofile = "flat"
+  , cbd_method = "landfire"
+  , output_dir = my_dir_temp
+  , fuel_litter = list(
+    ilitter = 1
+    , lrho = processing_info_temp$litter_bulk_density_kg_m3
+    , lmoisture = processing_info_temp$litter_moisture_pct
+    , lss = processing_info_temp$litter_surface_area_to_volume_m
+    , ldepth = processing_info_temp$litter_height_m
+  )
+  , fuel_grass = list(
+    igrass = 1
+    , grho = processing_info_temp$herbaceous_bulk_density_kg_m3
+    , gmoisture = processing_info_temp$herbaceous_moisture_pct
+    , gss = processing_info_temp$herbaceous_surface_area_to_volume_m
+    , gdepth = processing_info_temp$herbaceous_height_m
+  )
+)
+```
+
+let's see what we got
+
+```{r}
+cloud2trees_to_lanl_trees_ans_temp %>% names()
+```
+
+check out the tree list points that were cropped to our study boundary with a bounding box and a 20m buffer
+
+```{r}
+ggplot2::ggplot() +
+  ggplot2::geom_sf(
+    data = cloud2trees_to_lanl_trees_ans_temp$aoi
+    , fill = NA, color = "navy", lwd = 2
+  ) +
+  ggplot2::geom_sf(
+    data = cloud2trees_to_lanl_trees_ans_temp$tree_list
+    , mapping = ggplot2::aes(color = tree_height_m)
+  ) +
+  ggplot2::scale_color_distiller(palette = "Blues", direction = 1) +
+  ggplot2::labs(color = "Height (m)") +
+  ggplot2::theme_light() +
+  ggplot2::theme(legend.position = "top")
+```
+
+check out the DTM that was set to 2m resolution by default and cropped to our study boundary with a bounding box and a 20m buffer
+
+```{r}
+terra::plot(cloud2trees_to_lanl_trees_ans_temp$dtm, main = "DTM (m)")
+terra::plot(
+  cloud2trees_to_lanl_trees_ans_temp$aoi %>%
+    sf::st_transform(terra::crs(cloud2trees_to_lanl_trees_ans_temp$dtm)) %>%
+    terra::vect()
+  , add = T, border = "navy", col = NA
+  , lwd = 11
+)
+```
+
+and what are all of these file paths?
+
+```{r}
+# the path to the "Lidar_Bounds.geojson" file
+cloud2trees_to_lanl_trees_ans_temp$domain_path  
+# the path to the "topo.dat" file
+cloud2trees_to_lanl_trees_ans_temp$topofile_path  
+# the path to the TREES program "fuellist" file
+cloud2trees_to_lanl_trees_ans_temp$fuellist_path  
+# the path to the "Cloud2Trees_TreeList.txt" file
+cloud2trees_to_lanl_trees_ans_temp$treelist_path  
+```
+
+the `cloud2trees::cloud2trees_to_lanl_trees()` program made a delivery directory for the astute readers
+
+```{r}
+list.files(file.path(my_dir_temp,"lanl_trees_delivery"))
+```
+
+let's look at a few records of the fuellist
+
+```{r}
+readLines(cloud2trees_to_lanl_trees_ans_temp$fuellist_path)[1:11]
+```
+
+let's look at the structure of the "Cloud2Trees_TreeList.txt" file which does not include column names
+
+```{r}
+readr::read_delim(
+  cloud2trees_to_lanl_trees_ans_temp$treelist_path
+  , col_names = F
+  , progress = F, show_col_types = F
+) %>% 
+dplyr::glimpse()
+```
+
+```{r, warning=FALSE, message=FALSE, echo=FALSE, include=FALSE}
+remove(list = ls()[grep("_temp",ls())])
+gc()
+```
+
+## `cloud2trees::cloud2trees_to_lanl_trees()` everything
+
+as a reminder we processed all of these data
+
+```{r}
+study_sites_processing_sf %>% 
+  sf::st_drop_geometry() %>% 
+  dplyr::select(study_site_lab, data_desc, number_of_points, las_area_ha, fdir) %>% 
+  dplyr::mutate(dplyr::across(dplyr::where(is.numeric),~scales::comma(.x))) %>% 
+  dplyr::rename(cloud2trees_output_dir = fdir) %>% 
+  kableExtra::kbl() %>% 
+  kableExtra::kable_styling()
+```
+
+`cloud2trees::cloud2trees_to_lanl_trees()` all of the `cloud2trees::cloud2trees()` processed data
+
+```{r, results=F, message=FALSE, warning=FALSE}
 # dir
 dir_temp <- file.path("c:/Users/georg/Downloads/", "cloud2trees_TREES_data")
 if(!dir.exists(dir_temp)){
   dir.create(dir_temp)
 }
+# start at timer
+st_temp <- Sys.time()
 # every data
-ans_temp <- 
+ans_temp <-
   1:nrow(study_sites_processing_sf) %>%
-  # c(6) %>% 
-  purrr::map(\(x)
-    fp <- file.path(dir_temp, study_sites_processing_sf$study_site[x])
-    if(!dir.exists(fp)){
-      dir.create(fp)
-    }
-    clip_tree_list_aoi(
-      trees = list.files(
-          study_sites_processing_sf$fdir[x]
-          , pattern = "final_detected_tree_tops.*\\.gpkg$"
-          , full.names = T
-        ) %>% 
-        normalizePath() %>% 
-        purrr::map(\(ff)
-          sf::st_read(
-            dsn = ff
-            , quiet = T
-          )
-        ) %>% 
-        dplyr::bind_rows()
-      , aoi = study_sites_processing_sf %>% dplyr::slice(x)
-      , bbox_aoi = T
-      , buffer = 50
-    ) %>% 
-    sf::st_write(
-      dsn = file.path(
-        fp
-        , paste0(
-          study_sites_processing_sf$study_site[x]
-          , "_"
-          , stringr::str_replace_all(study_sites_processing_sf$data_desc[x], " ", "_")
-          , "_treetops.gpkg"
-        )
+  purrr::map(function(x){
+    # delivery folder
+    fp <- file.path(
+      dir_temp
+      , paste0(
+        study_sites_processing_sf$study_site[x]
+        , "_", stringr::str_replace_all(study_sites_processing_sf$data_desc[x],"[ .]", "_")
       )
-      , quiet = T
-      , append = F
     )
-  )
-
- # sf::st_read("../data/cloud2trees_processed_tree_lists/SycanMarsh_ALS_2021_treetops.gpkg") %>% 
- #  ggplot() + geom_sf() + geom_sf(data = study_sites_processing_sf %>% dplyr::slice(6) %>% sf::st_transform(6339), fill = NA, color = "navy")
+    if(!dir.exists(fp)){dir.create(fp)}
+    
+    # cloud2trees::cloud2trees_to_lanl_trees()
+    cloud2trees::cloud2trees_to_lanl_trees(
+      input_dir = study_sites_processing_sf$fdir[x] # point_cloud_processing_delivery 
+      , study_boundary = study_sites_processing_sf %>% dplyr::slice(x) # sf data
+      , bbox_aoi = T # use a bbox
+      , buffer = 30
+      , topofile = "flat"
+      , cbd_method = "landfire"
+      , output_dir = fp
+      , fuel_litter = list(
+        ilitter = 1
+        , lrho = study_sites_processing_sf$litter_bulk_density_kg_m3[x]
+        , lmoisture = study_sites_processing_sf$litter_moisture_pct[x]
+        , lss = study_sites_processing_sf$litter_surface_area_to_volume_m[x]
+        , ldepth = study_sites_processing_sf$litter_height_m[x]
+      )
+      , fuel_grass = list(
+        igrass = 1
+        , grho = study_sites_processing_sf$herbaceous_bulk_density_kg_m3[x]
+        , gmoisture = study_sites_processing_sf$herbaceous_moisture_pct[x]
+        , gss = study_sites_processing_sf$herbaceous_surface_area_to_volume_m[x]
+        , gdepth = study_sites_processing_sf$herbaceous_height_m[x]
+      )
+    )
+  })
+# end a timer
+end_temp <- Sys.time()
+secs_temp <- difftime(end_temp,st_temp,units="secs") %>% as.numeric()
+# set names
+names(ans_temp) <- paste0(
+  study_sites_processing_sf$study_site
+  , "_", stringr::str_replace_all(study_sites_processing_sf$data_desc,"[ .]", "_")
+)
 ```
+
+to process all of that data took `r scales::comma(secs_temp,accuracy=0.1)` seconds (`r scales::comma(secs_temp/60,accuracy=0.01)` minutes), not bad, not bad
+
+just to confirm we got the data we expected, let's look at one result using the Sycan Marsh UAS Lidar 2023 data 
+
+```{r}
+cloud2trees_to_lanl_trees_ans_temp <- ans_temp$SycanMarsh_UAS_LIDAR_2023
+cloud2trees_to_lanl_trees_ans_temp %>% names()
+```
+
+check out the tree list points that were cropped to our study boundary with a bounding box and a 20m buffer
+
+```{r}
+ggplot2::ggplot() +
+  ggplot2::geom_sf(
+    data = cloud2trees_to_lanl_trees_ans_temp$aoi
+    , fill = NA, color = "navy", lwd = 2
+  ) +
+  ggplot2::geom_sf(
+    data = cloud2trees_to_lanl_trees_ans_temp$tree_list
+    , mapping = ggplot2::aes(color = tree_height_m)
+  ) +
+  ggplot2::scale_color_distiller(palette = "Blues", direction = 1) +
+  ggplot2::labs(color = "Height (m)") +
+  ggplot2::theme_light() +
+  ggplot2::theme(legend.position = "top")
+```
+
+check out the DTM that was set to 2m resolution by default and cropped to our study boundary with a bounding box and a 20m buffer
+
+```{r}
+terra::plot(cloud2trees_to_lanl_trees_ans_temp$dtm, main = "DTM (m)")
+terra::plot(
+  cloud2trees_to_lanl_trees_ans_temp$aoi %>%
+    sf::st_transform(terra::crs(cloud2trees_to_lanl_trees_ans_temp$dtm)) %>%
+    terra::vect()
+  , add = T, border = "navy", col = NA
+  , lwd = 11
+)
+```
+
+and what are all of these file paths?
+
+```{r}
+# the path to the "Lidar_Bounds.geojson" file
+cloud2trees_to_lanl_trees_ans_temp$domain_path  
+# the path to the "topo.dat" file
+cloud2trees_to_lanl_trees_ans_temp$topofile_path  
+# the path to the TREES program "fuellist" file
+cloud2trees_to_lanl_trees_ans_temp$fuellist_path  
+# the path to the "Cloud2Trees_TreeList.txt" file
+cloud2trees_to_lanl_trees_ans_temp$treelist_path  
+```
+
+let's look at a few records of the fuellist
+
+```{r}
+readLines(cloud2trees_to_lanl_trees_ans_temp$fuellist_path)[1:11]
+```
+
+let's look at the structure of the "Cloud2Trees_TreeList.txt" file which does not include column names
+
+```{r}
+readr::read_delim(
+  cloud2trees_to_lanl_trees_ans_temp$treelist_path
+  , col_names = F
+  , progress = F, show_col_types = F
+) %>% 
+dplyr::glimpse()
+```
+
+```{r, warning=FALSE, message=FALSE, echo=FALSE, include=FALSE}
+remove(list = ls()[grep("_temp",ls())])
+gc()
+```
+

@@ -180,7 +180,7 @@ ptcld_df_temp <-
         tolower() %>% 
         unique() %>% 
         purrr::keep(
-          ~ !str_detect(.x, "point_cloud_processing")
+          ~ !stringr::str_detect(.x, "point_cloud_processing")
         )
     # gen df
     df <- dplyr::tibble(
@@ -189,9 +189,9 @@ ptcld_df_temp <-
         , uas_sfm_dir = character(1)
       ) %>% 
       dplyr::mutate(
-       als_dir = purrr::keep(dirs, ~ str_detect(.x, "als"))[1] %>% dplyr::coalesce(as.character(NA))
-        , uas_lidar_dir = purrr::keep(dirs, ~ str_detect(.x, "uas") & str_detect(.x, "lidar"))[1] %>% dplyr::coalesce(as.character(NA))
-        , uas_sfm_dir = purrr::keep(dirs, ~ str_detect(.x, "uas") & str_detect(.x, "sfm"))[1] %>% dplyr::coalesce(as.character(NA))
+       als_dir = purrr::keep(dirs, ~ stringr::str_detect(.x, "als"))[1] %>% dplyr::coalesce(as.character(NA))
+        , uas_lidar_dir = purrr::keep(dirs, ~ stringr::str_detect(.x, "uas") & stringr::str_detect(.x, "lidar"))[1] %>% dplyr::coalesce(as.character(NA))
+        , uas_sfm_dir = purrr::keep(dirs, ~ stringr::str_detect(.x, "uas") & stringr::str_detect(.x, "sfm"))[1] %>% dplyr::coalesce(as.character(NA))
         , fdir = study_sites_sf$fdir[x]
       )
     return(df)

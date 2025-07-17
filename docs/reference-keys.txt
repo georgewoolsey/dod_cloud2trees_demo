@@ -15,6 +15,7 @@ tab:unnamed-chunk-120
 tab:unnamed-chunk-128
 tab:unnamed-chunk-133
 tab:unnamed-chunk-138
+tab:unnamed-chunk-147
 introduction
 objective
 data_desc
@@ -115,6 +116,9 @@ point-cloud-processing-time-by-section
 point-cloud-processing-time-by-section-total
 silvicultural-metrics
 cloud2trees-to-lanl-trees
+surface-fuel-quantification
+cloud2treescloud2trees_to_lanl_trees-example-process
+cloud2treescloud2trees_to_lanl_trees-everything
 lessons-learned
 data-processing-challengesgaps
 challenges-with-these-demos

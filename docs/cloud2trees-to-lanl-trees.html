@@ -260,7 +260,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="7.2" data-path="point-cloud-processing-results.html"><a href="point-cloud-processing-results.html#silvicultural-metrics"><i class="fa fa-check"></i><b>7.2</b> Silvicultural Metrics</a></li>
 </ul></li>
-<li class="chapter" data-level="8" data-path="cloud2trees-to-lanl-trees.html"><a href="cloud2trees-to-lanl-trees.html"><i class="fa fa-check"></i><b>8</b> <code>cloud2trees</code> to LANL TREES</a></li>
+<li class="chapter" data-level="8" data-path="cloud2trees-to-lanl-trees.html"><a href="cloud2trees-to-lanl-trees.html"><i class="fa fa-check"></i><b>8</b> <code>cloud2trees</code> to LANL TREES</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="cloud2trees-to-lanl-trees.html"><a href="cloud2trees-to-lanl-trees.html#surface-fuel-quantification"><i class="fa fa-check"></i><b>8.1</b> Surface Fuel Quantification</a></li>
+<li class="chapter" data-level="8.2" data-path="cloud2trees-to-lanl-trees.html"><a href="cloud2trees-to-lanl-trees.html#cloud2treescloud2trees_to_lanl_trees-example-process"><i class="fa fa-check"></i><b>8.2</b> <code>cloud2trees::cloud2trees_to_lanl_trees()</code> example process</a></li>
+<li class="chapter" data-level="8.3" data-path="cloud2trees-to-lanl-trees.html"><a href="cloud2trees-to-lanl-trees.html#cloud2treescloud2trees_to_lanl_trees-everything"><i class="fa fa-check"></i><b>8.3</b> <code>cloud2trees::cloud2trees_to_lanl_trees()</code> everything</a></li>
+</ul></li>
 <li class="chapter" data-level="9" data-path="lessons-learned.html"><a href="lessons-learned.html"><i class="fa fa-check"></i><b>9</b> Lessons Learned</a>
 <ul>
 <li class="chapter" data-level="9.1" data-path="lessons-learned.html"><a href="lessons-learned.html#data-processing-challengesgaps"><i class="fa fa-check"></i><b>9.1</b> Data Processing Challenges/Gaps</a></li>
@@ -285,9 +290,670 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="cloud2trees-to-lanl-trees" class="section level1 hasAnchor" number="8">
 <h1><span class="header-section-number">Section 8</span> <code>cloud2trees</code> to LANL TREES<a href="cloud2trees-to-lanl-trees.html#cloud2trees-to-lanl-trees" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>format <code>cloud2trees</code> data outputs for <a href="https://github.com/lanl/Trees/">LANL TREES</a> program which does formatting for fire modeling</p>
-<p>this is accomplished via <code>cloud2trees::cloud2trees_to_lanl_trees()</code></p>
+<p>we format the <code>cloud2trees::cloud2trees()</code> outputs to meet the requirements of the <a href="https://github.com/lanl/Trees/">LANL TREES</a> program, which prepares data for fire modeling. This data formatting process is accomplished via <code>cloud2trees::cloud2trees_to_lanl_trees()</code>. The current iteration of this function requires the user to specify surface fuel load parameters, such as litter and herbaceous/grass fuel loads, which are assumed constant across the study area.</p>
+<div id="surface-fuel-quantification" class="section level2 hasAnchor" number="8.1">
+<h2><span class="header-section-number">8.1</span> Surface Fuel Quantification<a href="cloud2trees-to-lanl-trees.html#surface-fuel-quantification" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>let’s pull in surface fuel loading parameters which were determined through a literature review (<a href="https://www.fs.usda.gov/rds/archive/catalog/RDS-2017-0061">Gallagher et al. 2017</a>; <a href="https://iris.fws.gov/APPS/ServCat/DownloadFile/25710">Ottmar &amp; Andreu 2007</a>)</p>
+<div class="sourceCode" id="cb128"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb128-1"><a href="cloud2trees-to-lanl-trees.html#cb128-1" tabindex="-1"></a>surface_fuels <span class="ot">&lt;-</span></span>
+<span id="cb128-2"><a href="cloud2trees-to-lanl-trees.html#cb128-2" tabindex="-1"></a>  readxl<span class="sc">::</span><span class="fu">read_excel</span>(<span class="st">&quot;../data/Surface_Fuels.xlsx&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb128-3"><a href="cloud2trees-to-lanl-trees.html#cb128-3" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(dplyr<span class="sc">::</span><span class="fu">across</span>(</span>
+<span id="cb128-4"><a href="cloud2trees-to-lanl-trees.html#cb128-4" tabindex="-1"></a>    <span class="at">.cols =</span> tidyselect<span class="sc">::</span><span class="fu">contains</span>(<span class="st">&quot;%&quot;</span>)</span>
+<span id="cb128-5"><a href="cloud2trees-to-lanl-trees.html#cb128-5" tabindex="-1"></a>    , <span class="sc">~</span> .x<span class="sc">*</span>.<span class="dv">01</span></span>
+<span id="cb128-6"><a href="cloud2trees-to-lanl-trees.html#cb128-6" tabindex="-1"></a>  )) <span class="sc">%&gt;%</span> </span>
+<span id="cb128-7"><a href="cloud2trees-to-lanl-trees.html#cb128-7" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">rename_with</span>(</span>
+<span id="cb128-8"><a href="cloud2trees-to-lanl-trees.html#cb128-8" tabindex="-1"></a>    <span class="sc">~</span> stringr<span class="sc">::</span><span class="fu">str_replace_all</span>(.x,<span class="st">&quot;%&quot;</span>,<span class="st">&quot;pct&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb128-9"><a href="cloud2trees-to-lanl-trees.html#cb128-9" tabindex="-1"></a>      stringr<span class="sc">::</span><span class="fu">str_replace_all</span>(<span class="st">&quot;[ .]&quot;</span>, <span class="st">&quot;_&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb128-10"><a href="cloud2trees-to-lanl-trees.html#cb128-10" tabindex="-1"></a>      stringr<span class="sc">::</span><span class="fu">str_replace_all</span>(<span class="st">&quot;[^[:alnum:]_]+&quot;</span>, <span class="st">&quot;&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb128-11"><a href="cloud2trees-to-lanl-trees.html#cb128-11" tabindex="-1"></a>      <span class="fu">tolower</span>()</span>
+<span id="cb128-12"><a href="cloud2trees-to-lanl-trees.html#cb128-12" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb128-13"><a href="cloud2trees-to-lanl-trees.html#cb128-13" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">rename</span>(<span class="at">study_site=</span>site) <span class="sc">%&gt;%</span> </span>
+<span id="cb128-14"><a href="cloud2trees-to-lanl-trees.html#cb128-14" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
+<span id="cb128-15"><a href="cloud2trees-to-lanl-trees.html#cb128-15" tabindex="-1"></a>    <span class="at">study_site =</span> study_site <span class="sc">%&gt;%</span> stringr<span class="sc">::</span><span class="fu">str_to_title</span>() <span class="sc">%&gt;%</span> stringr<span class="sc">::</span><span class="fu">str_remove_all</span>(<span class="st">&quot;[ .]&quot;</span>)</span>
+<span id="cb128-16"><a href="cloud2trees-to-lanl-trees.html#cb128-16" tabindex="-1"></a>    <span class="co"># these are somewhat based on the literature assuming Fall timing</span></span>
+<span id="cb128-17"><a href="cloud2trees-to-lanl-trees.html#cb128-17" tabindex="-1"></a>    , <span class="at">herbaceous_moisture_pct =</span> dplyr<span class="sc">::</span><span class="fu">case_when</span>(</span>
+<span id="cb128-18"><a href="cloud2trees-to-lanl-trees.html#cb128-18" tabindex="-1"></a>      <span class="fu">is.na</span>(herbaceous_moisture_pct) <span class="sc">&amp;</span> study_site <span class="sc">==</span> <span class="st">&quot;SycanMarsh&quot;</span> <span class="sc">~</span> <span class="fl">0.3</span></span>
+<span id="cb128-19"><a href="cloud2trees-to-lanl-trees.html#cb128-19" tabindex="-1"></a>      , <span class="fu">is.na</span>(herbaceous_moisture_pct) <span class="sc">&amp;</span> study_site <span class="sc">==</span> <span class="st">&quot;FortStewart&quot;</span> <span class="sc">~</span> <span class="fl">0.95</span></span>
+<span id="cb128-20"><a href="cloud2trees-to-lanl-trees.html#cb128-20" tabindex="-1"></a>      , <span class="fu">is.na</span>(herbaceous_moisture_pct) <span class="sc">&amp;</span> study_site <span class="sc">==</span> <span class="st">&quot;SaltCabin&quot;</span> <span class="sc">~</span> <span class="fl">0.3</span></span>
+<span id="cb128-21"><a href="cloud2trees-to-lanl-trees.html#cb128-21" tabindex="-1"></a>      , <span class="fu">is.na</span>(herbaceous_moisture_pct) <span class="sc">&amp;</span> study_site <span class="sc">==</span> <span class="st">&quot;NewJersey&quot;</span> <span class="sc">~</span> <span class="fl">0.6</span></span>
+<span id="cb128-22"><a href="cloud2trees-to-lanl-trees.html#cb128-22" tabindex="-1"></a>      , T <span class="sc">~</span> herbaceous_moisture_pct</span>
+<span id="cb128-23"><a href="cloud2trees-to-lanl-trees.html#cb128-23" tabindex="-1"></a>    )</span>
+<span id="cb128-24"><a href="cloud2trees-to-lanl-trees.html#cb128-24" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb128-25"><a href="cloud2trees-to-lanl-trees.html#cb128-25" tabindex="-1"></a>  <span class="co"># put on our fancy labels</span></span>
+<span id="cb128-26"><a href="cloud2trees-to-lanl-trees.html#cb128-26" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">inner_join</span>(</span>
+<span id="cb128-27"><a href="cloud2trees-to-lanl-trees.html#cb128-27" tabindex="-1"></a>    study_sites_sf <span class="sc">%&gt;%</span> sf<span class="sc">::</span><span class="fu">st_drop_geometry</span>() <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(study_site, study_site_lab)</span>
+<span id="cb128-28"><a href="cloud2trees-to-lanl-trees.html#cb128-28" tabindex="-1"></a>    , <span class="at">by =</span> <span class="st">&quot;study_site&quot;</span></span>
+<span id="cb128-29"><a href="cloud2trees-to-lanl-trees.html#cb128-29" tabindex="-1"></a>  )</span>
+<span id="cb128-30"><a href="cloud2trees-to-lanl-trees.html#cb128-30" tabindex="-1"></a><span class="co"># add it to our processing data table</span></span>
+<span id="cb128-31"><a href="cloud2trees-to-lanl-trees.html#cb128-31" tabindex="-1"></a>study_sites_processing_sf <span class="ot">&lt;-</span> study_sites_processing_sf <span class="sc">%&gt;%</span> </span>
+<span id="cb128-32"><a href="cloud2trees-to-lanl-trees.html#cb128-32" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">left_join</span>(surface_fuels <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>study_site_lab),<span class="at">by=</span><span class="st">&quot;study_site&quot;</span>)</span>
+<span id="cb128-33"><a href="cloud2trees-to-lanl-trees.html#cb128-33" tabindex="-1"></a></span>
+<span id="cb128-34"><a href="cloud2trees-to-lanl-trees.html#cb128-34" tabindex="-1"></a><span class="co"># table it</span></span>
+<span id="cb128-35"><a href="cloud2trees-to-lanl-trees.html#cb128-35" tabindex="-1"></a>surface_fuels <span class="sc">%&gt;%</span> </span>
+<span id="cb128-36"><a href="cloud2trees-to-lanl-trees.html#cb128-36" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_longer</span>(</span>
+<span id="cb128-37"><a href="cloud2trees-to-lanl-trees.html#cb128-37" tabindex="-1"></a>    <span class="at">cols =</span> <span class="sc">-</span>tidyselect<span class="sc">::</span><span class="fu">starts_with</span>(<span class="st">&quot;study_site&quot;</span>)</span>
+<span id="cb128-38"><a href="cloud2trees-to-lanl-trees.html#cb128-38" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb128-39"><a href="cloud2trees-to-lanl-trees.html#cb128-39" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
+<span id="cb128-40"><a href="cloud2trees-to-lanl-trees.html#cb128-40" tabindex="-1"></a>    <span class="at">fuel_type =</span> stringr<span class="sc">::</span><span class="fu">word</span>(name,<span class="at">sep=</span><span class="st">&quot;_&quot;</span>)</span>
+<span id="cb128-41"><a href="cloud2trees-to-lanl-trees.html#cb128-41" tabindex="-1"></a>    , <span class="at">name =</span> stringr<span class="sc">::</span><span class="fu">str_remove</span>(name, <span class="fu">paste0</span>(fuel_type,<span class="st">&quot;_&quot;</span>))</span>
+<span id="cb128-42"><a href="cloud2trees-to-lanl-trees.html#cb128-42" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb128-43"><a href="cloud2trees-to-lanl-trees.html#cb128-43" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_wider</span>(<span class="at">names_from =</span> name, <span class="at">values_from =</span> value) <span class="sc">%&gt;%</span> </span>
+<span id="cb128-44"><a href="cloud2trees-to-lanl-trees.html#cb128-44" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
+<span id="cb128-45"><a href="cloud2trees-to-lanl-trees.html#cb128-45" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">across</span>(</span>
+<span id="cb128-46"><a href="cloud2trees-to-lanl-trees.html#cb128-46" tabindex="-1"></a>      tidyselect<span class="sc">::</span><span class="fu">ends_with</span>(<span class="st">&quot;_pct&quot;</span>), <span class="sc">~</span>scales<span class="sc">::</span><span class="fu">percent</span>(.x,<span class="at">accuracy=</span><span class="dv">1</span>)</span>
+<span id="cb128-47"><a href="cloud2trees-to-lanl-trees.html#cb128-47" tabindex="-1"></a>    )</span>
+<span id="cb128-48"><a href="cloud2trees-to-lanl-trees.html#cb128-48" tabindex="-1"></a>    <span class="co"># , dplyr::across(</span></span>
+<span id="cb128-49"><a href="cloud2trees-to-lanl-trees.html#cb128-49" tabindex="-1"></a>    <span class="co">#   dplyr::where(is.numeric), ~scales::comma(.x)</span></span>
+<span id="cb128-50"><a href="cloud2trees-to-lanl-trees.html#cb128-50" tabindex="-1"></a>    <span class="co"># )</span></span>
+<span id="cb128-51"><a href="cloud2trees-to-lanl-trees.html#cb128-51" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb128-52"><a href="cloud2trees-to-lanl-trees.html#cb128-52" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>study_site) <span class="sc">%&gt;%</span> </span>
+<span id="cb128-53"><a href="cloud2trees-to-lanl-trees.html#cb128-53" tabindex="-1"></a>   kableExtra<span class="sc">::</span><span class="fu">kbl</span>(</span>
+<span id="cb128-54"><a href="cloud2trees-to-lanl-trees.html#cb128-54" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">&quot;surface fuel loading parameters determined through a literature review&quot;</span></span>
+<span id="cb128-55"><a href="cloud2trees-to-lanl-trees.html#cb128-55" tabindex="-1"></a>    , <span class="at">col.names =</span> <span class="fu">c</span>(</span>
+<span id="cb128-56"><a href="cloud2trees-to-lanl-trees.html#cb128-56" tabindex="-1"></a>      <span class="st">&quot;site&quot;</span>,<span class="st">&quot;layer&quot;</span></span>
+<span id="cb128-57"><a href="cloud2trees-to-lanl-trees.html#cb128-57" tabindex="-1"></a>      , <span class="st">&quot;Bulk Density&lt;br&gt;(kg m&lt;sup&gt;-3&lt;/sup&gt;)&quot;</span></span>
+<span id="cb128-58"><a href="cloud2trees-to-lanl-trees.html#cb128-58" tabindex="-1"></a>      , <span class="st">&quot;Height (m)&quot;</span></span>
+<span id="cb128-59"><a href="cloud2trees-to-lanl-trees.html#cb128-59" tabindex="-1"></a>      , <span class="st">&quot;Moisture&quot;</span></span>
+<span id="cb128-60"><a href="cloud2trees-to-lanl-trees.html#cb128-60" tabindex="-1"></a>      , <span class="st">&quot;Surface Area&lt;br&gt;to Volume (m)&quot;</span></span>
+<span id="cb128-61"><a href="cloud2trees-to-lanl-trees.html#cb128-61" tabindex="-1"></a>    )</span>
+<span id="cb128-62"><a href="cloud2trees-to-lanl-trees.html#cb128-62" tabindex="-1"></a>    , <span class="at">escape =</span> F</span>
+<span id="cb128-63"><a href="cloud2trees-to-lanl-trees.html#cb128-63" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb128-64"><a href="cloud2trees-to-lanl-trees.html#cb128-64" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">kable_styling</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb128-65"><a href="cloud2trees-to-lanl-trees.html#cb128-65" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">collapse_rows</span>(<span class="at">columns =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">valign =</span> <span class="st">&quot;top&quot;</span>)  </span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-147">Table 8.1: </span>surface fuel loading parameters determined through a literature review
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+site
+</th>
+<th style="text-align:left;">
+layer
+</th>
+<th style="text-align:right;">
+Bulk Density<br>(kg m<sup>-3</sup>)
+</th>
+<th style="text-align:right;">
+Height (m)
+</th>
+<th style="text-align:left;">
+Moisture
+</th>
+<th style="text-align:right;">
+Surface Area<br>to Volume (m)
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;vertical-align: top !important;" rowspan="2">
+Sycan Marsh (OR)
+</td>
+<td style="text-align:left;">
+litter
+</td>
+<td style="text-align:right;">
+13.440000
+</td>
+<td style="text-align:right;">
+0.0320
+</td>
+<td style="text-align:left;">
+9%
+</td>
+<td style="text-align:right;">
+0.0004167
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+herbaceous
+</td>
+<td style="text-align:right;">
+0.006500
+</td>
+<td style="text-align:right;">
+0.1500
+</td>
+<td style="text-align:left;">
+30%
+</td>
+<td style="text-align:right;">
+0.0003333
+</td>
+</tr>
+<tr>
+<td style="text-align:left;vertical-align: top !important;" rowspan="2">
+Cedar Bridge (NJ)
+</td>
+<td style="text-align:left;">
+litter
+</td>
+<td style="text-align:right;">
+28.430000
+</td>
+<td style="text-align:right;">
+0.0570
+</td>
+<td style="text-align:left;">
+9%
+</td>
+<td style="text-align:right;">
+0.0004167
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+herbaceous
+</td>
+<td style="text-align:right;">
+0.007530
+</td>
+<td style="text-align:right;">
+0.1500
+</td>
+<td style="text-align:left;">
+58%
+</td>
+<td style="text-align:right;">
+0.0003333
+</td>
+</tr>
+<tr>
+<td style="text-align:left;vertical-align: top !important;" rowspan="2">
+Fort Stewart (GA)
+</td>
+<td style="text-align:left;">
+litter
+</td>
+<td style="text-align:right;">
+19.509000
+</td>
+<td style="text-align:right;">
+0.0343
+</td>
+<td style="text-align:left;">
+9%
+</td>
+<td style="text-align:right;">
+0.0004167
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+herbaceous
+</td>
+<td style="text-align:right;">
+0.100000
+</td>
+<td style="text-align:right;">
+25.0000
+</td>
+<td style="text-align:left;">
+95%
+</td>
+<td style="text-align:right;">
+0.0003333
+</td>
+</tr>
+<tr>
+<td style="text-align:left;vertical-align: top !important;" rowspan="2">
+Salt Cabin (CO)
+</td>
+<td style="text-align:left;">
+litter
+</td>
+<td style="text-align:right;">
+10.320000
+</td>
+<td style="text-align:right;">
+0.0180
+</td>
+<td style="text-align:left;">
+9%
+</td>
+<td style="text-align:right;">
+0.0004167
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+herbaceous
+</td>
+<td style="text-align:right;">
+0.001672
+</td>
+<td style="text-align:right;">
+10.0000
+</td>
+<td style="text-align:left;">
+30%
+</td>
+<td style="text-align:right;">
+0.0003333
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="cloud2treescloud2trees_to_lanl_trees-example-process" class="section level2 hasAnchor" number="8.2">
+<h2><span class="header-section-number">8.2</span> <code>cloud2trees::cloud2trees_to_lanl_trees()</code> example process<a href="cloud2trees-to-lanl-trees.html#cloud2treescloud2trees_to_lanl_trees-example-process" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>let’s use Sycan Marsh (OR) to show how easy it is to use <code>cloud2trees::cloud2trees_to_lanl_trees()</code></p>
+<div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb129-1"><a href="cloud2trees-to-lanl-trees.html#cb129-1" tabindex="-1"></a><span class="co"># just one record with surface fuels for ease</span></span>
+<span id="cb129-2"><a href="cloud2trees-to-lanl-trees.html#cb129-2" tabindex="-1"></a>processing_info_temp <span class="ot">&lt;-</span> study_sites_processing_sf <span class="sc">%&gt;%</span> </span>
+<span id="cb129-3"><a href="cloud2trees-to-lanl-trees.html#cb129-3" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(</span>
+<span id="cb129-4"><a href="cloud2trees-to-lanl-trees.html#cb129-4" tabindex="-1"></a>    study_site<span class="sc">==</span><span class="st">&quot;SycanMarsh&quot;</span></span>
+<span id="cb129-5"><a href="cloud2trees-to-lanl-trees.html#cb129-5" tabindex="-1"></a>    <span class="sc">&amp;</span> data_type<span class="sc">==</span><span class="st">&quot;ALS&quot;</span></span>
+<span id="cb129-6"><a href="cloud2trees-to-lanl-trees.html#cb129-6" tabindex="-1"></a>  )</span>
+<span id="cb129-7"><a href="cloud2trees-to-lanl-trees.html#cb129-7" tabindex="-1"></a><span class="co"># save a dir path</span></span>
+<span id="cb129-8"><a href="cloud2trees-to-lanl-trees.html#cb129-8" tabindex="-1"></a>my_dir_temp <span class="ot">&lt;-</span> <span class="fu">tempdir</span>()</span>
+<span id="cb129-9"><a href="cloud2trees-to-lanl-trees.html#cb129-9" tabindex="-1"></a><span class="co"># pass info to the fn</span></span>
+<span id="cb129-10"><a href="cloud2trees-to-lanl-trees.html#cb129-10" tabindex="-1"></a>cloud2trees_to_lanl_trees_ans_temp <span class="ot">&lt;-</span> cloud2trees<span class="sc">::</span><span class="fu">cloud2trees_to_lanl_trees</span>(</span>
+<span id="cb129-11"><a href="cloud2trees-to-lanl-trees.html#cb129-11" tabindex="-1"></a>  <span class="at">input_dir =</span> processing_info_temp<span class="sc">$</span>fdir <span class="co"># point_cloud_processing_delivery </span></span>
+<span id="cb129-12"><a href="cloud2trees-to-lanl-trees.html#cb129-12" tabindex="-1"></a>  , <span class="at">study_boundary =</span> processing_info_temp <span class="co"># sf data</span></span>
+<span id="cb129-13"><a href="cloud2trees-to-lanl-trees.html#cb129-13" tabindex="-1"></a>  , <span class="at">bbox_aoi =</span> T <span class="co"># use a bbox</span></span>
+<span id="cb129-14"><a href="cloud2trees-to-lanl-trees.html#cb129-14" tabindex="-1"></a>  , <span class="at">buffer =</span> <span class="dv">20</span></span>
+<span id="cb129-15"><a href="cloud2trees-to-lanl-trees.html#cb129-15" tabindex="-1"></a>  , <span class="at">topofile =</span> <span class="st">&quot;flat&quot;</span></span>
+<span id="cb129-16"><a href="cloud2trees-to-lanl-trees.html#cb129-16" tabindex="-1"></a>  , <span class="at">cbd_method =</span> <span class="st">&quot;landfire&quot;</span></span>
+<span id="cb129-17"><a href="cloud2trees-to-lanl-trees.html#cb129-17" tabindex="-1"></a>  , <span class="at">output_dir =</span> my_dir_temp</span>
+<span id="cb129-18"><a href="cloud2trees-to-lanl-trees.html#cb129-18" tabindex="-1"></a>  , <span class="at">fuel_litter =</span> <span class="fu">list</span>(</span>
+<span id="cb129-19"><a href="cloud2trees-to-lanl-trees.html#cb129-19" tabindex="-1"></a>    <span class="at">ilitter =</span> <span class="dv">1</span></span>
+<span id="cb129-20"><a href="cloud2trees-to-lanl-trees.html#cb129-20" tabindex="-1"></a>    , <span class="at">lrho =</span> processing_info_temp<span class="sc">$</span>litter_bulk_density_kg_m3</span>
+<span id="cb129-21"><a href="cloud2trees-to-lanl-trees.html#cb129-21" tabindex="-1"></a>    , <span class="at">lmoisture =</span> processing_info_temp<span class="sc">$</span>litter_moisture_pct</span>
+<span id="cb129-22"><a href="cloud2trees-to-lanl-trees.html#cb129-22" tabindex="-1"></a>    , <span class="at">lss =</span> processing_info_temp<span class="sc">$</span>litter_surface_area_to_volume_m</span>
+<span id="cb129-23"><a href="cloud2trees-to-lanl-trees.html#cb129-23" tabindex="-1"></a>    , <span class="at">ldepth =</span> processing_info_temp<span class="sc">$</span>litter_height_m</span>
+<span id="cb129-24"><a href="cloud2trees-to-lanl-trees.html#cb129-24" tabindex="-1"></a>  )</span>
+<span id="cb129-25"><a href="cloud2trees-to-lanl-trees.html#cb129-25" tabindex="-1"></a>  , <span class="at">fuel_grass =</span> <span class="fu">list</span>(</span>
+<span id="cb129-26"><a href="cloud2trees-to-lanl-trees.html#cb129-26" tabindex="-1"></a>    <span class="at">igrass =</span> <span class="dv">1</span></span>
+<span id="cb129-27"><a href="cloud2trees-to-lanl-trees.html#cb129-27" tabindex="-1"></a>    , <span class="at">grho =</span> processing_info_temp<span class="sc">$</span>herbaceous_bulk_density_kg_m3</span>
+<span id="cb129-28"><a href="cloud2trees-to-lanl-trees.html#cb129-28" tabindex="-1"></a>    , <span class="at">gmoisture =</span> processing_info_temp<span class="sc">$</span>herbaceous_moisture_pct</span>
+<span id="cb129-29"><a href="cloud2trees-to-lanl-trees.html#cb129-29" tabindex="-1"></a>    , <span class="at">gss =</span> processing_info_temp<span class="sc">$</span>herbaceous_surface_area_to_volume_m</span>
+<span id="cb129-30"><a href="cloud2trees-to-lanl-trees.html#cb129-30" tabindex="-1"></a>    , <span class="at">gdepth =</span> processing_info_temp<span class="sc">$</span>herbaceous_height_m</span>
+<span id="cb129-31"><a href="cloud2trees-to-lanl-trees.html#cb129-31" tabindex="-1"></a>  )</span>
+<span id="cb129-32"><a href="cloud2trees-to-lanl-trees.html#cb129-32" tabindex="-1"></a>)</span></code></pre></div>
+<p>let’s see what we got</p>
+<div class="sourceCode" id="cb130"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb130-1"><a href="cloud2trees-to-lanl-trees.html#cb130-1" tabindex="-1"></a>cloud2trees_to_lanl_trees_ans_temp <span class="sc">%&gt;%</span> <span class="fu">names</span>()</span></code></pre></div>
+<pre><code>## [1] &quot;tree_list&quot;     &quot;aoi&quot;           &quot;dtm&quot;           &quot;domain_path&quot;  
+## [5] &quot;topofile_path&quot; &quot;fuellist_path&quot; &quot;treelist_path&quot;</code></pre>
+<p>check out the tree list points that were cropped to our study boundary with a bounding box and a 20m buffer</p>
+<div class="sourceCode" id="cb132"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb132-1"><a href="cloud2trees-to-lanl-trees.html#cb132-1" tabindex="-1"></a>ggplot2<span class="sc">::</span><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb132-2"><a href="cloud2trees-to-lanl-trees.html#cb132-2" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">geom_sf</span>(</span>
+<span id="cb132-3"><a href="cloud2trees-to-lanl-trees.html#cb132-3" tabindex="-1"></a>    <span class="at">data =</span> cloud2trees_to_lanl_trees_ans_temp<span class="sc">$</span>aoi</span>
+<span id="cb132-4"><a href="cloud2trees-to-lanl-trees.html#cb132-4" tabindex="-1"></a>    , <span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">color =</span> <span class="st">&quot;navy&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span></span>
+<span id="cb132-5"><a href="cloud2trees-to-lanl-trees.html#cb132-5" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb132-6"><a href="cloud2trees-to-lanl-trees.html#cb132-6" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">geom_sf</span>(</span>
+<span id="cb132-7"><a href="cloud2trees-to-lanl-trees.html#cb132-7" tabindex="-1"></a>    <span class="at">data =</span> cloud2trees_to_lanl_trees_ans_temp<span class="sc">$</span>tree_list</span>
+<span id="cb132-8"><a href="cloud2trees-to-lanl-trees.html#cb132-8" tabindex="-1"></a>    , <span class="at">mapping =</span> ggplot2<span class="sc">::</span><span class="fu">aes</span>(<span class="at">color =</span> tree_height_m)</span>
+<span id="cb132-9"><a href="cloud2trees-to-lanl-trees.html#cb132-9" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb132-10"><a href="cloud2trees-to-lanl-trees.html#cb132-10" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">scale_color_distiller</span>(<span class="at">palette =</span> <span class="st">&quot;Blues&quot;</span>, <span class="at">direction =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb132-11"><a href="cloud2trees-to-lanl-trees.html#cb132-11" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">labs</span>(<span class="at">color =</span> <span class="st">&quot;Height (m)&quot;</span>) <span class="sc">+</span></span>
+<span id="cb132-12"><a href="cloud2trees-to-lanl-trees.html#cb132-12" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">theme_light</span>() <span class="sc">+</span></span>
+<span id="cb132-13"><a href="cloud2trees-to-lanl-trees.html#cb132-13" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;top&quot;</span>)</span></code></pre></div>
+<p><img src="dod_cloud2trees_demo_files/figure-html/unnamed-chunk-150-1.png" width="1008" /></p>
+<p>check out the DTM that was set to 2m resolution by default and cropped to our study boundary with a bounding box and a 20m buffer</p>
+<div class="sourceCode" id="cb133"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb133-1"><a href="cloud2trees-to-lanl-trees.html#cb133-1" tabindex="-1"></a>terra<span class="sc">::</span><span class="fu">plot</span>(cloud2trees_to_lanl_trees_ans_temp<span class="sc">$</span>dtm, <span class="at">main =</span> <span class="st">&quot;DTM (m)&quot;</span>)</span>
+<span id="cb133-2"><a href="cloud2trees-to-lanl-trees.html#cb133-2" tabindex="-1"></a>terra<span class="sc">::</span><span class="fu">plot</span>(</span>
+<span id="cb133-3"><a href="cloud2trees-to-lanl-trees.html#cb133-3" tabindex="-1"></a>  cloud2trees_to_lanl_trees_ans_temp<span class="sc">$</span>aoi <span class="sc">%&gt;%</span></span>
+<span id="cb133-4"><a href="cloud2trees-to-lanl-trees.html#cb133-4" tabindex="-1"></a>    sf<span class="sc">::</span><span class="fu">st_transform</span>(terra<span class="sc">::</span><span class="fu">crs</span>(cloud2trees_to_lanl_trees_ans_temp<span class="sc">$</span>dtm)) <span class="sc">%&gt;%</span></span>
+<span id="cb133-5"><a href="cloud2trees-to-lanl-trees.html#cb133-5" tabindex="-1"></a>    terra<span class="sc">::</span><span class="fu">vect</span>()</span>
+<span id="cb133-6"><a href="cloud2trees-to-lanl-trees.html#cb133-6" tabindex="-1"></a>  , <span class="at">add =</span> T, <span class="at">border =</span> <span class="st">&quot;navy&quot;</span>, <span class="at">col =</span> <span class="cn">NA</span></span>
+<span id="cb133-7"><a href="cloud2trees-to-lanl-trees.html#cb133-7" tabindex="-1"></a>  , <span class="at">lwd =</span> <span class="dv">11</span></span>
+<span id="cb133-8"><a href="cloud2trees-to-lanl-trees.html#cb133-8" tabindex="-1"></a>)</span></code></pre></div>
+<p><img src="dod_cloud2trees_demo_files/figure-html/unnamed-chunk-151-1.png" width="1008" /></p>
+<p>and what are all of these file paths?</p>
+<div class="sourceCode" id="cb134"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb134-1"><a href="cloud2trees-to-lanl-trees.html#cb134-1" tabindex="-1"></a><span class="co"># the path to the &quot;Lidar_Bounds.geojson&quot; file</span></span>
+<span id="cb134-2"><a href="cloud2trees-to-lanl-trees.html#cb134-2" tabindex="-1"></a>cloud2trees_to_lanl_trees_ans_temp<span class="sc">$</span>domain_path  </span></code></pre></div>
+<pre><code>## [1] &quot;C:\\Users\\georg\\AppData\\Local\\Temp\\RtmpYhstyi\\lanl_trees_delivery/Lidar_Bounds.geojson&quot;</code></pre>
+<div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb136-1"><a href="cloud2trees-to-lanl-trees.html#cb136-1" tabindex="-1"></a><span class="co"># the path to the &quot;topo.dat&quot; file</span></span>
+<span id="cb136-2"><a href="cloud2trees-to-lanl-trees.html#cb136-2" tabindex="-1"></a>cloud2trees_to_lanl_trees_ans_temp<span class="sc">$</span>topofile_path  </span></code></pre></div>
+<pre><code>## [1] &quot;C:\\Users\\georg\\AppData\\Local\\Temp\\RtmpYhstyi\\lanl_trees_delivery/topo.dat&quot;</code></pre>
+<div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb138-1"><a href="cloud2trees-to-lanl-trees.html#cb138-1" tabindex="-1"></a><span class="co"># the path to the TREES program &quot;fuellist&quot; file</span></span>
+<span id="cb138-2"><a href="cloud2trees-to-lanl-trees.html#cb138-2" tabindex="-1"></a>cloud2trees_to_lanl_trees_ans_temp<span class="sc">$</span>fuellist_path  </span></code></pre></div>
+<pre><code>## [1] &quot;C:\\Users\\georg\\AppData\\Local\\Temp\\RtmpYhstyi\\lanl_trees_delivery/fuellist&quot;</code></pre>
+<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb140-1"><a href="cloud2trees-to-lanl-trees.html#cb140-1" tabindex="-1"></a><span class="co"># the path to the &quot;Cloud2Trees_TreeList.txt&quot; file</span></span>
+<span id="cb140-2"><a href="cloud2trees-to-lanl-trees.html#cb140-2" tabindex="-1"></a>cloud2trees_to_lanl_trees_ans_temp<span class="sc">$</span>treelist_path  </span></code></pre></div>
+<pre><code>## [1] &quot;C:\\Users\\georg\\AppData\\Local\\Temp\\RtmpYhstyi\\lanl_trees_delivery\\Cloud2Trees_TreeList.txt&quot;</code></pre>
+<p>the <code>cloud2trees::cloud2trees_to_lanl_trees()</code> program made a delivery directory for the astute readers</p>
+<div class="sourceCode" id="cb142"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb142-1"><a href="cloud2trees-to-lanl-trees.html#cb142-1" tabindex="-1"></a><span class="fu">list.files</span>(<span class="fu">file.path</span>(my_dir_temp,<span class="st">&quot;lanl_trees_delivery&quot;</span>))</span></code></pre></div>
+<pre><code>## [1] &quot;Cloud2Trees_TreeList.txt&quot; &quot;dtm_Clipped.tif&quot;         
+## [3] &quot;fuellist&quot;                 &quot;Lidar_Bounds.geojson&quot;    
+## [5] &quot;topo.dat&quot;</code></pre>
+<p>let’s look at a few records of the fuellist</p>
+<div class="sourceCode" id="cb144"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb144-1"><a href="cloud2trees-to-lanl-trees.html#cb144-1" tabindex="-1"></a><span class="fu">readLines</span>(cloud2trees_to_lanl_trees_ans_temp<span class="sc">$</span>fuellist_path)[<span class="dv">1</span><span class="sc">:</span><span class="dv">11</span>]</span></code></pre></div>
+<pre><code>##  [1] &quot;! ----------------------------------&quot;                                                         
+##  [2] &quot;! FIRETEC domain info&quot;                                                                        
+##  [3] &quot;! ----------------------------------&quot;                                                         
+##  [4] &quot;      nx  = 380&quot;                                                                              
+##  [5] &quot;      ny  = 249&quot;                                                                              
+##  [6] &quot;      nz  = 35&quot;                                                                               
+##  [7] &quot;      dx  = 2&quot;                                                                                
+##  [8] &quot;      dy  = 2&quot;                                                                                
+##  [9] &quot;      dz  = 1.0                    ! Grid Resolution [m]&quot;                                     
+## [10] &quot;      aa1 = 0.1                     ! Vertical stretching component [default=0.1]&quot;            
+## [11] &quot;      singlefuel = 1                ! Flag forcing single fuel type instead of multiple fuels&quot;</code></pre>
+<p>let’s look at the structure of the “Cloud2Trees_TreeList.txt” file which does not include column names</p>
+<div class="sourceCode" id="cb146"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb146-1"><a href="cloud2trees-to-lanl-trees.html#cb146-1" tabindex="-1"></a>readr<span class="sc">::</span><span class="fu">read_delim</span>(</span>
+<span id="cb146-2"><a href="cloud2trees-to-lanl-trees.html#cb146-2" tabindex="-1"></a>  cloud2trees_to_lanl_trees_ans_temp<span class="sc">$</span>treelist_path</span>
+<span id="cb146-3"><a href="cloud2trees-to-lanl-trees.html#cb146-3" tabindex="-1"></a>  , <span class="at">col_names =</span> F</span>
+<span id="cb146-4"><a href="cloud2trees-to-lanl-trees.html#cb146-4" tabindex="-1"></a>  , <span class="at">progress =</span> F, <span class="at">show_col_types =</span> F</span>
+<span id="cb146-5"><a href="cloud2trees-to-lanl-trees.html#cb146-5" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb146-6"><a href="cloud2trees-to-lanl-trees.html#cb146-6" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">glimpse</span>()</span></code></pre></div>
+<pre><code>## Rows: 10,392
+## Columns: 10
+## $ X1  &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, …
+## $ X2  &lt;dbl&gt; 171.375, 468.125, 533.875, 540.875, 627.875, 657.125, 681.125, 692…
+## $ X3  &lt;dbl&gt; 497.875, 497.875, 497.875, 497.875, 497.875, 497.875, 497.875, 497…
+## $ X4  &lt;dbl&gt; 7.36, 20.65, 5.56, 9.21, 7.90, 9.11, 10.67, 9.29, 9.03, 17.87, 13.…
+## $ X5  &lt;dbl&gt; 3.3592, 2.5000, 2.9067, 3.5722, 3.0063, 3.9859, 2.5000, 3.5516, 2.…
+## $ X6  &lt;dbl&gt; 2.1110, 4.2967, 1.0171, 3.3497, 2.2917, 3.0251, 2.9721, 2.8350, 1.…
+## $ X7  &lt;dbl&gt; 4.9977, 6.1711, 3.6932, 5.0343, 4.1677, 4.6099, 5.4011, 4.2747, 4.…
+## $ X8  &lt;dbl&gt; 0.1241, 0.0774, 0.1464, 0.1464, 0.1581, 0.1334, 0.1416, 0.1416, 0.…
+## $ X9  &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, …
+## $ X10 &lt;dbl&gt; 5e-04, 5e-04, 5e-04, 5e-04, 5e-04, 5e-04, 5e-04, 5e-04, 5e-04, 5e-…</code></pre>
+</div>
+<div id="cloud2treescloud2trees_to_lanl_trees-everything" class="section level2 hasAnchor" number="8.3">
+<h2><span class="header-section-number">8.3</span> <code>cloud2trees::cloud2trees_to_lanl_trees()</code> everything<a href="cloud2trees-to-lanl-trees.html#cloud2treescloud2trees_to_lanl_trees-everything" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>as a reminder we processed all of these data</p>
+<div class="sourceCode" id="cb148"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb148-1"><a href="cloud2trees-to-lanl-trees.html#cb148-1" tabindex="-1"></a>study_sites_processing_sf <span class="sc">%&gt;%</span> </span>
+<span id="cb148-2"><a href="cloud2trees-to-lanl-trees.html#cb148-2" tabindex="-1"></a>  sf<span class="sc">::</span><span class="fu">st_drop_geometry</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb148-3"><a href="cloud2trees-to-lanl-trees.html#cb148-3" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(study_site_lab, data_desc, number_of_points, las_area_ha, fdir) <span class="sc">%&gt;%</span> </span>
+<span id="cb148-4"><a href="cloud2trees-to-lanl-trees.html#cb148-4" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(dplyr<span class="sc">::</span><span class="fu">across</span>(dplyr<span class="sc">::</span><span class="fu">where</span>(is.numeric),<span class="sc">~</span>scales<span class="sc">::</span><span class="fu">comma</span>(.x))) <span class="sc">%&gt;%</span> </span>
+<span id="cb148-5"><a href="cloud2trees-to-lanl-trees.html#cb148-5" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">rename</span>(<span class="at">cloud2trees_output_dir =</span> fdir) <span class="sc">%&gt;%</span> </span>
+<span id="cb148-6"><a href="cloud2trees-to-lanl-trees.html#cb148-6" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">kbl</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb148-7"><a href="cloud2trees-to-lanl-trees.html#cb148-7" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">kable_styling</span>()</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+study_site_lab
+</th>
+<th style="text-align:left;">
+data_desc
+</th>
+<th style="text-align:left;">
+number_of_points
+</th>
+<th style="text-align:left;">
+las_area_ha
+</th>
+<th style="text-align:left;">
+cloud2trees_output_dir
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Fort Stewart (GA)
+</td>
+<td style="text-align:left;">
+ALS 2018
+</td>
+<td style="text-align:left;">
+43,073,560
+</td>
+<td style="text-align:left;">
+900.0
+</td>
+<td style="text-align:left;">
+../data/FortStewart/als_2018_processing/point_cloud_processing_delivery
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Fort Stewart (GA)
+</td>
+<td style="text-align:left;">
+ALS 2025
+</td>
+<td style="text-align:left;">
+340,216,525
+</td>
+<td style="text-align:left;">
+686.0
+</td>
+<td style="text-align:left;">
+../data/FortStewart/als_2025_processing/point_cloud_processing_delivery
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Cedar Bridge (NJ)
+</td>
+<td style="text-align:left;">
+ALS 2012
+</td>
+<td style="text-align:left;">
+80,299,066
+</td>
+<td style="text-align:left;">
+206.4
+</td>
+<td style="text-align:left;">
+../data/NewJersey/als_2012_processing/point_cloud_processing_delivery
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Cedar Bridge (NJ)
+</td>
+<td style="text-align:left;">
+UAS LIDAR 2024
+</td>
+<td style="text-align:left;">
+758,267,426
+</td>
+<td style="text-align:left;">
+292.0
+</td>
+<td style="text-align:left;">
+../data/NewJersey/uas_lidar_2024_processing/point_cloud_processing_delivery
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Salt Cabin (CO)
+</td>
+<td style="text-align:left;">
+ALS 2021
+</td>
+<td style="text-align:left;">
+35,217,823
+</td>
+<td style="text-align:left;">
+533.7
+</td>
+<td style="text-align:left;">
+../data/SaltCabin/als_2021_processing/point_cloud_processing_delivery
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Salt Cabin (CO)
+</td>
+<td style="text-align:left;">
+UAS SFM 2024
+</td>
+<td style="text-align:left;">
+94,513,577
+</td>
+<td style="text-align:left;">
+27.9
+</td>
+<td style="text-align:left;">
+../data/SaltCabin/uas_sfm_2024_processing/point_cloud_processing_delivery
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sycan Marsh (OR)
+</td>
+<td style="text-align:left;">
+ALS 2021
+</td>
+<td style="text-align:left;">
+68,015,885
+</td>
+<td style="text-align:left;">
+200.0
+</td>
+<td style="text-align:left;">
+../data/SycanMarsh/als_2021_processing/point_cloud_processing_delivery
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sycan Marsh (OR)
+</td>
+<td style="text-align:left;">
+UAS LIDAR 2023
+</td>
+<td style="text-align:left;">
+200,545,096
+</td>
+<td style="text-align:left;">
+53.0
+</td>
+<td style="text-align:left;">
+../data/SycanMarsh/uas_lidar_2023_processing/point_cloud_processing_delivery
+</td>
+</tr>
+</tbody>
+</table>
+<p><code>cloud2trees::cloud2trees_to_lanl_trees()</code> all of the <code>cloud2trees::cloud2trees()</code> processed data</p>
+<div class="sourceCode" id="cb149"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb149-1"><a href="cloud2trees-to-lanl-trees.html#cb149-1" tabindex="-1"></a><span class="co"># dir</span></span>
+<span id="cb149-2"><a href="cloud2trees-to-lanl-trees.html#cb149-2" tabindex="-1"></a>dir_temp <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">&quot;c:/Users/georg/Downloads/&quot;</span>, <span class="st">&quot;cloud2trees_TREES_data&quot;</span>)</span>
+<span id="cb149-3"><a href="cloud2trees-to-lanl-trees.html#cb149-3" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">dir.exists</span>(dir_temp)){</span>
+<span id="cb149-4"><a href="cloud2trees-to-lanl-trees.html#cb149-4" tabindex="-1"></a>  <span class="fu">dir.create</span>(dir_temp)</span>
+<span id="cb149-5"><a href="cloud2trees-to-lanl-trees.html#cb149-5" tabindex="-1"></a>}</span>
+<span id="cb149-6"><a href="cloud2trees-to-lanl-trees.html#cb149-6" tabindex="-1"></a><span class="co"># start at timer</span></span>
+<span id="cb149-7"><a href="cloud2trees-to-lanl-trees.html#cb149-7" tabindex="-1"></a>st_temp <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
+<span id="cb149-8"><a href="cloud2trees-to-lanl-trees.html#cb149-8" tabindex="-1"></a><span class="co"># every data</span></span>
+<span id="cb149-9"><a href="cloud2trees-to-lanl-trees.html#cb149-9" tabindex="-1"></a>ans_temp <span class="ot">&lt;-</span></span>
+<span id="cb149-10"><a href="cloud2trees-to-lanl-trees.html#cb149-10" tabindex="-1"></a>  <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(study_sites_processing_sf) <span class="sc">%&gt;%</span></span>
+<span id="cb149-11"><a href="cloud2trees-to-lanl-trees.html#cb149-11" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">map</span>(<span class="cf">function</span>(x){</span>
+<span id="cb149-12"><a href="cloud2trees-to-lanl-trees.html#cb149-12" tabindex="-1"></a>    <span class="co"># delivery folder</span></span>
+<span id="cb149-13"><a href="cloud2trees-to-lanl-trees.html#cb149-13" tabindex="-1"></a>    fp <span class="ot">&lt;-</span> <span class="fu">file.path</span>(</span>
+<span id="cb149-14"><a href="cloud2trees-to-lanl-trees.html#cb149-14" tabindex="-1"></a>      dir_temp</span>
+<span id="cb149-15"><a href="cloud2trees-to-lanl-trees.html#cb149-15" tabindex="-1"></a>      , <span class="fu">paste0</span>(</span>
+<span id="cb149-16"><a href="cloud2trees-to-lanl-trees.html#cb149-16" tabindex="-1"></a>        study_sites_processing_sf<span class="sc">$</span>study_site[x]</span>
+<span id="cb149-17"><a href="cloud2trees-to-lanl-trees.html#cb149-17" tabindex="-1"></a>        , <span class="st">&quot;_&quot;</span>, stringr<span class="sc">::</span><span class="fu">str_replace_all</span>(study_sites_processing_sf<span class="sc">$</span>data_desc[x],<span class="st">&quot;[ .]&quot;</span>, <span class="st">&quot;_&quot;</span>)</span>
+<span id="cb149-18"><a href="cloud2trees-to-lanl-trees.html#cb149-18" tabindex="-1"></a>      )</span>
+<span id="cb149-19"><a href="cloud2trees-to-lanl-trees.html#cb149-19" tabindex="-1"></a>    )</span>
+<span id="cb149-20"><a href="cloud2trees-to-lanl-trees.html#cb149-20" tabindex="-1"></a>    <span class="cf">if</span>(<span class="sc">!</span><span class="fu">dir.exists</span>(fp)){<span class="fu">dir.create</span>(fp)}</span>
+<span id="cb149-21"><a href="cloud2trees-to-lanl-trees.html#cb149-21" tabindex="-1"></a>    </span>
+<span id="cb149-22"><a href="cloud2trees-to-lanl-trees.html#cb149-22" tabindex="-1"></a>    <span class="co"># cloud2trees::cloud2trees_to_lanl_trees()</span></span>
+<span id="cb149-23"><a href="cloud2trees-to-lanl-trees.html#cb149-23" tabindex="-1"></a>    cloud2trees<span class="sc">::</span><span class="fu">cloud2trees_to_lanl_trees</span>(</span>
+<span id="cb149-24"><a href="cloud2trees-to-lanl-trees.html#cb149-24" tabindex="-1"></a>      <span class="at">input_dir =</span> study_sites_processing_sf<span class="sc">$</span>fdir[x] <span class="co"># point_cloud_processing_delivery </span></span>
+<span id="cb149-25"><a href="cloud2trees-to-lanl-trees.html#cb149-25" tabindex="-1"></a>      , <span class="at">study_boundary =</span> study_sites_processing_sf <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">slice</span>(x) <span class="co"># sf data</span></span>
+<span id="cb149-26"><a href="cloud2trees-to-lanl-trees.html#cb149-26" tabindex="-1"></a>      , <span class="at">bbox_aoi =</span> T <span class="co"># use a bbox</span></span>
+<span id="cb149-27"><a href="cloud2trees-to-lanl-trees.html#cb149-27" tabindex="-1"></a>      , <span class="at">buffer =</span> <span class="dv">30</span></span>
+<span id="cb149-28"><a href="cloud2trees-to-lanl-trees.html#cb149-28" tabindex="-1"></a>      , <span class="at">topofile =</span> <span class="st">&quot;flat&quot;</span></span>
+<span id="cb149-29"><a href="cloud2trees-to-lanl-trees.html#cb149-29" tabindex="-1"></a>      , <span class="at">cbd_method =</span> <span class="st">&quot;landfire&quot;</span></span>
+<span id="cb149-30"><a href="cloud2trees-to-lanl-trees.html#cb149-30" tabindex="-1"></a>      , <span class="at">output_dir =</span> fp</span>
+<span id="cb149-31"><a href="cloud2trees-to-lanl-trees.html#cb149-31" tabindex="-1"></a>      , <span class="at">fuel_litter =</span> <span class="fu">list</span>(</span>
+<span id="cb149-32"><a href="cloud2trees-to-lanl-trees.html#cb149-32" tabindex="-1"></a>        <span class="at">ilitter =</span> <span class="dv">1</span></span>
+<span id="cb149-33"><a href="cloud2trees-to-lanl-trees.html#cb149-33" tabindex="-1"></a>        , <span class="at">lrho =</span> study_sites_processing_sf<span class="sc">$</span>litter_bulk_density_kg_m3[x]</span>
+<span id="cb149-34"><a href="cloud2trees-to-lanl-trees.html#cb149-34" tabindex="-1"></a>        , <span class="at">lmoisture =</span> study_sites_processing_sf<span class="sc">$</span>litter_moisture_pct[x]</span>
+<span id="cb149-35"><a href="cloud2trees-to-lanl-trees.html#cb149-35" tabindex="-1"></a>        , <span class="at">lss =</span> study_sites_processing_sf<span class="sc">$</span>litter_surface_area_to_volume_m[x]</span>
+<span id="cb149-36"><a href="cloud2trees-to-lanl-trees.html#cb149-36" tabindex="-1"></a>        , <span class="at">ldepth =</span> study_sites_processing_sf<span class="sc">$</span>litter_height_m[x]</span>
+<span id="cb149-37"><a href="cloud2trees-to-lanl-trees.html#cb149-37" tabindex="-1"></a>      )</span>
+<span id="cb149-38"><a href="cloud2trees-to-lanl-trees.html#cb149-38" tabindex="-1"></a>      , <span class="at">fuel_grass =</span> <span class="fu">list</span>(</span>
+<span id="cb149-39"><a href="cloud2trees-to-lanl-trees.html#cb149-39" tabindex="-1"></a>        <span class="at">igrass =</span> <span class="dv">1</span></span>
+<span id="cb149-40"><a href="cloud2trees-to-lanl-trees.html#cb149-40" tabindex="-1"></a>        , <span class="at">grho =</span> study_sites_processing_sf<span class="sc">$</span>herbaceous_bulk_density_kg_m3[x]</span>
+<span id="cb149-41"><a href="cloud2trees-to-lanl-trees.html#cb149-41" tabindex="-1"></a>        , <span class="at">gmoisture =</span> study_sites_processing_sf<span class="sc">$</span>herbaceous_moisture_pct[x]</span>
+<span id="cb149-42"><a href="cloud2trees-to-lanl-trees.html#cb149-42" tabindex="-1"></a>        , <span class="at">gss =</span> study_sites_processing_sf<span class="sc">$</span>herbaceous_surface_area_to_volume_m[x]</span>
+<span id="cb149-43"><a href="cloud2trees-to-lanl-trees.html#cb149-43" tabindex="-1"></a>        , <span class="at">gdepth =</span> study_sites_processing_sf<span class="sc">$</span>herbaceous_height_m[x]</span>
+<span id="cb149-44"><a href="cloud2trees-to-lanl-trees.html#cb149-44" tabindex="-1"></a>      )</span>
+<span id="cb149-45"><a href="cloud2trees-to-lanl-trees.html#cb149-45" tabindex="-1"></a>    )</span>
+<span id="cb149-46"><a href="cloud2trees-to-lanl-trees.html#cb149-46" tabindex="-1"></a>  })</span>
+<span id="cb149-47"><a href="cloud2trees-to-lanl-trees.html#cb149-47" tabindex="-1"></a><span class="co"># end a timer</span></span>
+<span id="cb149-48"><a href="cloud2trees-to-lanl-trees.html#cb149-48" tabindex="-1"></a>end_temp <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
+<span id="cb149-49"><a href="cloud2trees-to-lanl-trees.html#cb149-49" tabindex="-1"></a>secs_temp <span class="ot">&lt;-</span> <span class="fu">difftime</span>(end_temp,st_temp,<span class="at">units=</span><span class="st">&quot;secs&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">as.numeric</span>()</span>
+<span id="cb149-50"><a href="cloud2trees-to-lanl-trees.html#cb149-50" tabindex="-1"></a><span class="co"># set names</span></span>
+<span id="cb149-51"><a href="cloud2trees-to-lanl-trees.html#cb149-51" tabindex="-1"></a><span class="fu">names</span>(ans_temp) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(</span>
+<span id="cb149-52"><a href="cloud2trees-to-lanl-trees.html#cb149-52" tabindex="-1"></a>  study_sites_processing_sf<span class="sc">$</span>study_site</span>
+<span id="cb149-53"><a href="cloud2trees-to-lanl-trees.html#cb149-53" tabindex="-1"></a>  , <span class="st">&quot;_&quot;</span>, stringr<span class="sc">::</span><span class="fu">str_replace_all</span>(study_sites_processing_sf<span class="sc">$</span>data_desc,<span class="st">&quot;[ .]&quot;</span>, <span class="st">&quot;_&quot;</span>)</span>
+<span id="cb149-54"><a href="cloud2trees-to-lanl-trees.html#cb149-54" tabindex="-1"></a>)</span></code></pre></div>
+<p>to process all of that data took 46.4 seconds (0.77 minutes), not bad, not bad</p>
+<p>just to confirm we got the data we expected, let’s look at one result using the Sycan Marsh UAS Lidar 2023 data</p>
+<div class="sourceCode" id="cb150"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb150-1"><a href="cloud2trees-to-lanl-trees.html#cb150-1" tabindex="-1"></a>cloud2trees_to_lanl_trees_ans_temp <span class="ot">&lt;-</span> ans_temp<span class="sc">$</span>SycanMarsh_UAS_LIDAR_2023</span>
+<span id="cb150-2"><a href="cloud2trees-to-lanl-trees.html#cb150-2" tabindex="-1"></a>cloud2trees_to_lanl_trees_ans_temp <span class="sc">%&gt;%</span> <span class="fu">names</span>()</span></code></pre></div>
+<pre><code>## [1] &quot;tree_list&quot;     &quot;aoi&quot;           &quot;dtm&quot;           &quot;domain_path&quot;  
+## [5] &quot;topofile_path&quot; &quot;fuellist_path&quot; &quot;treelist_path&quot;</code></pre>
+<p>check out the tree list points that were cropped to our study boundary with a bounding box and a 20m buffer</p>
+<div class="sourceCode" id="cb152"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb152-1"><a href="cloud2trees-to-lanl-trees.html#cb152-1" tabindex="-1"></a>ggplot2<span class="sc">::</span><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb152-2"><a href="cloud2trees-to-lanl-trees.html#cb152-2" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">geom_sf</span>(</span>
+<span id="cb152-3"><a href="cloud2trees-to-lanl-trees.html#cb152-3" tabindex="-1"></a>    <span class="at">data =</span> cloud2trees_to_lanl_trees_ans_temp<span class="sc">$</span>aoi</span>
+<span id="cb152-4"><a href="cloud2trees-to-lanl-trees.html#cb152-4" tabindex="-1"></a>    , <span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">color =</span> <span class="st">&quot;navy&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span></span>
+<span id="cb152-5"><a href="cloud2trees-to-lanl-trees.html#cb152-5" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb152-6"><a href="cloud2trees-to-lanl-trees.html#cb152-6" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">geom_sf</span>(</span>
+<span id="cb152-7"><a href="cloud2trees-to-lanl-trees.html#cb152-7" tabindex="-1"></a>    <span class="at">data =</span> cloud2trees_to_lanl_trees_ans_temp<span class="sc">$</span>tree_list</span>
+<span id="cb152-8"><a href="cloud2trees-to-lanl-trees.html#cb152-8" tabindex="-1"></a>    , <span class="at">mapping =</span> ggplot2<span class="sc">::</span><span class="fu">aes</span>(<span class="at">color =</span> tree_height_m)</span>
+<span id="cb152-9"><a href="cloud2trees-to-lanl-trees.html#cb152-9" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb152-10"><a href="cloud2trees-to-lanl-trees.html#cb152-10" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">scale_color_distiller</span>(<span class="at">palette =</span> <span class="st">&quot;Blues&quot;</span>, <span class="at">direction =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb152-11"><a href="cloud2trees-to-lanl-trees.html#cb152-11" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">labs</span>(<span class="at">color =</span> <span class="st">&quot;Height (m)&quot;</span>) <span class="sc">+</span></span>
+<span id="cb152-12"><a href="cloud2trees-to-lanl-trees.html#cb152-12" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">theme_light</span>() <span class="sc">+</span></span>
+<span id="cb152-13"><a href="cloud2trees-to-lanl-trees.html#cb152-13" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;top&quot;</span>)</span></code></pre></div>
+<p><img src="dod_cloud2trees_demo_files/figure-html/unnamed-chunk-160-1.png" width="1008" /></p>
+<p>check out the DTM that was set to 2m resolution by default and cropped to our study boundary with a bounding box and a 20m buffer</p>
+<div class="sourceCode" id="cb153"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb153-1"><a href="cloud2trees-to-lanl-trees.html#cb153-1" tabindex="-1"></a>terra<span class="sc">::</span><span class="fu">plot</span>(cloud2trees_to_lanl_trees_ans_temp<span class="sc">$</span>dtm, <span class="at">main =</span> <span class="st">&quot;DTM (m)&quot;</span>)</span>
+<span id="cb153-2"><a href="cloud2trees-to-lanl-trees.html#cb153-2" tabindex="-1"></a>terra<span class="sc">::</span><span class="fu">plot</span>(</span>
+<span id="cb153-3"><a href="cloud2trees-to-lanl-trees.html#cb153-3" tabindex="-1"></a>  cloud2trees_to_lanl_trees_ans_temp<span class="sc">$</span>aoi <span class="sc">%&gt;%</span></span>
+<span id="cb153-4"><a href="cloud2trees-to-lanl-trees.html#cb153-4" tabindex="-1"></a>    sf<span class="sc">::</span><span class="fu">st_transform</span>(terra<span class="sc">::</span><span class="fu">crs</span>(cloud2trees_to_lanl_trees_ans_temp<span class="sc">$</span>dtm)) <span class="sc">%&gt;%</span></span>
+<span id="cb153-5"><a href="cloud2trees-to-lanl-trees.html#cb153-5" tabindex="-1"></a>    terra<span class="sc">::</span><span class="fu">vect</span>()</span>
+<span id="cb153-6"><a href="cloud2trees-to-lanl-trees.html#cb153-6" tabindex="-1"></a>  , <span class="at">add =</span> T, <span class="at">border =</span> <span class="st">&quot;navy&quot;</span>, <span class="at">col =</span> <span class="cn">NA</span></span>
+<span id="cb153-7"><a href="cloud2trees-to-lanl-trees.html#cb153-7" tabindex="-1"></a>  , <span class="at">lwd =</span> <span class="dv">11</span></span>
+<span id="cb153-8"><a href="cloud2trees-to-lanl-trees.html#cb153-8" tabindex="-1"></a>)</span></code></pre></div>
+<p><img src="dod_cloud2trees_demo_files/figure-html/unnamed-chunk-161-1.png" width="1008" /></p>
+<p>and what are all of these file paths?</p>
+<div class="sourceCode" id="cb154"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb154-1"><a href="cloud2trees-to-lanl-trees.html#cb154-1" tabindex="-1"></a><span class="co"># the path to the &quot;Lidar_Bounds.geojson&quot; file</span></span>
+<span id="cb154-2"><a href="cloud2trees-to-lanl-trees.html#cb154-2" tabindex="-1"></a>cloud2trees_to_lanl_trees_ans_temp<span class="sc">$</span>domain_path  </span></code></pre></div>
+<pre><code>## [1] &quot;C:\\Users\\georg\\Downloads\\cloud2trees_TREES_data\\SycanMarsh_UAS_LIDAR_2023\\lanl_trees_delivery/Lidar_Bounds.geojson&quot;</code></pre>
+<div class="sourceCode" id="cb156"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb156-1"><a href="cloud2trees-to-lanl-trees.html#cb156-1" tabindex="-1"></a><span class="co"># the path to the &quot;topo.dat&quot; file</span></span>
+<span id="cb156-2"><a href="cloud2trees-to-lanl-trees.html#cb156-2" tabindex="-1"></a>cloud2trees_to_lanl_trees_ans_temp<span class="sc">$</span>topofile_path  </span></code></pre></div>
+<pre><code>## [1] &quot;C:\\Users\\georg\\Downloads\\cloud2trees_TREES_data\\SycanMarsh_UAS_LIDAR_2023\\lanl_trees_delivery/topo.dat&quot;</code></pre>
+<div class="sourceCode" id="cb158"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb158-1"><a href="cloud2trees-to-lanl-trees.html#cb158-1" tabindex="-1"></a><span class="co"># the path to the TREES program &quot;fuellist&quot; file</span></span>
+<span id="cb158-2"><a href="cloud2trees-to-lanl-trees.html#cb158-2" tabindex="-1"></a>cloud2trees_to_lanl_trees_ans_temp<span class="sc">$</span>fuellist_path  </span></code></pre></div>
+<pre><code>## [1] &quot;C:\\Users\\georg\\Downloads\\cloud2trees_TREES_data\\SycanMarsh_UAS_LIDAR_2023\\lanl_trees_delivery/fuellist&quot;</code></pre>
+<div class="sourceCode" id="cb160"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb160-1"><a href="cloud2trees-to-lanl-trees.html#cb160-1" tabindex="-1"></a><span class="co"># the path to the &quot;Cloud2Trees_TreeList.txt&quot; file</span></span>
+<span id="cb160-2"><a href="cloud2trees-to-lanl-trees.html#cb160-2" tabindex="-1"></a>cloud2trees_to_lanl_trees_ans_temp<span class="sc">$</span>treelist_path  </span></code></pre></div>
+<pre><code>## [1] &quot;C:\\Users\\georg\\Downloads\\cloud2trees_TREES_data\\SycanMarsh_UAS_LIDAR_2023\\lanl_trees_delivery\\Cloud2Trees_TreeList.txt&quot;</code></pre>
+<p>let’s look at a few records of the fuellist</p>
+<div class="sourceCode" id="cb162"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb162-1"><a href="cloud2trees-to-lanl-trees.html#cb162-1" tabindex="-1"></a><span class="fu">readLines</span>(cloud2trees_to_lanl_trees_ans_temp<span class="sc">$</span>fuellist_path)[<span class="dv">1</span><span class="sc">:</span><span class="dv">11</span>]</span></code></pre></div>
+<pre><code>##  [1] &quot;! ----------------------------------&quot;                                                         
+##  [2] &quot;! FIRETEC domain info&quot;                                                                        
+##  [3] &quot;! ----------------------------------&quot;                                                         
+##  [4] &quot;      nx  = 390&quot;                                                                              
+##  [5] &quot;      ny  = 259&quot;                                                                              
+##  [6] &quot;      nz  = 36&quot;                                                                               
+##  [7] &quot;      dx  = 2&quot;                                                                                
+##  [8] &quot;      dy  = 2&quot;                                                                                
+##  [9] &quot;      dz  = 1.0                    ! Grid Resolution [m]&quot;                                     
+## [10] &quot;      aa1 = 0.1                     ! Vertical stretching component [default=0.1]&quot;            
+## [11] &quot;      singlefuel = 1                ! Flag forcing single fuel type instead of multiple fuels&quot;</code></pre>
+<p>let’s look at the structure of the “Cloud2Trees_TreeList.txt” file which does not include column names</p>
+<div class="sourceCode" id="cb164"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb164-1"><a href="cloud2trees-to-lanl-trees.html#cb164-1" tabindex="-1"></a>readr<span class="sc">::</span><span class="fu">read_delim</span>(</span>
+<span id="cb164-2"><a href="cloud2trees-to-lanl-trees.html#cb164-2" tabindex="-1"></a>  cloud2trees_to_lanl_trees_ans_temp<span class="sc">$</span>treelist_path</span>
+<span id="cb164-3"><a href="cloud2trees-to-lanl-trees.html#cb164-3" tabindex="-1"></a>  , <span class="at">col_names =</span> F</span>
+<span id="cb164-4"><a href="cloud2trees-to-lanl-trees.html#cb164-4" tabindex="-1"></a>  , <span class="at">progress =</span> F, <span class="at">show_col_types =</span> F</span>
+<span id="cb164-5"><a href="cloud2trees-to-lanl-trees.html#cb164-5" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb164-6"><a href="cloud2trees-to-lanl-trees.html#cb164-6" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">glimpse</span>()</span></code></pre></div>
+<pre><code>## Rows: 8,606
+## Columns: 10
+## $ X1  &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, …
+## $ X2  &lt;dbl&gt; 388.875, 558.625, 575.625, 638.875, 699.375, 728.125, 736.375, 740…
+## $ X3  &lt;dbl&gt; 517.875, 517.875, 517.875, 517.875, 517.875, 517.875, 517.875, 517…
+## $ X4  &lt;dbl&gt; 10.0416, 11.2904, 9.6332, 7.9933, 10.3822, 5.4345, 9.3381, 8.4360,…
+## $ X5  &lt;dbl&gt; 5.5000, 4.6646, 2.5000, 4.1667, 4.7420, 1.5000, 4.5000, 3.5000, 5.…
+## $ X6  &lt;dbl&gt; 1.4384, 4.1459, 2.0921, 1.9747, 4.2689, 0.8463, 3.1413, 2.4430, 1.…
+## $ X7  &lt;dbl&gt; 8.2307, 5.0031, 4.6430, 1.9327, 5.9543, 3.4247, 4.4341, 6.5833, 4.…
+## $ X8  &lt;dbl&gt; 0.4253, 0.1613, 0.0972, 0.1065, 0.1192, 0.0676, 0.0676, 0.0676, 0.…
+## $ X9  &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, …
+## $ X10 &lt;dbl&gt; 5e-04, 5e-04, 5e-04, 5e-04, 5e-04, 5e-04, 5e-04, 5e-04, 5e-04, 5e-…</code></pre>
 
+</div>
 </div>
             </section>
 
