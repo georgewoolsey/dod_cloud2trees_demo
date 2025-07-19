@@ -22,7 +22,7 @@ mapview::mapviewOptions(
 # map it
 # add the study bounds
 mapview::mapview(
-  aoi_las_ctg[[1]]$geometry
+  aoi_las_ctg[["SaltCabin_als_2021"]]@data %>% dplyr::select(filename)
   , color = "black"
   , lwd = 2
   , alpha.regions = 0
@@ -63,8 +63,10 @@ aoi_las_ctg
 put las files in a list
 ```{r}
 # list of all las files
-las_flist_temp <- aoi_las_ctg[["SaltCabin_als_2021"]] %>% 
+las_flist_temp <-
+  aoi_las_ctg[["SaltCabin_als_2021"]] %>% 
   purrr::pluck("data") %>% 
+  dplyr::filter(stringr::str_detect(filename,"USGS_LPC_CO_CameronPeakWildfire_2021_D21_w2985n1485_reproj")) %>% 
   dplyr::pull(filename)
 ```
 
@@ -81,12 +83,13 @@ if(!file.exists("../data/itd_tuning_SaltCabin_als.jpg")){
       input_las_dir = las_flist_temp
       , n_samples = 3
       , ws_fn_list = my_ws_functions
+      , chm_res_m = 0.25
     )
   ggplot2::ggsave(
     "../data/itd_tuning_SaltCabin_als.jpg"
     , plot = itd_tuning_ans$plot_samples
     , dpi = "print"
-    , height = 6, width = 10
+    , height = 7.5, width = 10
   )
 }
 ```
@@ -338,6 +341,7 @@ if(!file.exists("../data/itd_tuning_SaltCabin_uas_sfm.jpg")){
       input_las_dir = las_flist_temp
       , n_samples = 3
       , ws_fn_list = my_ws_functions
+      , chm_res_m = 0.25
     )
   ggplot2::ggsave(
     "../data/itd_tuning_SaltCabin_uas_sfm.jpg"

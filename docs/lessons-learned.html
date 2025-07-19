@@ -273,7 +273,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="9" data-path="lessons-learned.html"><a href="lessons-learned.html"><i class="fa fa-check"></i><b>9</b> Lessons Learned</a>
 <ul>
 <li class="chapter" data-level="9.1" data-path="lessons-learned.html"><a href="lessons-learned.html#data-processing-challengesgaps"><i class="fa fa-check"></i><b>9.1</b> Data Processing Challenges/Gaps</a></li>
-<li class="chapter" data-level="9.2" data-path="lessons-learned.html"><a href="lessons-learned.html#challenges-with-these-demos"><i class="fa fa-check"></i><b>9.2</b> Challenges with these Demos:</a></li>
+<li class="chapter" data-level="9.2" data-path="lessons-learned.html"><a href="lessons-learned.html#challenges-with-these-demos"><i class="fa fa-check"></i><b>9.2</b> Challenges with these Demos</a></li>
 </ul></li>
 </ul>
 
@@ -311,17 +311,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul>
 </div>
 <div id="challenges-with-these-demos" class="section level2 hasAnchor" number="9.2">
-<h2><span class="header-section-number">9.2</span> Challenges with these Demos:<a href="lessons-learned.html#challenges-with-these-demos" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<h2><span class="header-section-number">9.2</span> Challenges with these Demos<a href="lessons-learned.html#challenges-with-these-demos" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <ul>
 <li>Most data from USGS and Forest Service Data Archive were directly usable while other data sources lacked projection information and documented metadata
 <ul>
 <li>Only about half of the data was available in public access portals</li>
 <li>About a third of the data delivered with missing metadata that initially prevented processing</li>
-</ul></li>
 <li>Point cloud data that did not use a metric Coordinate Reference System (CRS) requires pre-processing
 <ul>
-<li>To ensure compatibility with our processing pipeline, point cloud data requires transformation if delivered in State Plane Coordinate Systems (SPCS) or with vertical units expressed in feet.</li>
+<li>To ensure compatibility with our processing pipeline, point cloud data requires transformation if delivered in State Plane Coordinate Systems (SPCS) or with vertical units expressed in feet</li>
 <li>Converting these data to a metric Coordinate Reference System (CRS) adds notable overhead to the processing timeline</li>
+</ul></li>
+</ul></li>
+<li>Data provided with boundaries clipped to roughly follow the irregularly-shaped study area (possibly with a buffer), rather than using a strict bounding box during point cloud cropping, prevented the generation of a Digital Terrain Model (DTM) suitable for the LANL TREES program.
+<ul>
+<li>The LANL TREES program specifically requires a rectangular extent with no missing elevation values for its FORTRAN-formatted ‘topo.dat’ input file.</li>
 </ul></li>
 <li>A significant temporal discrepancy (3-12 years) exists between datasets collected at each site, which complicates data interpretation and comparison.
 <ul>

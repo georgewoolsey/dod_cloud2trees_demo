@@ -1,23 +1,25 @@
 # Lessons Learned
 
 ## Data Processing Challenges/Gaps
- * LANDFIRE canopy biomass estimation errors, this could lead to underestimating tree level crown bulk density
-    - LANDFIRE estimated bulk density values seem low for three of the sites
- * FIA Forest Type mapping errors
- * Intrinsic fuel properties currently user defined (e.g., fuel moisture, low heat of combustion, surface area to volume, etc.)
- * Requires ocular interpretation to tune trees extraction process, future work could automate starting parameters by forest type
- * Data formatting for fire modeling currently only done by TREES program
- * Surface fuels are currently assigned as either constants or as spatially formatted using the TREES program
- * Most metrics require broader validation across forest types than has been completed
- * Future linkages are possible to model tree parameters from NAIP/Satellite derived canopy height models
+* LANDFIRE canopy biomass estimation errors, this could lead to underestimating tree level crown bulk density
+  - LANDFIRE estimated bulk density values seem low for three of the sites
+* FIA Forest Type mapping errors
+* Intrinsic fuel properties currently user defined (e.g., fuel moisture, low heat of combustion, surface area to volume, etc.)
+* Requires ocular interpretation to tune trees extraction process, future work could automate starting parameters by forest type
+* Data formatting for fire modeling currently only done by TREES program
+* Surface fuels are currently assigned as either constants or as spatially formatted using the TREES program
+* Most metrics require broader validation across forest types than has been completed
+* Future linkages are possible to model tree parameters from NAIP/Satellite derived canopy height models
 
-## Challenges with these Demos:
- * Most data from USGS and Forest Service Data Archive were directly usable while other data sources lacked projection information and documented metadata
-    - Only about half of the data was available in public access portals
-    - About a third of the data delivered with missing metadata that initially prevented processing
- * Point cloud data that did not use a metric Coordinate Reference System (CRS) requires pre-processing
-    - To ensure compatibility with our processing pipeline, point cloud data requires transformation if delivered in State Plane Coordinate Systems (SPCS) or with vertical units expressed in feet. 
-    - Converting these data to a metric Coordinate Reference System (CRS) adds notable overhead to the processing timeline
- * A significant temporal discrepancy (3-12 years) exists between datasets collected at each site, which complicates data interpretation and comparison. 
-    - This time gap acts as a confounding variable when attempting to compare data acquired by different collection systems (e.g., ALS versus UAS-SfM).
+## Challenges with these Demos
+* Most data from USGS and Forest Service Data Archive were directly usable while other data sources lacked projection information and documented metadata
+  - Only about half of the data was available in public access portals
+  - About a third of the data delivered with missing metadata that initially prevented processing
+  - Point cloud data that did not use a metric Coordinate Reference System (CRS) requires pre-processing
+    + To ensure compatibility with our processing pipeline, point cloud data requires transformation if delivered in State Plane Coordinate Systems (SPCS) or with vertical units expressed in feet
+    + Converting these data to a metric Coordinate Reference System (CRS) adds notable overhead to the processing timeline
+* Data provided with boundaries clipped to roughly follow the irregularly-shaped study area (possibly with a buffer), rather than using a strict bounding box during point cloud cropping, prevented the generation of a Digital Terrain Model (DTM) suitable for the LANL TREES program. 
+  - The LANL TREES program specifically requires a rectangular extent with no missing elevation values for its FORTRAN-formatted 'topo.dat' input file.
+* A significant temporal discrepancy (3-12 years) exists between datasets collected at each site, which complicates data interpretation and comparison. 
+  - This time gap acts as a confounding variable when attempting to compare data acquired by different collection systems (e.g., ALS versus UAS-SfM).
  
