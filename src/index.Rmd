@@ -36,6 +36,26 @@ The objective of this study is to demonstrate the use of `cloud2trees` for proce
 
 Data was obtained for four stands in Oregon, Colorado, New Jersey, and Georgia. Data was provided from USDA and SERDP funded projects to include different combinations of ALS, UAS-LiDAR, and UAS-SfM datasets. Datasets covered a total of 2,900 hectares of point cloud data.
 
+During this analysis, we found that when the raw point cloud was cropped to an irregularly-shaped study area (potentially with a buffer), rather than using a rectangular bounding box, the resulting Digital Terrain Model (DTM) outputs did not meet the LANL TREES program's specifications. The LANL TREES program specifically requires a DTM with a complete, rectangular spatial extent (i.e., no missing elevation values) for its input file. Furthermore, incomplete point cloud data, leading to gaps in tree detection across the simulation area, resulted in irregular and potentially unreliable fire modeling simulation runs.
+
+For this specific project the data completeness was as follows:
+
+* Complete
+  + Sycan Marsh ALS 2021
+  + Sycan Marsh UAS 2023
+  + Salt Cabin ALS 2021
+  + Salt Cabin UAS 2023
+* Incomplete
+  + New Jersey ALS 2012
+  + New Jersey UAS 2024
+  + Fort Stewart ALS 2018
+  + Fort Stewart ALS 2025
+
+
+```{r, echo=FALSE, out.width="100%", out.height="100%", fig.align='center', fig.show='hold', results='asis'}
+knitr::include_graphics("https://i.ibb.co/JRHhfrT0/whatdataisgood.jpg")
+```
+
 ## Processing Workflow
 
 ```{r, echo=FALSE, out.width="100%", out.height="100%", fig.align='center', fig.show='hold', results='asis'}
