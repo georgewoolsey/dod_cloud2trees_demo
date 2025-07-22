@@ -1,0 +1,53 @@
+# 3D Fuel Structures
+
+This section showcases interactive HTML visualizations of the 3D fuel structures derived using the `cloud2trees` framework to process point cloud data and prepared specifically for QUIC-Fire fire modeling using the LANL TREES program.
+
+We used `cloud2trees::cloud2trees()` to process raw point cloud data (ALS, UAS-lidar, UAS-SfM) and extract individual tree-level attributes (see sections starting [here](#sycmarsh)). These biophysical attributes attached to each tree in the list include geographic coordinates (X, Y), estimated total tree height, and crown area. Beyond these core metrics, `cloud2trees` was also used to estimate DBH, height to maximum crown diameter (HMD), FIA forest type, canopy base height (CBH), crown bulk density (CBD), and crown biomass. After processing with `cloud2trees::cloud2trees()`, the `cloud2trees::cloud2trees_to_lanl_trees()` function was used for formatting these outputs to meet the input specifications of the LANL TREES program (see [this section](#lanl_trees)). LANL TREES then translated this tree-level data into the complex 3D fuel arrays required by the QUIC-Fire model. 
+
+Due to file storage limitations, these detailed visualizations are presented for four datasets from the analysis.
+
+## Salt Cabin (CO) - ALS
+
+See processing section for [Salt Cabin (CO) - ALS](#sc_als)
+
+<iframe src="https://georgewoolsey.github.io/dod_cloud2trees_demo/quicfire_fuels_html/SaltCabin_ALS_2021.html"
+        width="100%"
+        height="500px"
+        frameborder="0"
+        allowfullscreen>
+</iframe>
+
+## Salt Cabin (CO) - UAS-SfM
+
+See processing section for [Salt Cabin (CO) - UAS-SfM](#sc_uas)
+
+<iframe src="https://georgewoolsey.github.io/dod_cloud2trees_demo/quicfire_fuels_html/SaltCabin_UAS_2024.html"
+        width="100%"
+        height="500px"
+        frameborder="0"
+        allowfullscreen>
+</iframe>
+
+
+## Sycan Marsh (OR) - ALS
+
+See processing section for [Sycan Marsh (OR) - ALS](#sy_als)
+
+<iframe src="https://georgewoolsey.github.io/dod_cloud2trees_demo/quicfire_fuels_html/SycanMarsh_ALS_2021.html"
+        width="100%"
+        height="500px"
+        frameborder="0"
+        allowfullscreen>
+</iframe>
+
+## Sycan Marsh (OR) - UAS-lidar
+
+See processing section for [Sycan Marsh (OR) - UAS-lidar](#sy_uas)
+
+<iframe src="https://georgewoolsey.github.io/dod_cloud2trees_demo/quicfire_fuels_html/SycanMarsh_UAS_2023.html"
+        width="100%"
+        height="500px"
+        frameborder="0"
+        allowfullscreen>
+</iframe>
+

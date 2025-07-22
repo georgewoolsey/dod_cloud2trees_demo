@@ -1,4 +1,4 @@
-# Sycan Marsh (OR)
+# Sycan Marsh (OR){#sycmarsh}
 
 process the point cloud data for the Sycan Marsh (OR) study site
 
@@ -56,7 +56,7 @@ point cloud data summary
 aoi_las_ctg
 ```
 
-## ALS Processing
+## ALS Processing{#sy_als}
 
 ### ITD tuning
 
@@ -315,7 +315,7 @@ remove(cloud2trees_ans)
 gc()
 ```
 
-## UAS lidar Processing
+## UAS lidar Processing{#sy_uas}
 
 ### ITD tuning
 
