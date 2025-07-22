@@ -42,10 +42,10 @@ For this specific project the data completeness was as follows:
 
 * Complete
   + Sycan Marsh ALS 2021
-  + Sycan Marsh UAS 2023
   + Salt Cabin ALS 2021
   + Salt Cabin UAS 2023
 * Incomplete
+  + Sycan Marsh UAS 2023
   + New Jersey ALS 2012
   + New Jersey UAS 2024
   + Fort Stewart ALS 2018

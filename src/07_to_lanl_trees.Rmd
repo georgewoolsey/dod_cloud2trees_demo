@@ -71,7 +71,8 @@ surface_fuels %>%
       , "Bulk Density<br>(kg m<sup>-3</sup>)"
       , "Height (m)"
       , "Moisture"
-      , "Surface Area<br>to Volume (m)"
+      # , "Surface Area<br>to Volume (m)"
+      , "Sizescale<br>(1/m)"
     )
     , escape = F
   ) %>% 

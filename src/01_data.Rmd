@@ -176,12 +176,12 @@ study_sites_sf %>%
 
 where are these places?
 
-```{r}
+```{r, results='asis'}
 # first plot a point so we can see it on the map
 mapview::mapview(
-  sf::st_centroid(study_sites_sf)
+  study_sites_sf %>% sf::st_centroid() %>% dplyr::select("study_site")
   , zcol = "study_site"
-  , cex = 5
+  , cex = 7
   , label = T
   , legend = T
   , popup = T
