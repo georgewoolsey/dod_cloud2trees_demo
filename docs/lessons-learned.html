@@ -334,6 +334,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li>The LANL TREES program specifically requires a rectangular extent with no missing elevation values for its FORTRAN-formatted ‘topo.dat’ input file.</li>
 </ul></li>
+<li>Challenges arise from QUIC-Fire’s reliance on specific projection systems for its wind solver, specifically Universal Transverse Mercator (UTM) and NAD83 Albers Equal Area Conic
+<ul>
+<li>When raw point cloud data is not collected or generated in either of these projections, the simulation domain must undergo reprojection</li>
+<li>This transformation can lead to visually odd rotated or cropped domains within the simulation runs</li>
+</ul></li>
 <li>A significant temporal discrepancy (3-12 years) exists between datasets collected at each site, which complicates data interpretation and comparison.
 <ul>
 <li>This time gap acts as a confounding variable when attempting to compare data acquired by different collection systems (e.g., ALS versus UAS-SfM).</li>
