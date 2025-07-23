@@ -14,7 +14,7 @@
 ## Challenges with these Demos
 * Most data from USGS and Forest Service Data Archive were directly usable while other data sources lacked projection information and documented metadata
   - Only about half of the data was available in public access portals
-  - About a third of the data delivered with missing metadata that initially prevented processing
+  - About a third of the data was delivered with missing metadata that initially prevented processing
   - Point cloud data that did not use a metric Coordinate Reference System (CRS) requires pre-processing
     + To ensure compatibility with our processing pipeline, point cloud data requires transformation if delivered in State Plane Coordinate Systems (SPCS) or with vertical units expressed in feet
     + Converting these data to a metric Coordinate Reference System (CRS) adds notable overhead to the processing timeline

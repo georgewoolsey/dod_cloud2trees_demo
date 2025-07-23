@@ -302,18 +302,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">DoD cloud2trees Demonstration: Forest Fuel Quantification for Wildfire Modeling using QUIC-Fire</h1>
 <p class="author"><em>George Woolsey, Wade Tinkham, Chad Hoffman, and Sophie Bonner</em></p>
-<p class="date"><em>22 July, 2025</em></p>
+<p class="date"><em>23 July, 2025</em></p>
 </div>
 <div id="introduction" class="section level1 hasAnchor" number="1">
 <h1><span class="header-section-number">Section 1</span> Introduction<a href="index.html#introduction" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>Demonstration of <code>cloud2trees</code> for processing aerial point cloud data to generate inputs for <a href="https://scholar.google.com/scholar?cluster=5135309566348498660&amp;oi=gsb&amp;hl=en&amp;as_sdt=0,6">QUIC-Fire</a></p>
 <div id="objective" class="section level2 hasAnchor" number="1.1">
 <h2><span class="header-section-number">1.1</span> Objective<a href="index.html#objective" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>The objective of this study is to demonstrate the use of <code>cloud2trees</code> for processing aerial point cloud data to generate inputs for <a href="https://scholar.google.com/scholar?cluster=5135309566348498660&amp;oi=gsb&amp;hl=en&amp;as_sdt=0,6">QUIC-Fire</a>. We will use the framework to process ALS and UAS-SfM datasets across geographically variable demonstration sites. The <code>cloud2trees</code> framework generates a tree list containing individual tree-level attributes such as geographic coordinates (X, Y), height, DBH, crown dimensions, forest type, and wildfire-relevant fuel loading metrics like crown bulk density and crown base height. The outputs from <code>cloud2trees</code> will be prepared for ingestion into the QUIC-Fire model (perhaps this is built into the package by now???) to showcase the framework’s processing efficiency and reliability for timely wildfire behavior modeling.</p>
+<p>The objective of this study is to demonstrate the use of <code>cloud2trees</code> for processing aerial point cloud data to generate inputs for <a href="https://scholar.google.com/scholar?cluster=5135309566348498660&amp;oi=gsb&amp;hl=en&amp;as_sdt=0,6">QUIC-Fire</a>. We will use the framework to process ALS and UAS-SfM datasets across geographically variable demonstration sites. The <code>cloud2trees</code> framework generates a tree list containing individual tree-level attributes such as geographic coordinates (X, Y), height, DBH, crown dimensions, forest type, and wildfire-relevant fuel loading metrics like crown bulk density and crown base height. The outputs from <code>cloud2trees</code> will be prepared for ingestion into the QUIC-Fire model to showcase the framework’s processing efficiency and reliability for timely wildfire behavior modeling.</p>
 </div>
 <div id="data_desc" class="section level2 hasAnchor" number="1.2">
 <h2><span class="header-section-number">1.2</span> Data<a href="index.html#data_desc" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Data was obtained for four stands in Oregon, Colorado, New Jersey, and Georgia. Data was provided from USDA and SERDP funded projects to include different combinations of ALS, UAS-LiDAR, and UAS-SfM datasets. Datasets covered a total of 2,900 hectares of point cloud data.</p>
+<p>Data was obtained for four stands in Oregon, Colorado, New Jersey, and Georgia. Data was provided from USDA and SERDP funded projects to include different combinations of ALS, UAS-lidar, and UAS-SfM datasets. Datasets covered a total of 2,900 hectares of point cloud data.</p>
 <p>During this analysis, we found that when the raw point cloud was cropped to an irregularly-shaped study area (potentially with a buffer), rather than using a rectangular bounding box, the resulting Digital Terrain Model (DTM) outputs did not meet the LANL TREES program’s specifications. The LANL TREES program specifically requires a DTM with a complete, rectangular spatial extent (i.e., no missing elevation values) for its input file. Furthermore, incomplete point cloud data, leading to gaps in tree detection across the simulation area, resulted in irregular and potentially unreliable fire modeling simulation runs.</p>
 <p>For this specific project the data completeness was as follows:</p>
 <ul>
@@ -336,6 +336,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="processing-workflow" class="section level2 hasAnchor" number="1.3">
 <h2><span class="header-section-number">1.3</span> Processing Workflow<a href="index.html#processing-workflow" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>This schematic illustrates the <code>cloud2trees</code> framework, which processes aerial point cloud data to generate a spatially explicit forest inventory. The workflow produces a height-normalized point cloud, Digital Terrain Model (DTM), and Canopy Height Model (CHM), from which individual trees are delineated and attributed with biophysical properties including location, height, crown dimensions, FIA forest type group, DBH, CBH, crown bulk density, and crown biomass. This comprehensive output serves as crucial input for 3D physics-based fire behavior models.</p>
 <p><img src="https://i.ibb.co/xtzW7v0R/cloud2trees-workflow-graphic.png" width="100%" height="100%" style="display: block; margin: auto;" /></p>
 
 </div>

@@ -30,11 +30,11 @@ Demonstration of `cloud2trees` for processing aerial point cloud data to generat
 
 ## Objective
 
-The objective of this study is to demonstrate the use of `cloud2trees` for processing aerial point cloud data to generate inputs for [QUIC-Fire](https://scholar.google.com/scholar?cluster=5135309566348498660&oi=gsb&hl=en&as_sdt=0,6). We will use the framework to process ALS and UAS-SfM datasets across geographically variable demonstration sites. The `cloud2trees` framework generates a tree list containing individual tree-level attributes such as geographic coordinates (X, Y), height, DBH, crown dimensions, forest type, and wildfire-relevant fuel loading metrics like crown bulk density and crown base height. The outputs from `cloud2trees` will be prepared for ingestion into the QUIC-Fire model (perhaps this is built into the package by now???) to showcase the framework's processing efficiency and reliability for timely wildfire behavior modeling.
+The objective of this study is to demonstrate the use of `cloud2trees` for processing aerial point cloud data to generate inputs for [QUIC-Fire](https://scholar.google.com/scholar?cluster=5135309566348498660&oi=gsb&hl=en&as_sdt=0,6). We will use the framework to process ALS and UAS-SfM datasets across geographically variable demonstration sites. The `cloud2trees` framework generates a tree list containing individual tree-level attributes such as geographic coordinates (X, Y), height, DBH, crown dimensions, forest type, and wildfire-relevant fuel loading metrics like crown bulk density and crown base height. The outputs from `cloud2trees` will be prepared for ingestion into the QUIC-Fire model to showcase the framework's processing efficiency and reliability for timely wildfire behavior modeling.
 
 ## Data{#data_desc}
 
-Data was obtained for four stands in Oregon, Colorado, New Jersey, and Georgia. Data was provided from USDA and SERDP funded projects to include different combinations of ALS, UAS-LiDAR, and UAS-SfM datasets. Datasets covered a total of 2,900 hectares of point cloud data.
+Data was obtained for four stands in Oregon, Colorado, New Jersey, and Georgia. Data was provided from USDA and SERDP funded projects to include different combinations of ALS, UAS-lidar, and UAS-SfM datasets. Datasets covered a total of 2,900 hectares of point cloud data.
 
 During this analysis, we found that when the raw point cloud was cropped to an irregularly-shaped study area (potentially with a buffer), rather than using a rectangular bounding box, the resulting Digital Terrain Model (DTM) outputs did not meet the LANL TREES program's specifications. The LANL TREES program specifically requires a DTM with a complete, rectangular spatial extent (i.e., no missing elevation values) for its input file. Furthermore, incomplete point cloud data, leading to gaps in tree detection across the simulation area, resulted in irregular and potentially unreliable fire modeling simulation runs.
 
@@ -57,6 +57,8 @@ knitr::include_graphics("https://i.ibb.co/JRHhfrT0/whatdataisgood.jpg")
 ```
 
 ## Processing Workflow
+
+This schematic illustrates the `cloud2trees` framework, which processes aerial point cloud data to generate a spatially explicit forest inventory. The workflow produces a height-normalized point cloud, Digital Terrain Model (DTM), and Canopy Height Model (CHM), from which individual trees are delineated and attributed with biophysical properties including location, height, crown dimensions, FIA forest type group, DBH, CBH, crown bulk density, and crown biomass. This comprehensive output serves as crucial input for 3D physics-based fire behavior models.
 
 ```{r, echo=FALSE, out.width="100%", out.height="100%", fig.align='center', fig.show='hold', results='asis'}
 knitr::include_graphics("https://i.ibb.co/xtzW7v0R/cloud2trees-workflow-graphic.png")
