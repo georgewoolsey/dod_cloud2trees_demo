@@ -1,6 +1,6 @@
 --- 
 title: "DoD cloud2trees Demonstration: Forest Fuel Quantification for Wildfire Modeling using QUIC-Fire"
-author: "George Woolsey, Wade Tinkham, Chad Hoffman, and Sophie Bonner"
+author: "George Woolsey, Wade Tinkham, Chad Hoffman"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 site: bookdown::bookdown_site
 output: 
@@ -23,6 +23,10 @@ zotero: true
 link-citations: true
 description: "Using the bookdown package to write a book of data exploration. The output format for this example is bookdown::gitbook."
 ---
+
+# Author Acknowledgement
+
+The authors would like to acknowledge a co-author at USGS for their valuable contributions to the fuels generation methodology, including fuel quantification on the tree list, and the development of output formatting processes for LANL TREES and QUIC-Fire. They also performed the fire modeling analysis within QUIC-Fire for this particular project.
 
 # Introduction
 
