@@ -617,16 +617,16 @@ herbaceous
 <p>and what are all of these file paths?</p>
 <div class="sourceCode" id="cb141"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb141-1"><a href="lanl_trees.html#cb141-1" tabindex="-1"></a><span class="co"># the path to the &quot;Lidar_Bounds.geojson&quot; file</span></span>
 <span id="cb141-2"><a href="lanl_trees.html#cb141-2" tabindex="-1"></a>cloud2trees_to_lanl_trees_ans_temp<span class="sc">$</span>domain_path  </span></code></pre></div>
-<pre><code>## [1] &quot;C:\\Users\\georg\\AppData\\Local\\Temp\\RtmpELk7j0\\lanl_trees_delivery/Lidar_Bounds.geojson&quot;</code></pre>
+<pre><code>## [1] &quot;C:\\Users\\georg\\AppData\\Local\\Temp\\RtmpoBqgFU\\lanl_trees_delivery/Lidar_Bounds.geojson&quot;</code></pre>
 <div class="sourceCode" id="cb143"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb143-1"><a href="lanl_trees.html#cb143-1" tabindex="-1"></a><span class="co"># the path to the &quot;topo.dat&quot; file</span></span>
 <span id="cb143-2"><a href="lanl_trees.html#cb143-2" tabindex="-1"></a>cloud2trees_to_lanl_trees_ans_temp<span class="sc">$</span>topofile_path  </span></code></pre></div>
-<pre><code>## [1] &quot;C:\\Users\\georg\\AppData\\Local\\Temp\\RtmpELk7j0\\lanl_trees_delivery/topo.dat&quot;</code></pre>
+<pre><code>## [1] &quot;C:\\Users\\georg\\AppData\\Local\\Temp\\RtmpoBqgFU\\lanl_trees_delivery/topo.dat&quot;</code></pre>
 <div class="sourceCode" id="cb145"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb145-1"><a href="lanl_trees.html#cb145-1" tabindex="-1"></a><span class="co"># the path to the TREES program &quot;fuellist&quot; file</span></span>
 <span id="cb145-2"><a href="lanl_trees.html#cb145-2" tabindex="-1"></a>cloud2trees_to_lanl_trees_ans_temp<span class="sc">$</span>fuellist_path  </span></code></pre></div>
-<pre><code>## [1] &quot;C:\\Users\\georg\\AppData\\Local\\Temp\\RtmpELk7j0\\lanl_trees_delivery/fuellist&quot;</code></pre>
+<pre><code>## [1] &quot;C:\\Users\\georg\\AppData\\Local\\Temp\\RtmpoBqgFU\\lanl_trees_delivery/fuellist&quot;</code></pre>
 <div class="sourceCode" id="cb147"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb147-1"><a href="lanl_trees.html#cb147-1" tabindex="-1"></a><span class="co"># the path to the &quot;Cloud2Trees_TreeList.txt&quot; file</span></span>
 <span id="cb147-2"><a href="lanl_trees.html#cb147-2" tabindex="-1"></a>cloud2trees_to_lanl_trees_ans_temp<span class="sc">$</span>treelist_path  </span></code></pre></div>
-<pre><code>## [1] &quot;C:\\Users\\georg\\AppData\\Local\\Temp\\RtmpELk7j0\\lanl_trees_delivery\\Cloud2Trees_TreeList.txt&quot;</code></pre>
+<pre><code>## [1] &quot;C:\\Users\\georg\\AppData\\Local\\Temp\\RtmpoBqgFU\\lanl_trees_delivery\\Cloud2Trees_TreeList.txt&quot;</code></pre>
 <p>the <code>cloud2trees::cloud2trees_to_lanl_trees()</code> program made a delivery directory for the astute readers</p>
 <div class="sourceCode" id="cb149"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb149-1"><a href="lanl_trees.html#cb149-1" tabindex="-1"></a><span class="fu">list.files</span>(<span class="fu">file.path</span>(my_dir_temp,<span class="st">&quot;lanl_trees_delivery&quot;</span>))</span></code></pre></div>
 <pre><code>## [1] &quot;Cloud2Trees_TreeList.txt&quot; &quot;dtm_Clipped.tif&quot;         
@@ -889,7 +889,7 @@ UAS LIDAR 2023
 <span id="cb156-52"><a href="lanl_trees.html#cb156-52" tabindex="-1"></a>  study_sites_processing_sf<span class="sc">$</span>study_site</span>
 <span id="cb156-53"><a href="lanl_trees.html#cb156-53" tabindex="-1"></a>  , <span class="st">&quot;_&quot;</span>, stringr<span class="sc">::</span><span class="fu">str_replace_all</span>(study_sites_processing_sf<span class="sc">$</span>data_desc,<span class="st">&quot;[ .]&quot;</span>, <span class="st">&quot;_&quot;</span>)</span>
 <span id="cb156-54"><a href="lanl_trees.html#cb156-54" tabindex="-1"></a>)</span></code></pre></div>
-<p>to process all of that data took 51.0 seconds (0.85 minutes), not bad, not bad</p>
+<p>to process all of that data took 48.7 seconds (0.81 minutes), not bad, not bad</p>
 <p>just to confirm we got the data we expected, let’s look at one result using the Sycan Marsh UAS Lidar 2023 data</p>
 <div class="sourceCode" id="cb157"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb157-1"><a href="lanl_trees.html#cb157-1" tabindex="-1"></a>cloud2trees_to_lanl_trees_ans_temp <span class="ot">&lt;-</span> ans_temp<span class="sc">$</span>SycanMarsh_UAS_LIDAR_2023</span>
 <span id="cb157-2"><a href="lanl_trees.html#cb157-2" tabindex="-1"></a>cloud2trees_to_lanl_trees_ans_temp <span class="sc">%&gt;%</span> <span class="fu">names</span>()</span></code></pre></div>
